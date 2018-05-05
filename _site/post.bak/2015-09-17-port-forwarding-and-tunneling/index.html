@@ -1,0 +1,90 @@
+<p>As a pentester, you might be able to take control of systems that have a direct access but you also might be able to test the internal network and check the machine who are inside a subnetwork.</p>
+
+<p>For that task you’ll have to use an already compromised machine as a bridge/gateway, this technic is called “pivot”. 
+Depending of the context, different solutions exist to perform that task.</p>
+
+<h2 id="rinetd">Rinetd</h2>
+
+<p>The easiest one. First you need to install Rinetd:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>aptitude search rinetd
+p   rinetd                                     - Internet TCP redirection server&lt;/pre&gt;
+</code></pre>
+</div>
+
+<p>Then edit the <code class="highlighter-rouge">/etc/rinetd.conf</code> file:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># bindadress    bindport  connectaddress  connectport
+192.168.0.10    80        91.121.139.22   8080
+</code></pre>
+</div>
+
+<p>Restart Rinetd and from now, all incoming traffic on <code class="highlighter-rouge">192.168.0.10</code> on port <code class="highlighter-rouge">80</code> will be redirected to <code class="highlighter-rouge">91.121.139.22</code> on port <code class="highlighter-rouge">8080</code>. 
+This can be usefull if a firewall is restricting outbound traffic on certain port.</p>
+
+<!--more-->
+
+<h2 id="ssh">SSH</h2>
+
+<h3 id="local-port-forwarding">Local port forwarding</h3>
+
+<p><code class="highlighter-rouge">ssh -L &lt;local port to listen&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;gateway&gt;</code></p>
+
+<p>Similar to port forwarding with Rinetd, this technic still have some tints. The traffic is encrypted but only between the local machine and the gateway. 
+If the remote host is <code class="highlighter-rouge">localhost</code> then it refers to the gateway. Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh -L 8080:192.168.1.25:80 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>This open a tunnel between the local machine on port <code class="highlighter-rouge">8080</code> to <code class="highlighter-rouge">192.168.1.25</code> on port <code class="highlighter-rouge">80</code> trough the ssh server <code class="highlighter-rouge">192.168.0.10</code> connected with user <code class="highlighter-rouge">bob</code>. 
+Connexion from other machines are not accepted by default, to enable this feature you have to use the <code class="highlighter-rouge">-g</code> option.</p>
+
+<h3 id="remote-port-forwarding">Remote port forwarding</h3>
+
+<p><code class="highlighter-rouge">ssh -R &lt;remote port to bind&gt;:&lt;local host&gt;:&lt;local port&gt; &lt;gateway&gt;</code></p>
+
+<p>Note that this must be launched on the already compromised machine ! In this case if the local host is <code class="highlighter-rouge">localhost</code> then it refers to the local machine. Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh -R 1234:192.168.1.25:80 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>This pop a reverse shell on <code class="highlighter-rouge">192.168.0.10</code> connected with user <code class="highlighter-rouge">bob</code> and create a tunnel on port <code class="highlighter-rouge">1234</code> wich will receive all traffic from <code class="highlighter-rouge">192.168.1.25</code> on port <code class="highlighter-rouge">80</code>.</p>
+
+<h2 id="proxychains">ProxyChains</h2>
+
+<p>As a standalone, Proxychains is mainly used to anonymize traffic but combined with SSH it can be used to perform dynamic port forwarding.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ aptitude search proxychains
+p   libproxychains-dev                - proxy chains -- shared library (development)
+p   libproxychains3                   - proxy chains -- shared library (runtime)
+p   proxychains                       - proxy chains - redirect connections through proxy servers&lt;/pre&gt;
+</code></pre>
+</div>
+
+<p>When the install is finished, edit <code class="highlighter-rouge">/etc/proxychains.conf</code> as here:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ProxyList]
+# add proxy here ...
+# meanwile
+# defaults set to "tor"
+socks4  127.0.0.1 9050
+</code></pre>
+</div>
+
+<p>Then we can create a tunnel wich will forward all incoming traffic to any host in the internal network trough the compromised machine which runs the ssh server. Syntax:</p>
+
+<p><code class="highlighter-rouge">ssh -D &lt;local proxy&gt; &lt;target&gt;</code></p>
+
+<p>Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ssh -D 127.0.0.1:9050 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>From now we can perform scans or anything else on every port on every machine in the DMZ with Proxychains:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ proxychains nmap -p 139,445 192.168.1.100-200
+</code></pre>
+</div>

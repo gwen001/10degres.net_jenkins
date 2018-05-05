@@ -1,0 +1,291 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Steganography &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="stegano">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Steganography">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Steganography">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/steganography/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/steganography/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Steganography">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/steganography/" rel="bookmark" title="Steganography">Steganography</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-10-18T00:00:00+01:00">October 18, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <h2 id="definition">Definition</h2>
+
+<p>Steganography is the art of hidding a message in another common message. 
+The hidden message can be clear text or encrypted and the container can be anything: image, music, single text or whatever… 
+The main benefit of steganography is that you can get the final message only if you know the technic used to hide it, because you’ll need to use the same algorithm. 
+As a second layer of protection, you can also encrypt the data with any algorithm you like or with a private key.</p>
+
+<!--more-->
+
+<h2 id="example">Example</h2>
+
+<p>A good old example of steganography is the famous letter of Georges Sand to Alfred de Musset. 
+The original text looks like a lovely letter but you only read even lines, a porn text appears (see <a href="http://5ko.free.fr/fr/sand.html" class="flashlink" target="_blank">this link</a> (FR)). 
+If you don’t know that you won’t be able to see how Georges Sand was horny :)</p>
+
+<h2 id="least-significant-bit">Least Significant Bit</h2>
+
+<p>Our days, with new technologies, the container can be a media support: image (jpg, gif, bmp…), video (avi, mov, flv…), sound (wav, ogg…). 
+Let’s see how it works with a basic technic, called Least Significant Bit aka LSB, on a png image. 
+This is probably one of the easiest technic to hide a message inside an image using steganogaphy.</p>
+
+<p>Each pixel of an image is made of 3 components: Red, Green, Blue. Each component can have a value from 0 to 255, so the total available colors is about <code class="highlighter-rouge">256*256*256=16777216</code>. 
+Obviously the human eye cannot see all of those shades. 
+Each RGB component is encoded on 8 bits (2^8), that means we can use the “least significant bit” aka 2^0=1 as a flag to hide any characters. 
+Who will notice the difference between a full black pixel with R=0, G=0, B=0 and another pixel with R=1, G=1, B=1 ? No one for sure…</p>
+
+<p><a href="/images/lsb-black-000000.png"><img src="/images/lsb-black-000000.png" alt="lsb black 000000" /></a>
+<a href="/images/lsb-black-010101.png"><img src="/images/lsb-black-010101.png" alt="lsb black 010101" /></a></p>
+
+<p>Do you see the difference ? Of course not. Do you get the point now ?</p>
+
+<h2 id="real-case">Real case</h2>
+
+<p>Based on this technic, I wrote a little PHP script to put a secret message inside a png picture then I wrote another script for extraction:</p>
+
+<p><a href="/images/lsb-mountain-message.png"><img src="/images/lsb-mountain-message.png" alt="lsb mountain with message" /></a>
+<a href="/images/lsb-mountain-empty.png"><img src="/images/lsb-mountain-empty.png" alt="lsb mountain original" /></a></p>
+
+<p>The picture with the encoded message is the left one, obviously you cannot see the difference without an image editor, here is the extracted data:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>UXVlIGRldmllbnQgbGEgdmVydHUgcGVuZGFudCBjZXMgZMOpbGljaWV1eCB2b3lhZ2VzIG91IGxhIHBlbnPDqWU
+gZnJhbmNoaXQgdG91cyBsZXMgb2JzdGFjbGVzID8=
+</code></pre>
+</div>
+
+<p>After a base64 decode, a text from Honoré De Balzac, a famous french writer, appears:</p>
+
+<p><code class="highlighter-rouge">Que devient la vertu pendant ces délicieux voyages ou la pensée franchit tous les obstacles ?</code></p>
+
+<p>In this test I only used the red component to store my message, that means I can only encode one bit of one character in one pixel. 
+Since a character is encoded on 8 bits, the string max length is:
+<code class="highlighter-rouge">(img_width*img_height) / 8</code></p>
+
+<p>Of course everything is possible to raise the max length, you can use the green and the blue components, you also use the second least significant bit and third, 
+compress your data or you can simply use a bigger picture :) The only thing you have to matter is that the more text you’ll add, the more it will alter the original picture.</p>
+
+<h2 id="forfun">For fun</h2>
+
+<p>I improved my script to support every filetype in input. 
+In the following picture I decide to hide a mp3 sound, there is no way to figure out the tricks:</p>
+
+<p><a href="/images/lsb-dbz-message.png"><img src="/images/lsb-dbz-message.png" alt="lsb dbz with audio" /></a>
+<a href="/images/lsb-dbz-empty.png"><img src="/images/lsb-dbz-empty.png" alt="lsb dbz original" /></a></p>
+
+<audio src="/images/lsb_dbz.mp3" controls="controls"></audio>
+
+<p>In this test I used the three color components because of the size of the audio which was about 500Ko, the original picture was about 2Mo. 
+Finally, after the merge, the final picture is logically, about 2.5Mo.</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#stegano" title="Pages tagged stegano" class="tag"><span class="term">stegano</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/steganography/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/steganography/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/steganography/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://github.com/kzykhys/Steganography" target="_blank">A very nice Steganography project from Kazuyuki Hayashi written in PHP</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="http://www.openstego.com/" target="_blank">OpenStego for Linux and Windows</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/file-transfer-with-ping/">&laquo; File transfer with ping</a></h4>
+			<span>Published on October 26, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/bug-bounty-programs/">Bug Bounty Programs &raquo; </a></h4>
+			<span>Published on October 08, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

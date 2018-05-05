@@ -1,0 +1,342 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Sqlmap &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="sql injection, sqlmap">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Sqlmap">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sqlmap">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/sqlmap/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/sqlmap/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Sqlmap">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/sqlmap/" rel="bookmark" title="Sqlmap">Sqlmap</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2016-01-18T00:00:00+00:00">January 18, 2016</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>Written in Python by <a href="https://twitter.com/stamparm" class="flashlink" target="_blank">Miroslav Stamper</a>, Sqlmap is probably the best automated tool to detect and exploit SQL Injection.</p>
+
+<p>Sqlmap fully supports many databases as MySQL, Microsoft SQL Server, PostgreSQL, Oracle (and many more) and is able to detect the following injection types : 
+Boolean based blind, Error based, Union based, Stacked queries, Time based blind, Inline queries. Depending of the target status, sqlmap is also able to :</p>
+
+<ul>
+  <li>prompt an interactive sql shell</li>
+  <li>download/upload files</li>
+  <li>prompt a web shell</li>
+  <li>crack hashed password using a dictionnary attack</li>
+  <li>and a lot more…</li>
+</ul>
+
+<p>Below some examples of the main functions using <a href="/an-extremely-buggy-web-app/">bWAPP</a></p>
+
+<h2 id="basic-usage">Basic usage</h2>
+
+<p><a href="/images/sqlmap-basic-usage.png"><img src="/images/sqlmap-basic-usage.png" alt="sqlmap basic usage" style="float:left;margin-right:10px;" width="300" /></a></p>
+
+<p>In this example sqlmap has detected that the GET parameter <code class="highlighter-rouge">title</code> of the search function is vulnerable to sql injection. 
+Well done! Plus it found that 4 different types of injection can be used for exploitation. 
+Note that sqlmap has also detected that the parameter is vulnerable to XSS attacks which is unfortunatly very common these days…</p>
+
+<p>To perform test on POST field you should write: <code class="highlighter-rouge">--data="title=sqlitest&amp;action=search"</code></p>
+
+<p>In the next example, I’ll turn off the verbose mode.</p>
+
+<p><br /></p>
+
+<!--more-->
+
+<h2 id="information-gathering">Information gathering</h2>
+
+<p>Who am I ? Where am I ? What can I do ? Once you found an injection point, the next step is to gather as much information as possible about the running environment. 
+ This task is very easy with sqlmap which provides a great list of options.</p>
+
+<p><code class="highlighter-rouge">--hostname</code></p>
+
+<p><a href="/images/sqlmap-hostname.png"><img src="/images/sqlmap-hostname.png" alt="sqlmap hostname" /></a></p>
+
+<p><code class="highlighter-rouge">--current-user</code></p>
+
+<p><a href="/images/sqlmap-current-user.png"><img src="/images/sqlmap-current-user.png" alt="sqlmap current user" /></a></p>
+
+<p><code class="highlighter-rouge">--privileges</code></p>
+
+<p><a href="/images/sqlmap-privileges.png"><img src="/images/sqlmap-privileges.png" alt="sqlmap privileges" /></a></p>
+
+<p>And many more… All collected informations are stored in log files in the <code class="highlighter-rouge">~/.sqlmap</code> directory. 
+To get fresh results ignoring the results previously recorded you’ll then have to use <code class="highlighter-rouge">--fresh-queries</code> or <code class="highlighter-rouge">--flush-session</code> or simply remove the corresponding directory.</p>
+
+<h2 id="enumeration">Enumeration</h2>
+
+<p>The next step of the exploitation is to enumerate available databases, tables and columns. Again this is pretty simple with sqlmap.</p>
+
+<p>Databases: <code class="highlighter-rouge">--dbs</code></p>
+
+<p><a href="/images/sqlmap-databases.png"><img src="/images/sqlmap-databases.png" alt="sqlmap databases" /></a></p>
+
+<p>Tables: <code class="highlighter-rouge">-D bwapp --tables</code></p>
+
+<p><a href="/images/sqlmap-tables.png"><img src="/images/sqlmap-tables.png" alt="sqlmap tables" /></a></p>
+
+<p>Columns: <code class="highlighter-rouge">-D bwapp -T users --columns</code></p>
+
+<p><a href="/images/sqlmap-columns.png"><img src="/images/sqlmap-columns.png" alt="sqlmap columns" /></a></p>
+
+<p>Check the official documentation to see the list of all available options.</p>
+
+<h2 id="getting-datas">Getting datas</h2>
+
+<p>Now you know the structure of the tables, you can grab all datas you want. To perform that task, I like to use the interactive sql prompt:</p>
+
+<p><a href="/images/sqlmap-datas.png"><img src="/images/sqlmap-datas.png" alt="sqlmap datas" /></a></p>
+
+<p>You can also dump a table or a database with the option <code class="highlighter-rouge">--dump</code> on the command line. If sqlmap detects hashed strings, it will ask you to crack them or not via a dictionnary based attack.
+ The default wordlist is +1M length, it’s up you to fill it or provide your own list.</p>
+
+<p><a href="/images/sqlmap-crack.png"><img src="/images/sqlmap-crack.png" alt="sqlmap crack" /></a></p>
+
+<h2 id="manage-files">Manage files</h2>
+
+<p>Depending of the sql user privileges , the injection type and the filesystem permissions, you maybe could be able to play with the server.</p>
+
+<p>Read file:</p>
+
+<p><a href="/images/sqlmap-file-read.png"><img src="/images/sqlmap-file-read.png" alt="sqlmap file read" /></a></p>
+
+<p>Write file:</p>
+
+<p><a href="/images/sqlmap-file-write.png"><img src="/images/sqlmap-file-write.png" alt="sqlmap file write" /></a></p>
+
+<p>The option <code class="highlighter-rouge">--os-shell</code> allows you to upload an ASP/JSP/PHP script on the remote server which will render an upload form. 
+Then you’ll use it to upload whatever file you want, usually a backdoor to perform a POC for your client.</p>
+
+<h2 id="usefull">Usefull</h2>
+
+<p>Below my favorite options of sqlmap, the ones I always use in all pentest.</p>
+
+<p><code class="highlighter-rouge">--threads=10</code> : to speed up sqlmap</p>
+
+<p><code class="highlighter-rouge">--tor --tor-type=socks5</code> : to anonymize the traffic, must be used carefully while performing time based tests</p>
+
+<p><code class="highlighter-rouge">--random-agent</code> : a different User-Agent for each session</p>
+
+<p>In this time where security is the heart of our job, day after day more and more network admins like to implements WAF, IPS or IDS. 
+Sqlmap has an option to bypass basic configuration of those systems: <code class="highlighter-rouge">--tamper</code> allows you to trick the requests by applying a filter on the SQL string like random case.</p>
+
+<h2 id="going-further">Going further</h2>
+
+<p>Sqlmap is a very very powerful tool. After months I still don’t know all options but here are some extra functionnalities who look interesting:</p>
+
+<p>Interaction with Metasploit framework</p>
+
+<p>Smartphone impersonation</p>
+
+<p>Website crawling</p>
+
+<p>Windows registry access</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#sql injection" title="Pages tagged sql injection" class="tag"><span class="term">sql injection</span></a><a href="http://10degres.net/tags/#sqlmap" title="Pages tagged sqlmap" class="tag"><span class="term">sqlmap</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/sqlmap/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/sqlmap/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/sqlmap/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="http://sqlmap.org/" target="_blank">Sqlmap official website</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://github.com/sqlmapproject/sqlmap/wiki/Usage" target="_blank">Sqlmap usage on the GitHub project</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/an-extremely-buggy-web-app/">&laquo; An extremely buggy web app !</a></h4>
+			<span>Published on January 28, 2016</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/file-transfer-with-ping/">File transfer with ping &raquo; </a></h4>
+			<span>Published on October 26, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

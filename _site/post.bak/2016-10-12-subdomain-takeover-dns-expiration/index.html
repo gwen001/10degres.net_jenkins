@@ -1,0 +1,42 @@
+<p>One quick and easy way to make cash in bug bounty job is subdomain takeover.
+The goal is to thief a forgetted/unused subdomain of your target and put a PoC in place.
+If you are able to do that, that means that instead of a plain text file, an attacker could replicate the true site of the victim and deals with phishing.
+This way he could trick users and even the employees of the company to grab useful datas like credentials, this can also have really huge impact on the companies reputation.</p>
+
+<p>First of all you have to find a list of subdomains of your target.
+To perform that task, you simply can use a tool like <a href="/theharvester/">TheHarvester</a> or <a href="https://github.com/darkoperator/dnsrecon" class="flashlink" target="_blank">DNSRecon</a>.
+<!--more--></p>
+
+<p>Then for each subdomains you should check if it is an alias or not, I personnally use the command <code class="highlighter-rouge">host</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>host rencontres.leparisien.fr
+rencontres.leparisien.fr is an <span class="nb">alias </span><span class="k">for </span>www.pointscommuns.com.
+www.pointscommuns.com has address 217.70.188.38
+</code></pre>
+</div>
+
+<p>if yes, and if the alias destination is an external domain, then you should check this expiry date of this domain.
+Because if this domain has expired, that means an attacker could buy it through a registrar like Gandi for a small amount.
+Then put a fake look alike website in place and finally start social engineering by impersonating the vulnerable company.</p>
+
+<p>To perform all those tests, I wrote a PHP script that takes a subdomains list as an argument.
+Usage is:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Usage: php dnsexpire.php [OPTIONS] -f &lt;subdomain|input file&gt;
+
+Options:
+    -a  set alert for result output, default=30 days
+    -f  subdomains list source file
+    -h  print this help
+
+Examples:
+    php dnsexpire.php -f example.com
+    php dnsexpire.php -a 10 -f dns.txt
+</code></pre>
+</div>
+
+<p>Output is:</p>
+
+<p><a href="/images/dnsexpire-example.jpg"><img src="/images/dnsexpire-example.jpg" alt="DNS expiration PHP tool" /></a></p>
+
+<p>The code is available on my <a href="https://github.com/gwen001/dnsexpire" class="flashlink" target="_blank">GitHub repository</a> so give it a try!</p>

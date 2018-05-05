@@ -1,0 +1,317 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Kick the bucket &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="aws, s3, bucket">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Kick the bucket">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kick the bucket">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/kick-the-bucket/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/kick-the-bucket/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Kick the bucket">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/kick-the-bucket/" rel="bookmark" title="Kick the bucket">Kick the bucket</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2017-08-01T00:00:00+01:00">August 01, 2017</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>I already wrote <a href="/playing-with-s3-buckets/">a post about Amazon S3 buckets</a> but they became so popular these last weeks  that many people explain what is a bucket, what is the danger and how to exploit misconfiguration. My goal here is more: how/where to find those vulnerable buckets.</p>
+
+<p>First I assume you already know the basics, if not, you can read the excellent article from <a href="https://labs.detectify.com/2017/07/13/a-deep-dive-into-aws-s3-access-controls-taking-full-control-over-your-assets/" target="_blank" class="flashlink">Frans Rosen on Detectify</a>.
+<!--more--></p>
+
+<h2 id="how-a-bucket-name-looks-like">How a bucket name looks like?</h2>
+<p>After analyzing alot of buckets, here are the most common pattern I found:</p>
+
+<ul>
+  <li>&lt;main_name&gt;&lt;separator&gt;&lt;word&gt;</li>
+  <li>&lt;word&gt;&lt;separator&gt;&lt;main_name&gt;</li>
+  <li>&lt;subdomain&gt;</li>
+</ul>
+
+<p>Where <code class="highlighter-rouge">main_name</code> usually is the name of the company or the domain and <code class="highlighter-rouge">separator</code> usually is a dot <code class="highlighter-rouge">.</code> or a dash <code class="highlighter-rouge">-</code>, example:</p>
+
+<ul>
+  <li>10degres-static</li>
+  <li>prod.10degres</li>
+  <li>assets.10degres.net</li>
+</ul>
+
+<p>It’s also very common to find multiple “level” of separation, example:</p>
+
+<ul>
+  <li>10degres-backups-2016</li>
+  <li>dev.www.10degres.net</li>
+</ul>
+
+<p>Pretty rare, but sometimes separators are mixed:</p>
+
+<ul>
+  <li>img-dev.10degres.net</li>
+  <li>static.10-degres.net</li>
+</ul>
+
+<h2 id="how-to-access-a-bucket">How to access a bucket?</h2>
+
+<p>There is 4 ways to access a bucket:</p>
+<ul>
+  <li>subdomain of s3.amazonaws.com, ex: <code class="highlighter-rouge">https://xxxxxxxxxx.s3.amazonaws.com</code></li>
+  <li>subdirectory of s3.amazonaws.com, ex: <code class="highlighter-rouge">https://s3.amazonaws.com/xxxxxxxxxx</code></li>
+  <li>subdomain of Cloudfront, ex: <code class="highlighter-rouge">https://xxxxxxxxxx.cloudfront.net</code></li>
+  <li><code class="highlighter-rouge">awscli</code> the command line environment tool for AWS, ex: <code class="highlighter-rouge">aws s3 ls s3://xxxxxxxxxx</code></li>
+</ul>
+
+<p>From here you probably already guessed the next chapter…</p>
+
+<h2 id="how-to-find-buckets">How to find buckets?</h2>
+
+<p>To Find buckets, you can use the tools you already use when you perform recon on a new program/domain/host:</p>
+
+<ul>
+  <li>
+    <p>sudbomain discovery: Sublist3r, dnsrecon, altdns, <a href="https://www.threatcrowd.org/searchApi/v2/domain/report/?domain=cloudfront.net" target="_blank">threadcrowd.org</a>…
+<img src="/images/s3bucket-theharvester.png" alt="Sudbomain discovery with theharvester" /></p>
+  </li>
+  <li>
+    <p>subdirectory discovery: dirb, wfuzz, gobuster…
+<img src="/images/s3bucket-wfuzz.png" alt="Subdirectory discovery witf WFuzz" /></p>
+  </li>
+  <li>
+    <p>both: Google, Burp Suite and many others…
+<img src="/images/s3bucket-burp.png" alt="Subdomain discovery with Burp Suite" /></p>
+  </li>
+</ul>
+
+<h2 id="dedicated-tools">Dedicated tools</h2>
+
+<p>Some dedicated tools have been released to discover buckets:</p>
+
+<ul>
+  <li><a href="https://digi.ninja/projects/bucket_finder.php" target="_blank">Bucket Finder</a> by DigiNinja</li>
+  <li><a href="https://github.com/nahamsec/lazys3" target="_blank">laszyS3</a> by Jobert Abma and Ben Sadeghipour</li>
+  <li><a href="https://github.com/michenriksen/bucketlist" target="_blank">bucketlist</a> by Michen Riksen</li>
+  <li><a href="https://github.com/gwen001/s3-buckets-finder" target="_blank">s3-bucket-finder</a> by me<br />
+I also wrote <a href="/assets/cloudfront.txt" target="_blank">a small script</a> that try to determine what is behind a Cloudfront subdomain.</li>
+</ul>
+
+<h2 id="additionnal-notes">Additionnal notes</h2>
+
+<p>Even if a bucket is read only, you can report it if the datas available are hot, take a look at Hackerone where the researcher wrote a <a href="https://hackerone.com/reports/202725" target="_blank" class="flashlink">report to Mapbox</a> and got a nice reward.
+<br /><br />
+Even if a bucket is empty, you can also report it, the danger still here, a hacker could use the place to store hacked datas (movies, software…) or serve malicious files.
+<br /><br />
+A bucket can be readable from the command line tool <code class="highlighter-rouge">awscli</code> but not with your browser, try both way.
+<br /><br />
+All files contained in a bucket can have different permissions, test them all.
+<br /><br />
+A bucket can be configured to serve only one region, you will get a very specific message in that case, so test all region to find the good one (<a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region" target="_blank" class="flashlink">see the region list</a>).
+<br /><br />
+Some buckets are not reachable via <code class="highlighter-rouge">http</code>, you should prefer <code class="highlighter-rouge">https</code>.
+<br /><br />
+At this time, there is no real way to know the owner of a bucket. The only thing you can do, if you have access to the ACL (via the command line method <code class="highlighter-rouge">get-bucket-acl</code>), is to compare the owner of two different buckets. So take care when/who you send a report.</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#aws" title="Pages tagged aws" class="tag"><span class="term">aws</span></a><a href="http://10degres.net/tags/#s3" title="Pages tagged s3" class="tag"><span class="term">s3</span></a><a href="http://10degres.net/tags/#bucket" title="Pages tagged bucket" class="tag"><span class="term">bucket</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/kick-the-bucket/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/kick-the-bucket/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/kick-the-bucket/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="http://docs.aws.amazon.com/cli/latest/reference/s3/" target="_blank">Documentation of S3 commands</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank">Documentation of s3api</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/wordpress-testing/">&laquo; Wordpress testing</a></h4>
+			<span>Published on September 12, 2017</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/my-way-to-go/">My way to go &raquo; </a></h4>
+			<span>Published on April 19, 2017</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

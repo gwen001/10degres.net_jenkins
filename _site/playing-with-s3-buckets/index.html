@@ -1,0 +1,335 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Playing with S3 buckets &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="aws, s3, bucket">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Playing with S3 buckets">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Playing with S3 buckets">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/playing-with-s3-buckets/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/playing-with-s3-buckets/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Playing with S3 buckets">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/playing-with-s3-buckets/" rel="bookmark" title="Playing with S3 buckets">Playing with S3 buckets</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2016-04-15T00:00:00+01:00">April 15, 2016</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>Amazon Simple Storage Service aka S3 is a cloud storage for the Internet. 
+You first create a bucket and you can then upload any number of objects (photos, videos, documents etc.) to it.
+However if the permissions (ACL) are not well settled, bad things can happen.</p>
+
+<p>Recently disclosed by Hackerone, a misconfiguration in their Amazon Web Services S3 buckets allowed any authenticated user to write in there.
+From here an attacker could upload a malicious file waiting for someone open it, or overwrite existing files.</p>
+
+<p>When you crawl a website, you can you can check the presence of S3 by intercepting calls to <code class="highlighter-rouge">amazonaws.com</code>.
+The bucket call can have different look:
+<code class="highlighter-rouge">https://&lt;aws_region&gt;.amazonaws.com/&lt;bucket_name&gt;/&lt;file_path&gt;</code><br />
+or:<br />
+<code class="highlighter-rouge">https://&lt;bucket_name&gt;.amazonaws.com/&lt;file_path&gt;</code></p>
+
+<p>Once you get the bucket name, you can execute many tests using <strong>awscli</strong> to check his permissions.
+If you try to access to a bucket who doesn’t exist, you’ll get this message:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>aws s3 ls s3://gwen001-azertyuiop  
+A client error <span class="o">(</span>NoSuchBucket<span class="o">)</span> occurred when calling the ListObjects operation: The specified bucket does not exist
+</code></pre>
+</div>
+
+<p>If you try to execute a command you are not allowed to, you’ll then get something like this:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>aws s3 ls s3://gwen001-test000/
+A client error <span class="o">(</span>AccessDenied<span class="o">)</span> occurred when calling the ListObjects operation: Access Denied
+</code></pre>
+</div>
+<!--more-->
+<p>For the purpose of this article I created some buckets with differents permissions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bucket</th>
+      <th>Grantee</th>
+      <th>Read</th>
+      <th>Write</th>
+      <th>get ACL</th>
+      <th>set ACL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>test000</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test001</td>
+      <td>me</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>test002</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test003</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test004</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test005</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Using my brain and bit of Bash, I wrote a script based on a wordlist to discover and test my buckets.
+The wordlist: 
+<code class="highlighter-rouge">test000 test001 testme test002 test003 test004 test005 testx</code></p>
+
+<p>The script:<br />
+https://github.com/gwen001/pentest-tools/blob/master/s3-buckets-force.sh</p>
+
+<p>The output:
+<a href="/images/s3-bucket-test.png"><img src="/images/s3-bucket-test.png" alt="s3 bucket test" /></a></p>
+
+<p>Finally 6 buckets has been found, which is correct, and the permissions has also been tested.</p>
+
+<p>When <code class="highlighter-rouge">Edit Permissions</code> is allowed for <code class="highlighter-rouge">Everyone</code>, this is the deadly zone but don’t underestimate the power of read only.
+From a pentester point of view this is a very good start to gather informations about your business and for a hacker it’s a great source to leak your datas.</p>
+
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#aws" title="Pages tagged aws" class="tag"><span class="term">aws</span></a><a href="http://10degres.net/tags/#s3" title="Pages tagged s3" class="tag"><span class="term">s3</span></a><a href="http://10degres.net/tags/#bucket" title="Pages tagged bucket" class="tag"><span class="term">bucket</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/playing-with-s3-buckets/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/playing-with-s3-buckets/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/playing-with-s3-buckets/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/S3_ACLs_UsingACLs.html" target="_blank">Managing your bucket access with ACLs</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://www.youtube.com/watch?v=_x5VKuFjvrk" target="_blank">Demo video from Pete Yaworks</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://hackerone.com/reports/128088" target="_blank">The initial report on Hackerone</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/image-gallery-sql-injection/">&laquo; Image Gallery SQL Injection</a></h4>
+			<span>Published on May 20, 2016</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/an-extremely-buggy-web-app/">An extremely buggy web app ! &raquo; </a></h4>
+			<span>Published on January 28, 2016</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

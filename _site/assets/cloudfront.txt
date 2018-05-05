@@ -1,0 +1,311 @@
+<?php
+
+class Utils
+{
+	const TMP_DIR = '/tmp/';
+	const T_SHELL_COLORS = array(
+		'nc' => '0',
+		'black' => '0;30',
+		'red' => '0;31',
+		'green' => '0;32',
+		'orange' => '0;33',
+		'blue' => '0;34',
+		'purple' => '0;35',
+		'cyan' => '0;36',
+		'light_grey' => '0;37',
+		'dark_grey' => '1;30',
+		'light_red' => '1;31',
+		'light_green' => '1;32',
+		'yellow' => '1;33',
+		'light_blue' => '1;34',
+		'light_purple' => '1;35',
+		'light_cyan' => '1;36',
+		'white' => '1;37',
+	);
+
+	public static function _print( $str, $color )
+	{
+		echo "\033[".self::T_SHELL_COLORS[$color]."m".$str." \033[0m";
+	}
+	public static function _println( $str, $color )
+	{
+		self::_print( $str, $color );
+		echo "\n";
+	}
+}
+
+	
+function usage( $err=null ) {
+  echo 'Usage: '.$_SERVER['argv'][0]." <file>\n";
+  if( $err ) {
+    echo 'Error: '.$err."!\n";
+  }
+  exit();
+}
+
+if( $_SERVER['argc'] != 2 ) {
+  usage();
+}
+
+$src = trim( $_SERVER['argv'][1] );
+if( !is_file($src) ) {
+	usage( $src.' file not found' );
+}
+
+$t_domain = file( $src, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+
+$n = 0;
+$cnt = count( $t_domain );
+echo $cnt." sudomains to test\n\n";
+
+$n_child = 0;
+$max_child = 30;
+$min_sleep = 10000;
+$max_sleep = 100000;
+$current = 0;
+$cnt_notice = 1000;
+$t_process = [];
+$t_signal_queue = [];
+
+posix_setsid();
+declare( ticks=1 );
+pcntl_signal( SIGCHLD, 'signal_handler' );
+
+
+for( $current=0 ; $current<$cnt ; )
+{
+	if( ($current%$cnt_notice) == 0 ) {
+		echo "Current ".$current."...\n";
+	}
+	
+	if( $n_child < $max_child )
+	{
+		$pid = pcntl_fork();
+
+		if( $pid == -1 ) {
+			// fork error
+		} elseif( $pid ) {
+			// father
+			$n_child++;
+			$current++;
+			$t_process[$pid] = uniqid();
+	        if( isset($t_signal_queue[$pid]) ){
+	        	$signal_handler( SIGCHLD, $pid, $t_signal_queue[$pid] );
+	        	unset( $t_signal_queue[$pid] );
+	        }
+		} else {
+			// child process
+			testSubdomain( $current, $t_domain[$current] );
+			exit( 0 );
+		}
+	}
+
+	usleep( rand($min_sleep,$max_sleep) );
+}
+
+
+function getAwsDomain( $d )
+{
+	if( stristr($d,'.s3.amazonaws.com') || stristr($d,'.cloudfront.net') ) {
+		return $d;
+	}
+
+	exec( 'host '.$d, $output );
+	
+	if( is_array($output) && count($output) )
+	{
+		foreach( $output as $o )
+		{
+			$m = preg_match( '/'.$d.' is an alias for (.*.s3.amazonaws.com)./', $o, $match );
+			if( $m ) {
+				return $match[1];
+			}
+			$m = preg_match( '/'.$d.' is an alias for (.*.cloudfront.net)./', $o, $match );
+			if( $m ) {
+				return $match[1];
+			}
+		}
+	}
+	
+	return $d;
+}
+
+
+function testSubdomain( $n, $d )
+{
+	$reald = getAwsDomain( $d );
+	//var_dump( $reald );
+	
+	$url = 'https://'.$reald;
+	
+	$c = curl_init();
+	curl_setopt( $c, CURLOPT_URL, $url );
+	curl_setopt( $c, CURLOPT_CONNECTTIMEOUT, 5 );
+	//curl_setopt( $c, CURLOPT_USERAGENT, self::T_USER_AGENT[rand(0,self::N_USER_AGENT)] );
+	curl_setopt( $c, CURLOPT_FOLLOWLOCATION, false );
+	curl_setopt( $c, CURLOPT_RETURNTRANSFER, true );
+	curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
+	//curl_setopt( $c, CURLOPT_HEADER, true );
+	$r = curl_exec( $c );
+	//var_dump( $r );
+	$t_info = curl_getinfo( $c );
+	//var_dump( $t_info );
+	curl_close( $c );
+
+	$dead = false;
+	$http_code = $t_info['http_code'];
+	$txt = $n.'. Testing '.$url.' ('.$http_code.') -> ';
+
+	if( !$r )
+	{
+		$url = 'http://'.$reald;
+
+		$c = curl_init();
+		curl_setopt( $c, CURLOPT_URL, $url );
+		curl_setopt( $c, CURLOPT_CONNECTTIMEOUT, 5 );
+		//curl_setopt( $c, CURLOPT_USERAGENT, self::T_USER_AGENT[rand(0,self::N_USER_AGENT)] );
+		curl_setopt( $c, CURLOPT_FOLLOWLOCATION, false );
+		curl_setopt( $c, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $c, CURLOPT_SSL_VERIFYPEER, false );
+		//curl_setopt( $c, CURLOPT_HEADER, true );
+		$r = curl_exec( $c );
+		//var_dump( $r );
+		$t_info = curl_getinfo( $c );
+		//var_dump( $t_info );
+		curl_close( $c );
+		
+		$http_code = $t_info['http_code'];
+		$txt = $n.'. Testing '.$url.' ('.$http_code.') -> ';
+
+		if( !$r ) {
+			$dead = true;
+			$txt .= 'looks dead';
+			$color = 'light_grey';
+		}
+	}
+	
+	if( !$dead )
+	{
+		//var_dump( $http_code );
+		
+		if( $http_code == 404 ) {
+			$txt .= 'nothing here';
+			$color = 'light_grey';
+		}
+		elseif( $http_code == 403 && strstr($r,'Bad request.') ) {
+			$txt .= 'try subdomain takeover';
+			$color = 'light_cyan';
+		}
+		elseif( $http_code == 403 && strstr($r,'AccessDenied') ) {
+			$txt .= 'access denied';
+			$color = 'white';
+		}
+		elseif( $http_code == 403 && strstr($r,'AllAccessDisabled') ) {
+			$txt .= 'access denied';
+			$color = 'white';
+		}
+		elseif( $http_code == 403 && strstr($r,"<p>You don't have permission to access") ) {
+			$txt .= 'server error (cloudfront)';
+			$color = 'white';
+		}
+		elseif( $http_code == 403 && strstr($r,'<center><h1>403 Forbidden</h1></center>') ) {
+			$txt .= 'server error (extern - nginx)';
+			$color = 'white';
+		}
+		elseif( $http_code == 403 && strstr($r,'<title>403 - Forbidden: Access is denied.</title>') ) {
+			$txt .= 'server error (extern - iis)';
+			$color = 'white';
+		}
+		elseif( $http_code == 403 && strstr($r,'o8888oo  ooo  oooo  ooo. .oo.  .oo.   888oooo.   888  oooo d8b') ) {
+			$txt .= 'tumblr';
+			$color = 'blue';
+		}
+		elseif( $http_code == 502 && strstr($r,"CloudFront wasn't able to connect to the origin.") ) {
+			$txt .= ' origin dead';
+			$color = 'light_grey';
+		}
+		elseif( $http_code == 502 && strstr($r,"CloudFront attempted to establish a connection with the origin, but either the attempt failed or the origin closed the connection.") ) {
+			$txt .= ' origin dead';
+			$color = 'light_grey';
+		}
+		elseif( $http_code == 503 && strstr($r,"Failed to contact the origin.") ) {
+			$txt .= ' origin dead';
+			$color = 'light_grey';
+		}
+		elseif( $http_code == 504 && strstr($r,"CloudFront attempted to establish a connection with the origin, but either the attempt failed or the origin closed the connection.") ) {
+			$txt .= ' origin dead';
+			$color = 'light_grey';
+		}
+		elseif( $http_code == 200 && strstr($r,'ListBucketResult') ) {
+			$m = preg_match( '#<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>(.*)</Name>#i', $r, $matches );
+			//var_dump( $matches );
+			$txt .= 'try bucket takeover -> ';
+			if( $m ) {
+				$txt .= $matches[1].' ';
+			}
+			$color = 'green';
+		}
+		elseif( $http_code == 200 ) {
+			$txt .= ' looks like there is a website here';
+			$color = 'orange';
+		}
+		elseif( $http_code == 302 ) {
+			$txt .= ' looks like there is a website here';
+			$color = 'orange';
+		}
+		elseif( $http_code == 301 ) {
+			$txt .= ' looks like there is a website here';
+			$color = 'orange';
+		}
+		else {
+			$txt .= 'dunno';
+			$color = 'yellow';
+		}
+	}
+	
+	Utils::_println( $txt, $color );
+}
+
+
+
+// http://stackoverflow.com/questions/16238510/pcntl-fork-results-in-defunct-parent-process
+// Thousand Thanks!
+function signal_handler( $signal, $pid=null, $status=null )
+{
+	$pid = (int)$pid;
+	global $t_signal_queue, $t_process, $n_child;
+	
+	// If no pid is provided, Let's wait to figure out which child process ended
+	if( !$pid ){
+		$pid = pcntl_waitpid( -1, $status, WNOHANG );
+	}
+	
+	// Get all exited children
+	while( $pid > 0 )
+	{
+		if( $pid && isset($t_process[$pid]) ) {
+			// I don't care about exit status right now.
+			//  $exitCode = pcntl_wexitstatus($status);
+			//  if($exitCode != 0){
+			//      echo "$pid exited with status ".$exitCode."\n";
+			//  }
+			// Process is finished, so remove it from the list.
+			$n_child--;
+			unset( $t_process[$pid] );
+		}
+		elseif( $pid ) {
+			// Job finished before the parent process could record it as launched.
+			// Store it to handle when the parent process is ready
+			$t_signal_queue[$pid] = $status;
+		}
+		
+		$pid = pcntl_waitpid( -1, $status, WNOHANG );
+	}
+	
+	return true;
+}
+
+
+exit();
+
+?>

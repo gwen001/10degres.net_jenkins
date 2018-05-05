@@ -1,0 +1,311 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>DVWA - XSS reflected &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="dvwa, xss, training">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="DVWA - XSS reflected">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA - XSS reflected">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/dvwa-xss-reflected/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/dvwa-xss-reflected/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="DVWA - XSS reflected">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/dvwa-xss-reflected/" rel="bookmark" title="DVWA - XSS reflected">DVWA - XSS reflected</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-01-20T00:00:00+00:00">January 20, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>According to OWASP Top 10, Cross-Site Scripting aka XSS takes the 3rd place in the more common and important web vulnerabilities list. 
+Her primary goal is to spoof the session of another user by stealing his cookie id, usually a privileged user like an admin. 
+You can train XSS in Damn Vulnerable Web Application, here are some tests you can perform.</p>
+
+<h2 id="low">Low</h2>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nb">array_key_exists</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="k">NULL</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">''</span> <span class="p">)</span> <span class="p">{</span>  
+  <span class="nv">$isempty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>  
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;pre&gt;'</span><span class="p">;</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">];</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;/pre&gt;'</span><span class="p">;</span>  
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>This code output the <code class="highlighter-rouge">name</code> parameter without any filter so it’s very vulnerable to XSS!
+<!--more-->
+If you provide a single name it works perfectly but if you insert any HTML code it will be interpreted:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low0.png"><img src="/images/dvwa_xss_reflected_low0.png" alt="DVWA XSS reflected low" /></a></p>
+
+<p>That means you can also use JavaScript:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low1.png"><img src="/images/dvwa_xss_reflected_low1.png" alt="DVWA XSS reflected low" /></a></p>
+
+<h2 id="medium">Medium</h2>
+
+<p>In the second level, the parameter is sanitized by removing the HTML tag <code class="highlighter-rouge">&lt;script&gt;</code> :</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">array_key_exists</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="k">NULL</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">''</span><span class="p">){</span>
+  <span class="nv">$isempty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">' &lt;pre&gt;'</span><span class="p">;</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s1">'&lt;script&gt;'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;/pre&gt;'</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Is that enough? Of course not because the text you provide can have many different forms. 
+The test is not even case insensitive. 
+So you can simply use the same payload as previously and just add an uppercase letter or some few useless characters like white spaces:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low2.png"><img src="/images/dvwa_xss_reflected_low2.png" alt="DVWA XSS reflected medium" /></a></p>
+
+<h2 id="high">High</h2>
+
+<p>The final level is a good example of how to protect your site. 
+Before echoing the <code class="highlighter-rouge">name</code> the script escapes it with <code class="highlighter-rouge">htmlspecialchars()</code>. 
+According to <a href="http://php.net/manual/fr/function.htmlspecialchars.php" title="PHP documentation" class="flashlink" target="_blank">PHP htmlspecialchars</a>, 
+this function converts all special characters to HTML entities. 
+<code class="highlighter-rouge">&lt; </code> will be converted to <code class="highlighter-rouge">&amp;lt;</code>, <code class="highlighter-rouge">&gt;</code> to <code class="highlighter-rouge">&amp;gt;</code> and so on… 
+So the HTML or JavaScript code won’t run.</p>
+
+<p>When a XSS is found, no matter the code you submit, it will be evaluated. 
+You can then perform a redirection:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="o">=</span><span class="s1">'http://10degres.net'</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>
+
+<p>Deface the site:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'H@ck3d by true l33t r0x0r'</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>
+
+<p>Or display cookies…</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#dvwa" title="Pages tagged dvwa" class="tag"><span class="term">dvwa</span></a><a href="http://10degres.net/tags/#xss" title="Pages tagged xss" class="tag"><span class="term">xss</span></a><a href="http://10degres.net/tags/#training" title="Pages tagged training" class="tag"><span class="term">training</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/dvwa-xss-reflected/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/dvwa-xss-reflected/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/dvwa-xss-reflected/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://www.owasp.org/index.php/Top_10_2013-Top_10" target="_blank">OWASP Top 10</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS)" target="_blank">OWASP XSS description</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet" target="_blank">Filter Evasion Cheat Sheet</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="http://excess-xss.com/" target="_blank">A (very) comprehensive tutorial on cross-site scripting</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="/damn-vulnerable-web-application/">Damn Vulnerable Web Application</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/exploit-exercices-nebula-level03/">&laquo; Exploit Exercices, Nebula &ndash; level03</a></h4>
+			<span>Published on January 22, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/browser-extensions/">Browser extensions &raquo; </a></h4>
+			<span>Published on January 14, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

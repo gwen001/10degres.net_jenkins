@@ -1,0 +1,48 @@
+<p>We all know the famous quote “<em>Think out of the box</em>”.
+Technical knowledge is important but creativity is also.
+In bug bounty, to get nice rewards, sometimes you don’t need to be a crazy coder or great network engineer, you simply need to try what other didn’t.</p>
+
+<p>This year, Slack get in trouble because many developers leave their credentials in their public repository.
+Last year Uber had to deal with a major security issue: database keys were stored in GitHub (this leads to a sweet bounty for the finder).</p>
+
+<p>I found an interesting project, on GitHub itself, to parse the search engine results: <a href="https://github.com/melvinsh/vcsmap" class="flashlink" target="_blank">vcsmap from Melvinsh</a>.
+Unfortunately the scrapper seems to have trouble with search that required authentication.
+Since I don’t understand Ruby, I wrote my own tool with PHP.
+<!--more--></p>
+
+<p>The code is available on my <a href="https://github.com/gwen001/github-search" class="flashlink" target="_blank">GitHub repository</a> and for sure, you can tweak it to fit your needs.
+Usage is:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Usage: php github-search.php [OPTIONS]
+
+Options:
+    -c  set cookie session
+    -e	file extension filter
+    -f  looking for file
+    -h  print this help
+    -o  provide organization name
+    -r  maximum number of results, default 50
+    -s  search string
+
+Examples:
+    php github-search.php -o myorganization -s db_password
+    php github-search.php -o myorganization -f wp-config.php -s db_password
+    php github-search.php -c "user_session=B0KqycP8LlYORc-s3WFZoH71TG" -f wp-config -e php -r 1000
+</code></pre>
+</div>
+
+<p>An organization name must be provided when you are not authenticated on GitHub, that why the cookie option exists, of course you should use your own cookie value. And here is the output:</p>
+
+<p><a href="/images/github-search-example.png"><img src="/images/github-search-example.png" alt="GitHub search PHP tool" /></a></p>
+
+<p>The following fields are displayed:</p>
+
+<ul>
+  <li>repository: name of the repository where the file/string has been found</li>
+  <li>file: name of the file found or where the string has been found</li>
+  <li>language: the estimated language used in the file</li>
+  <li>summary: the lines where the string has been found with their number</li>
+  <li>link: direct link to the concerned file</li>
+</ul>
+
+<p>Give it a try and let me know if you find a bug!</p>

@@ -1,0 +1,59 @@
+<p>Cross-Site Request Forgery aka CSRF is an attack unintentionally triggered by the user himself. 
+It sends HTTP requests to execute unexpected actions in different ways: trough <code class="highlighter-rouge">img</code> tag to perform <code class="highlighter-rouge">GET</code> requests or with Ajax requests when <code class="highlighter-rouge">POST</code> is required. 
+You can learn basic CSRF in <a href="/damn-vulnerable-web-application/" title="Damn Vulnerable Web Application">DVWA</a>.</p>
+
+<p>To perform this CSRF you firstly need to log in, then you must visit a malicious site who will perform a stealth HTTP request who will submit the change password form with specific values.</p>
+
+<h2 id="low">Low</h2>
+
+<p>The original request can be found by using a local proxy like Burp Suite or analyzing HTTP headers with a browser extension like <a href="https://addons.mozilla.org/fr/firefox/addon/live-http-headers/" class="flashlink" target="_blank">Live HTTP Headers</a>.
+The payload:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>My malicious website<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;p&gt;</span>It works like a charm!<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"http://local.dvwa.com/vulnerabilities/csrf/?password_new=azerty&amp;password_conf=azerty&amp;Change=Change"</span> <span class="na">width=</span><span class="s">"1"</span> <span class="na">height=</span><span class="s">"1"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre>
+</div>
+
+<!--more-->
+
+<p>The attributes <code class="highlighter-rouge">width</code> and <code class="highlighter-rouge">height</code> are only used to hide the broken image.
+This code displays:</p>
+
+<p><a href="/images/dvwa-csrf-low.png"><img src="/images/dvwa-csrf-low.png" alt="dvwa csrf low" /></a></p>
+
+<p>The hash of the password changed in my database from <code class="highlighter-rouge">5f4dcc3b5aa765d61d8327deb882cf99</code> to <code class="highlighter-rouge">ab4f63f9ac65152575886860dde480a1</code>, so it worked perfectly… 
+We can now take a look at the Apache logs.</p>
+
+<p>Access log of the malicious server:</p>
+
+<p><a href="/images/dvwa-csrf-malicious.png"><img src="/images/dvwa-csrf-malicious.png" alt="dvwa csrf malicious" /></a></p>
+
+<p>Access log of the DVWA server:</p>
+
+<p><a href="/images/dvwa-csrf-access.png"><img src="/images/dvwa-csrf-access.png" alt="dvwa csrf access" /></a></p>
+
+<p>However an error has been generated because we tried to display an image which is not:</p>
+
+<p><a href="/images/dvwa-csrf-error.png"><img src="/images/dvwa-csrf-error.png" alt="dvwa csrf error" /></a></p>
+
+<h2 id="medium">Medium</h2>
+
+<p>In this level a protection has been implemented. 
+The developper checks the referer to be sure that the incoming request comes from the same local server. 
+However this control is defective. 
+If I rename my script on my malicious server from <code class="highlighter-rouge">payload.html</code> to <code class="highlighter-rouge">127.0.0.1.html</code> it will work. 
+Plus the regexp is mal formed and doesn’t protect special chars like dot ‘<code class="highlighter-rouge">.</code>’ so <code class="highlighter-rouge">127908071.html</code> or <code class="highlighter-rouge">aa127U0B0K1zz.php</code> are also valid filenames.</p>
+
+<h2 id="high">High</h2>
+
+<p>Finally this level is well protected. The old password is required (which should be only known by the concerned user himself) and cannot be predicted in an automated script.</p>
+
+<p>There is differents ways to secure sensitive actions. A well known method is to use a random token placed in the form and checked after the submission. 
+Another approach is to configure the sessions to close with the browser and with a limited timelife. That way the time window when the vulnerability is effective is shorter.</p>

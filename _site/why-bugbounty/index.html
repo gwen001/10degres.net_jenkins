@@ -1,0 +1,365 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Why Bug Bounty &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="bug bounty">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/images/bb-mybblife.png">
+<meta name="twitter:title" content="Why Bug Bounty">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why Bug Bounty">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/why-bugbounty/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/images/bb-mybblife.png">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/why-bugbounty/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Why Bug Bounty">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/why-bugbounty/" rel="bookmark" title="Why Bug Bounty">Why Bug Bounty</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2018-03-29T00:00:00+01:00">March 29, 2018</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>People are usually surprised by the answer when they ask me what I do for living, questions rain, here are some answers. 
+My first report was a XSS on a Yahoo acquisition, it happened the 26th January 2016. Since this date, I (try to) perform Bug Bounty as a full time job on <a href="https://hackerone.com" class="flashlink" target="_blank">Hackerone</a>. 
+Did I say “job”? I don’t really consider bug bounty/hacking as a “job”, it’s more a hobby or a passion, because you have to be passionnate to perform in this domain. 
+So let’s say that bug bounty is my main source of income. 
+Below why I do this “job”, why it fits perfectly to me and why I love it.<br />
+<!--more-->
+<br />
+<a href="/images/bb-mybblife.png"><img src="/images/bb-mybblife.png" alt="My Bug Bounty life" /></a></p>
+
+<h2 id="-whoami"># whoami</h2>
+
+<p>First of all: life is unfair. Depending where you are born, everything is different.
+So to understand my point of view, you need to know a little bit about me.</p>
+
+<p>I am 40+ years old, I am French, I had always lived/worked in Paris and the close suburb.
+I started web development at the end of 1999. It was the very beginning of the Internet in my country.
+At that time we had “Webmasters”, you know, that person that could do everything, well she had to do everything because she was the only one to understand all of this shit: code, hosting services, integration, database, design and sometimes customer relationships.
+1 person where we now have 10.
+A friend told me about PHP3, it sounded pretty easy compared to another compiled language, <em>“If you are comfortable with C, you will be easy with PHP”</em>, true. 
+<em>“You don’t need to declare the variables nor initialize anything, you don’t even have to care about the errors”</em>, so cool!</p>
+
+<p>18 years later, I’m definitely not a PHP guru nor an Internet master. I had mainly coded basic websites, internal admin panels and small testing tools since I started security, in 2015, after I was fired for security reasons (understand: for having reported several SQLi in the main website of my company).
+Like many web developers, I didn’t know anything about security, I started from zero. 
+3 hard months to get <a href="https://www.offensive-security.com/information-security-certifications/oscp-offensive-security-certified-professional/">OSCP</a>. 
+At the same time I heard about bug bounty, I jumped into it at the beginning of 2016.</p>
+
+<h2 id="-money">$ money</h2>
+
+<p>Hey what did you expect?</p>
+
+<p>In what kind of (legal) job I could earn 10k$ in 2 days? Seriously??
+Even in my wildest dreams, I would have never imagine that. Ok it’s not everyday, but… I don’t really need to earn that much every single day.
+Some people ask me if I’m not afraid because of that, because “the salary” is not stable.
+Yeah it’s true, it’s not reliable. But the thing I love is that it mainly depends on me.</p>
+
+<p>In a company, who decides my salary?
+In a company, whatever my knowledge, my skills, no matter the time I spend at the office, if I don’t have good feelings with my supervisor, I’m screwed.
+If (s)he hates me, (s)he will only relate bullshits about me to his/her own boss or (s)he will get credit for my work. 
+My salary is mainly linked to this person.
+That’s it.
+When I finally get something, I only get a very little something, close to nothing compared of what I asked, what I really deserve for my devotion, for those hours spent on my weekends to repair the errors done by others.</p>
+
+<p>In bug bounty, it’s very different.
+The money mainly depends on my knowledge because the rewards depend on the severity of the vulnerabilities I report.
+Ok the companies decide the bounties, true again, but if I don’t like the bounties offered by a company, I can simply move to another one.
+There are many many programs and some companies offer big payments like Facebook, Google, Yahoo, Uber and many others. 
+They are public programs, they offer great bounties and no, they are not bulletproof, there are a lot of holes everywhere, it’s up to me to find them.
+Month after month my knowledge increases, so the more I practice, the more chance I get to find big issues and grab big bounties. 
+However, I always keep in my mind that bug bounty is like every other freelance job, no work = no money.</p>
+
+<h2 id="-learning">+ learning</h2>
+
+<p>A company usually hires me for my skills, my <u>current</u> skills, not the skills I’ll potentially have (or not) in the future.
+They have some tasks in the pool and they need someone to flush the queue, they need me right here right now to do this stuff. 
+My potential, my ability to learn, what I will be able to do in 5 years, they can’t bet on this because they don’t know me and most of the time they simply don’t care about that.
+Because of that I can only apply to jobs I am qualified for, I already know, I have already done before.
+Some nice companies could help me to evolve, to move from a chair to another, they can offer me a course where I’ll get new knowledge, hopefully.
+But it’s still pretty rare, too rare in France in my opinion, it has never happened to me, I have always paid the courses by myself.</p>
+
+<p>In bug bounty each case is different.
+I meet so many different types of architecture and crazy combinations of different technologies.
+I have to take care of older vulnerabilites (sometimes very very old stuff) but I also have to stay up to date because new bugs appear every day.
+I read thousands of articles, I watch videos, I buy books, I follow other hackers, I test the things by myself which makes me better and better.
+My skills grow very fast. 
+I learn something new every day and it’s fucking exciting!</p>
+
+<h2 id="-gratefulness">&amp; gratefulness</h2>
+
+<p>In my country, people like me (like you?), geeks, we are just stupid kids that play video games all day. 
+We are not well considered by companies, we are like tissue, use it, throw it away.
+<em>“You’re not happy here? Go away, there are thousands of people like you waiting for your seat.”</em></p>
+
+<p>In bug bounty, I have been amazed by how the companies can be nice.
+I received much more congratulations in the first 3 months of my hunter career than the past 18 years. Isn’t that crazy? 
+The rewards themselves can be considered as a thanks but it’s definitely not the most important for me, I appreciate the words much more.<br />
+<em>“Damn man you did a great job, that was awesome, we are happy to give you 300$ for that.”</em><br />
+Bug bounty? Daily. Company? Legend.<br />
+<a href="/images/bb-thanks.png"><img src="/images/bb-thanks.png" alt="Bug Bounty thanks" /></a></p>
+
+<h2 id="o-statisfaction">\o/ statisfaction</h2>
+
+<p>Trust me, there is nothing more exciting than popping a shell on a remote server, not even sex, really.
+No matter the bounty. 
+I can dance like an idiot watching the result of the commands.
+And when the issue is fixed, I have this feeling that I did something good.
+I’m so happy to see that all these hours/days/weeks/months spent to learn hacking are finally rewarded.
+All this time working so fucking hard, all these failures, and finally get it.
+Days after the report is closed I still read it again and again, proud of myself :)</p>
+
+<p>Or being able to bypass a SSRF filter, it’s like successfully solving the biggest challenge of my life.
+It reminds me of the first time I finished this one, same feeling, every time.<br />
+<a href="/images/bb-rubiks-cube.png"><img src="/images/bb-rubiks-cube.png" alt="Bug Bounty Rubik's Cube" /></a></p>
+
+<h2 id="-contact">&gt; contact</h2>
+
+<p>Since I perform bug bounty, I joined Twitter, I have been to several conventions, where I met many people in the security industry like Sam Houston in London.
+I have been in touch with people from big companies like Yahoo or Uber.
+I share techniques with some of the more talented hunters on this planet, I spent some days with Geekboy in India, Nicolas Grégoire in Paris, Jobert Abma and Pete Yaworski in Québec, and many others…
+This is definitely something that would never have happened if I would have stayed stuck in my small office (or big open space) in a company because I mainly had contact with my close colleagues, sometimes the office next to us but come on…</p>
+
+<p>Plus, since I only need a computer and a Wi-Fi connection to “work”, I can do that from anywhere in the world. Any country, any hotel or any coffee shop… 
+I can travel to meet my fellow hunters and make money at the same time or I can visit the company I hack.
+You know, meet those people you talk with but you never see, that’s so cool to meet them in real life.
+I have never met so many interesting people that could teach me such interesting things.</p>
+
+<h2 id="-whats-next">? what’s next</h2>
+
+<p>I consider bug bounty as a step in my life, I don’t plan to do it for ever.
+For now it’s the best way for me to learn &amp; earn at the same time.
+My goal is to perform pentest and whatever the platform, being able to enter the system of the company I’m dealing with, no matter if it has webapps or not.
+However since I have been a web developper for ages, web testing is obviously my entry point in the security world.</p>
+
+<p>I think the next step will be network and system testing but for that, even if I already have the basics, I still have many many things to learn.
+I had some small experiences with CTF in the conventions I have been to, it was so fun and I learn so much there that I will probably give a try that way, it’s also a good way to meet people.</p>
+
+<h2 id="-conclusion">| conclusion</h2>
+
+<p>Money, knowledge, thanks, people, personal satisfaction, all these things make bug bounty the best “job” ever for me.
+The best way to make your own opinion is to give it a try, also take care to read the stories linked at the very bottom of this page.</p>
+
+<p>Now I want to say something to developers, especially French people.
+If you work in a company, if you are not happy in your daily job, if you don’t like the way they use you, if you think you deserve something better.
+You have to know that you can choose. Really!
+There are several options.
+Freelancing is one of them.
+It can be scary at first but remember that you have the strongest position.
+You have <u>skills</u>, you have <u>experience</u>, you have <u>potential</u>, you have a <u>real value</u> (and I’m not only talking about money), never doubt that and don’t let anyone tell you the opposite.
+Companies need you much more than you need them because you create the world of today and tomorrow.</p>
+
+<p>Do you know this story? A company hires a senior designer to create a new logo for the brand.
+2 days later the freelancer comes back with some graphics.
+The artistic director of the company studies the propositions and chooses one.
+Then he asks the invoice to the designer, what a surprise when he discovers the total amount:<br />
+<em>- 5000$ ?!! Seriously ? 5000$ for 2 days of work ??? For a single image ??</em><br />
+Reply:<br />
+<em>- No, 5000$ for 15 years of work.</em></p>
+
+<p>My opinion.</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#bug bounty" title="Pages tagged bug bounty" class="tag"><span class="term">bug bounty</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/why-bugbounty/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/why-bugbounty/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/why-bugbounty/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://www.csoonline.com/article/2846873/data-protection/why-bug-bounty-hunters-love-the-thrill-of-the-chase.html" target="_blank">Why bug bounty hunters love the thrill of the chase</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://medium.com/@phwd/bug-bounty-is-a-joke-91bc1875c890" target="_blank">Bug bounty is a joke</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://hackernoon.com/bug-bounties-a-broken-system-7781fe0bf7d" target="_blank">Bug bounties, a broken system</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/subdomain-enumeration/">&laquo; Subdomain enumeration</a></h4>
+			<span>Published on April 21, 2018</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/the-bugbounty-program-that-changed-my-life/">The bug bounty program that changed my life &raquo; </a></h4>
+			<span>Published on February 11, 2018</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

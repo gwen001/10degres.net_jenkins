@@ -1,0 +1,74 @@
+<h2 id="description">Description</h2>
+
+<p>Here is a very interesting issue in MySQL database. 
+SQL truncation occurs when you try to insert/update a field with a string which is longer than the maximum length defined in the table structure. 
+For instance if you defined a column <code class="highlighter-rouge">name</code> as a varchar(8) and you provide <code class="highlighter-rouge">abracadabra</code> wich is 11, MySQL will truncate the string to 8 and will insert <code class="highlighter-rouge">abracada</code> instead. 
+No message, no warning, nothing at all. This flaw can lead to security issue in some case.</p>
+
+<h2 id="example">Example</h2>
+
+<p>First I create this small table:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="nv">`user`</span> <span class="p">(</span>
+  <span class="nv">`id`</span> <span class="n">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="n">unsigned</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+  <span class="nv">`login`</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="nv">`passwd`</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="nv">`id`</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre>
+</div>
+
+<!--more-->
+
+<p>Then I insert some users:</p>
+
+<p><a href="/images/mysql-truncation-1.png"><img src="/images/mysql-truncation-1.png" alt="MySQL Truncation" /></a></p>
+
+<p>My three users are ok and absolutly regular. 
+But now what’s happen if I try to insert another user who has a name longer that 8 (<code class="highlighter-rouge">login</code> max length)?</p>
+
+<p><a href="/images/mysql-truncation-2.png"><img src="/images/mysql-truncation-2.png" alt="MySQL Truncation" /></a></p>
+
+<p>See? It has been truncated to 8 without any additionnal message. So maybe I can try another one?</p>
+
+<p><a href="/images/mysql-truncation-3.png"><img src="/images/mysql-truncation-3.png" alt="MySQL Truncation" /></a></p>
+
+<p>Looks like it worked. 
+Now I have a user “<code class="highlighter-rouge">admin</code>” and a user “<code class="highlighter-rouge">admin  </code> “ with some trailing spaces. 
+Unfortunatly MySQL strings compare also suffers of another issue who ignores trailing spaces, that means those two strings are considered as equal in some case. POC:</p>
+
+<p><a href="/images/mysql-truncation-4.png"><img src="/images/mysql-truncation-4.png" alt="MySQL Truncation" /></a></p>
+
+<p>Et voilà! MySQL clause <code class="highlighter-rouge">group by</code> considers user <code class="highlighter-rouge">1</code> and user <code class="highlighter-rouge">4</code> as “equal”.</p>
+
+<p>Tests with operator ‘<code class="highlighter-rouge">=' </code>:
+<a href="/images/mysql-truncation-5.png"><img src="/images/mysql-truncation-5.png" alt="MySQL Truncation" /></a></p>
+
+<p>Tests with operator <code class="highlighter-rouge">like </code>:
+<a href="/images/mysql-truncation-6.png"><img src="/images/mysql-truncation-6.png" alt="MySQL Truncation" /></a>&lt;/div&gt;</p>
+
+<p>In this situation <code class="highlighter-rouge">like</code> seems to be safer.</p>
+
+<h2 id="why-is-it-dangerous">Why is it dangerous ?</h2>
+
+<p>First of all, it should not be allowed to register two users with the same login/email in any system. 
+Then, since MySQL will return 2 results in some case, you cannot really predict wich one will be used when comparing with the user entry so it can be dangerous in some function like “Forgot password”. 
+A user could receive an email with credentials of another user…</p>
+
+<h2 id="what-can-i-do-">What can I do ?</h2>
+
+<p>According to <a href="http://dev.mysql.com/doc/refman/5.0/en/sql-mode.html#sqlmode_strict_trans_tables" title="MySQL documentation">MySQL documentation</a>, a trick is to change <code class="highlighter-rouge">sql_mode</code> to be more strict:</p>
+
+<blockquote>
+  <p>If a value could not be inserted as given into a transactional table, abort the statement.</p>
+</blockquote>
+
+<p><a href="/images/mysql-truncation-7.png"><img src="/images/mysql-truncation-7.png" alt="MySQL Truncation" /></a></p>
+
+<p>As a matter of fact I’m not sure this is a good solution. 
+Many developers don’t even test the result of their sql requests so if the server uses this parameter this can leads to many holes.</p>
+
+<p>Another solution would be to use a unique index on the proper field, MySQL will trigger an error because it will (again) consider ”<code class="highlighter-rouge">admin</code>” and “<code class="highlighter-rouge">admin  </code> “ as equal.</p>
+
+<p>Finally, most of the orm check the good validity of the values before executing the queries and apply filters. 
+This must be tested…</p>

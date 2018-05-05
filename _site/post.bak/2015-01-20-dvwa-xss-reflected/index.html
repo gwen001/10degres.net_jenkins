@@ -1,0 +1,76 @@
+<p>According to OWASP Top 10, Cross-Site Scripting aka XSS takes the 3rd place in the more common and important web vulnerabilities list. 
+Her primary goal is to spoof the session of another user by stealing his cookie id, usually a privileged user like an admin. 
+You can train XSS in Damn Vulnerable Web Application, here are some tests you can perform.</p>
+
+<h2 id="low">Low</h2>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nb">array_key_exists</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="k">NULL</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">''</span> <span class="p">)</span> <span class="p">{</span>  
+  <span class="nv">$isempty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>  
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;pre&gt;'</span><span class="p">;</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">];</span>  
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;/pre&gt;'</span><span class="p">;</span>  
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>This code output the <code class="highlighter-rouge">name</code> parameter without any filter so it’s very vulnerable to XSS!
+<!--more-->
+If you provide a single name it works perfectly but if you insert any HTML code it will be interpreted:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low0.png"><img src="/images/dvwa_xss_reflected_low0.png" alt="DVWA XSS reflected low" /></a></p>
+
+<p>That means you can also use JavaScript:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low1.png"><img src="/images/dvwa_xss_reflected_low1.png" alt="DVWA XSS reflected low" /></a></p>
+
+<h2 id="medium">Medium</h2>
+
+<p>In the second level, the parameter is sanitized by removing the HTML tag <code class="highlighter-rouge">&lt;script&gt;</code> :</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">array_key_exists</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="k">NULL</span> <span class="o">||</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">''</span><span class="p">){</span>
+  <span class="nv">$isempty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">' &lt;pre&gt;'</span><span class="p">;</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s1">'&lt;script&gt;'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]);</span>
+  <span class="nv">$html</span> <span class="o">.=</span> <span class="s1">'&lt;/pre&gt;'</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Is that enough? Of course not because the text you provide can have many different forms. 
+The test is not even case insensitive. 
+So you can simply use the same payload as previously and just add an uppercase letter or some few useless characters like white spaces:</p>
+
+<p><a href="/images/dvwa_xss_reflected_low2.png"><img src="/images/dvwa_xss_reflected_low2.png" alt="DVWA XSS reflected medium" /></a></p>
+
+<h2 id="high">High</h2>
+
+<p>The final level is a good example of how to protect your site. 
+Before echoing the <code class="highlighter-rouge">name</code> the script escapes it with <code class="highlighter-rouge">htmlspecialchars()</code>. 
+According to <a href="http://php.net/manual/fr/function.htmlspecialchars.php" title="PHP documentation" class="flashlink" target="_blank">PHP htmlspecialchars</a>, 
+this function converts all special characters to HTML entities. 
+<code class="highlighter-rouge">&lt; </code> will be converted to <code class="highlighter-rouge">&amp;lt;</code>, <code class="highlighter-rouge">&gt;</code> to <code class="highlighter-rouge">&amp;gt;</code> and so on… 
+So the HTML or JavaScript code won’t run.</p>
+
+<p>When a XSS is found, no matter the code you submit, it will be evaluated. 
+You can then perform a redirection:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="o">=</span><span class="s1">'http://10degres.net'</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>
+
+<p>Deface the site:</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">'H@ck3d by true l33t r0x0r'</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>
+
+<p>Or display cookies…</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/script</span><span class="err">&gt;
+</span></code></pre>
+</div>

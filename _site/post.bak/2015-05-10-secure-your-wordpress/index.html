@@ -1,0 +1,129 @@
+<p>With more than 60 million websites, WordPress is the most popular CMS currently in use but it’s also based on the most hacked environment aka LAMP.</p>
+
+<p>As we all know, there is no way to stop a determined hacker but you can slow him down or detect him before things become serious. 
+Below some techniques to improve the security of your site. 
+This post is directly inspired from <a href="http://codex.wordpress.org/Hardening_WordPress" class="flashlink" target="_blank">Wordpress official codex</a> and some hackers techniques I learned last months.</p>
+
+<h2 id="files">Files</h2>
+
+<p>According to Worpdress documentation, and I won’t discuss this point here, directories must have the following permission: <code class="highlighter-rouge">drwxr-xr-x</code> (755) and files must be: <code class="highlighter-rouge">-rw-r--r--</code> (644). 
+Wordpress says that automatic update changes file/dir permissions, that’s true but not that way in my case, maybe a cron job could do it ?</p>
+
+<!--more-->
+
+<h2 id="database">Database</h2>
+
+<p>It’s very important that your database is protected with strong credentials, check the post about <a href="http://blog.10degres.net/choose-your-password/">how to choose a good password</a>. 
+Keep in mind that a SQL user must be only used for one application and <strong>must not have administrator privileges</strong>.</p>
+
+<p>It’s also possible to change the table prefix which is <code class="highlighter-rouge">wp_</code> by default, this will prevent from automatic SQL injection attacks. 
+However this must be done while performing the installation, it’s too hard/dangerous to change that parameter on a running app.</p>
+
+<p>Backup your database very often, once a week is a good average but it actually depends on your post frequency. 
+Of course the data files must not be saved under the web tree.</p>
+
+<h2 id="core">Core</h2>
+
+<p>When a new bug is found it’s quickly registered on many security listing. 
+Years later, it’s still there with the list of infected versions.</p>
+
+<p>Keep your Wordpress up to date. For each new release you’ll get a warning in your dashboard. 
+If you have automatic update enable (implemented in version 3.7), you’ll receive a message but you’ll not need to do anything.</p>
+
+<p>It can be usefull to hide the current version of your Wordpress with this small script in <code class="highlighter-rouge">functions.php</code>:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>function remove_wp_version_tag() {
+  return null;
+}
+
+add_filter( 'the_generator', 'remove_wp_version_tag' );
+</code></pre>
+</div>
+
+<h2 id="users">Users</h2>
+
+<p>The point here is to hide usernames as much as possible.</p>
+
+<p>Rename the default user admin to whatever you want because this username is the first target of a brute force attack.</p>
+
+<p>Give your users a nickname, which should be selected as public and different than the username.</p>
+
+<p>Disable authors dedicated page with this small script in <code class="highlighter-rouge">functions.php</code>:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>add_action('template_redirect', 'bwp_template_redirect');
+
+function bwp_template_redirect() {
+    global $wp_query, $post;
+    if (is_author() ) {
+        $wp_query-&gt;set_404();
+    }
+}
+</code></pre>
+</div>
+
+<p>You can also remove the tag <code class="highlighter-rouge">&lt;dc:creator&gt;</code> from all feed: <code class="highlighter-rouge">wp-admin/includes/export.php</code>, <code class="highlighter-rouge">wp-includes/feed-rss2-comments.php</code>, 
+<code class="highlighter-rouge">wp-includes/feed-rss2.php</code> and <code class="highlighter-rouge">wp-includes/feed-rdf.php</code> however those files could be overwrited at the next update.</p>
+
+<p>Of course users must have a strong password, a single user access, even with low privileges, can be deadly.</p>
+
+<h2 id="plugins--themes">Plugins &amp; Themes</h2>
+
+<p>It’s very important to stay aware about updates, most of the times they fixe small bugs but sometimes it’s about security. 
+You wouldn’t keep a Local File Inclusion because of a gallery plugins, even if it’s disable. Btw remove disabled plugins/themes, you don’t need them and you probably won’t care about patches…</p>
+
+<p>Try to hide the current version of your plugins  and themes by removing <code class="highlighter-rouge">.txt</code> files who disclose to much infos (versions, patches, bugs, …) as well as most <code class="highlighter-rouge">.html</code> files. 
+Those two functions prevent display of version numbers in the html source of your site, in <code class="highlighter-rouge">functions.php</code>:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>function remove_wp_version_strings( $src ) {
+  global $wp_version;
+    parse_str(parse_url($src, PHP_URL_QUERY), $query);
+  if ( !empty($query['ver']) <span class="err">&amp;&amp;</span> $query['ver'] === $wp_version ) {
+    $src = remove_query_arg('ver', $src);
+  }
+  return $src;
+}
+
+add_filter( 'script_loader_src', 'remove_wp_version_strings' );
+add_filter( 'style_loader_src', 'remove_wp_version_strings' );
+
+// remove wp version param from any enqueued scripts
+function vc_remove_wp_ver_css_js( $src ) {
+    if ( strpos( $src, 'ver=' ) )
+        $src = remove_query_arg( 'ver', $src );
+    return $src;
+}
+
+add_filter( 'style_loader_src', 'vc_remove_wp_ver_css_js', 9999 );
+add_filter( 'script_loader_src', 'vc_remove_wp_ver_css_js', 9999 );
+</code></pre>
+</div>
+
+<h2 id="admin--login">Admin &amp; Login</h2>
+
+<p>To protect admin section you can restrict <code class="highlighter-rouge">wp-admin</code> directory and <code class="highlighter-rouge">wp-login.php</code> to trusted IP address. In <code class="highlighter-rouge">/.htaccess</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;filesmatch "wp-login"=""&gt;
+  order deny,allow
+  deny from all
+  allow from xxx.xxx.xxx.xxx
+&lt;/filesmatch&gt;
+</code></pre>
+</div>
+
+<p>In <code class="highlighter-rouge">/wp-admin/.htaccess</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>order deny,allow
+deny from all
+allow from xxx.xxx.xxx.xxx
+</code></pre>
+</div>
+
+<p>To prevent brute force, and if you have a server with <strong>fail2ban</strong> installed, there is a Wordpress plugin planned to interact with it: 
+<a href="https://wordpress.org/plugins/wp-fail2ban/" class="flashlink" target="_blank">Wordpress fail2ban plugin</a> (the installation requires root access to the server).</p>
+
+<h2 id="tools">Tools</h2>
+
+<p>To test all changes you can use <a href="http://wpscan.org/" class="flashlink" target="_blank">WPScan</a>, this tool is a great WordPress vulnerability scanner.</p>
+
+<p>Sucuri Team has developped a <a href="https://wordpress.org/plugins/sucuri-scanner/" title="Wordpress Sucuri plugin" class="flashlink" target="_blank">security plugin</a> who will <del>spam</del> send you reports about: 
+file integrity, brute force, updates, log in and so on…</p>

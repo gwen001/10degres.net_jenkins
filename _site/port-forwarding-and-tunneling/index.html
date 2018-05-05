@@ -1,0 +1,313 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Port forwarding and tunneling &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="ssh, post exploitation, pivot">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Port forwarding and tunneling">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Port forwarding and tunneling">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/port-forwarding-and-tunneling/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/port-forwarding-and-tunneling/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Port forwarding and tunneling">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/port-forwarding-and-tunneling/" rel="bookmark" title="Port forwarding and tunneling">Port forwarding and tunneling</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-09-17T00:00:00+01:00">September 17, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>As a pentester, you might be able to take control of systems that have a direct access but you also might be able to test the internal network and check the machine who are inside a subnetwork.</p>
+
+<p>For that task you’ll have to use an already compromised machine as a bridge/gateway, this technic is called “pivot”. 
+Depending of the context, different solutions exist to perform that task.</p>
+
+<h2 id="rinetd">Rinetd</h2>
+
+<p>The easiest one. First you need to install Rinetd:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>aptitude search rinetd
+p   rinetd                                     - Internet TCP redirection server&lt;/pre&gt;
+</code></pre>
+</div>
+
+<p>Then edit the <code class="highlighter-rouge">/etc/rinetd.conf</code> file:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># bindadress    bindport  connectaddress  connectport
+192.168.0.10    80        91.121.139.22   8080
+</code></pre>
+</div>
+
+<p>Restart Rinetd and from now, all incoming traffic on <code class="highlighter-rouge">192.168.0.10</code> on port <code class="highlighter-rouge">80</code> will be redirected to <code class="highlighter-rouge">91.121.139.22</code> on port <code class="highlighter-rouge">8080</code>. 
+This can be usefull if a firewall is restricting outbound traffic on certain port.</p>
+
+<!--more-->
+
+<h2 id="ssh">SSH</h2>
+
+<h3 id="local-port-forwarding">Local port forwarding</h3>
+
+<p><code class="highlighter-rouge">ssh -L &lt;local port to listen&gt;:&lt;remote host&gt;:&lt;remote port&gt; &lt;gateway&gt;</code></p>
+
+<p>Similar to port forwarding with Rinetd, this technic still have some tints. The traffic is encrypted but only between the local machine and the gateway. 
+If the remote host is <code class="highlighter-rouge">localhost</code> then it refers to the gateway. Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh -L 8080:192.168.1.25:80 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>This open a tunnel between the local machine on port <code class="highlighter-rouge">8080</code> to <code class="highlighter-rouge">192.168.1.25</code> on port <code class="highlighter-rouge">80</code> trough the ssh server <code class="highlighter-rouge">192.168.0.10</code> connected with user <code class="highlighter-rouge">bob</code>. 
+Connexion from other machines are not accepted by default, to enable this feature you have to use the <code class="highlighter-rouge">-g</code> option.</p>
+
+<h3 id="remote-port-forwarding">Remote port forwarding</h3>
+
+<p><code class="highlighter-rouge">ssh -R &lt;remote port to bind&gt;:&lt;local host&gt;:&lt;local port&gt; &lt;gateway&gt;</code></p>
+
+<p>Note that this must be launched on the already compromised machine ! In this case if the local host is <code class="highlighter-rouge">localhost</code> then it refers to the local machine. Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ssh -R 1234:192.168.1.25:80 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>This pop a reverse shell on <code class="highlighter-rouge">192.168.0.10</code> connected with user <code class="highlighter-rouge">bob</code> and create a tunnel on port <code class="highlighter-rouge">1234</code> wich will receive all traffic from <code class="highlighter-rouge">192.168.1.25</code> on port <code class="highlighter-rouge">80</code>.</p>
+
+<h2 id="proxychains">ProxyChains</h2>
+
+<p>As a standalone, Proxychains is mainly used to anonymize traffic but combined with SSH it can be used to perform dynamic port forwarding.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ aptitude search proxychains
+p   libproxychains-dev                - proxy chains -- shared library (development)
+p   libproxychains3                   - proxy chains -- shared library (runtime)
+p   proxychains                       - proxy chains - redirect connections through proxy servers&lt;/pre&gt;
+</code></pre>
+</div>
+
+<p>When the install is finished, edit <code class="highlighter-rouge">/etc/proxychains.conf</code> as here:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ProxyList]
+# add proxy here ...
+# meanwile
+# defaults set to "tor"
+socks4  127.0.0.1 9050
+</code></pre>
+</div>
+
+<p>Then we can create a tunnel wich will forward all incoming traffic to any host in the internal network trough the compromised machine which runs the ssh server. Syntax:</p>
+
+<p><code class="highlighter-rouge">ssh -D &lt;local proxy&gt; &lt;target&gt;</code></p>
+
+<p>Example:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ ssh -D 127.0.0.1:9050 bob@192.168.0.10
+</code></pre>
+</div>
+
+<p>From now we can perform scans or anything else on every port on every machine in the DMZ with Proxychains:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ proxychains nmap -p 139,445 192.168.1.100-200
+</code></pre>
+</div>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#ssh" title="Pages tagged ssh" class="tag"><span class="term">ssh</span></a><a href="http://10degres.net/tags/#post exploitation" title="Pages tagged post exploitation" class="tag"><span class="term">post exploitation</span></a><a href="http://10degres.net/tags/#pivot" title="Pages tagged pivot" class="tag"><span class="term">pivot</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/port-forwarding-and-tunneling/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/port-forwarding-and-tunneling/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/port-forwarding-and-tunneling/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://www.youtube.com/watch?v=Wuu_n0Pvbsk" target="_blank">Hak5 videos</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch13s04.html" target="_blank">Port forwarding tutoriel on linux-france (fr)</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/bug-bounty-programs/">&laquo; Bug Bounty Programs</a></h4>
+			<span>Published on October 08, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/offensive-security-certified-professional/">Offensive Security Certified Professional &raquo; </a></h4>
+			<span>Published on September 08, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

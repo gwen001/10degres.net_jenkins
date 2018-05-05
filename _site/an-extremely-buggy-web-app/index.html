@@ -1,0 +1,390 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>An extremely buggy web app ! &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="training, csrf, xss, sql injection, bwapp, brute force, command injection, lfi&rfi, path traversal">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="An extremely buggy web app !">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="An extremely buggy web app !">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/an-extremely-buggy-web-app/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/an-extremely-buggy-web-app/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="An extremely buggy web app !">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/an-extremely-buggy-web-app/" rel="bookmark" title="An extremely buggy web app !">An extremely buggy web app !</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2016-01-28T00:00:00+00:00">January 28, 2016</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p><strong>bWAPP</strong> is a PHP web application which is intentionnally crackable. It covers a very large set of common vulns but also some unusual case you can meet on the Internet.</p>
+
+<p>The goal here is to train your development skill and hacking knowledge to be able to write a better (more secure) code.
+Compared to <a href="/damn-vulnerable-web-application/">DVWA</a>, you have to consider bWAPP as a much more advanced level of difficulty.</p>
+
+<p><a href="/images/bwapp.png"><img src="/images/bwapp.png" alt="bwapp" /></a>
+<!--more--></p>
+
+<p>Below the impressive list of bugs implemented:</p>
+
+<p><strong>Injection</strong><br />
+HTML Injection - Reflected (GET)<br />
+HTML Injection - Reflected (POST)<br />
+HTML Injection - Reflected (Current URL)<br />
+HTML Injection - Stored (Blog)<br />
+iFrame Injection<br />
+LDAP Injection (Search)<br />
+Mail Header Injection (SMTP)<br />
+OS Command Injection<br />
+OS Command Injection - Blind<br />
+PHP Code Injection<br />
+Server-Side Includes (SSI) Injection<br />
+SQL Injection (GET/Search)<br />
+SQL Injection (GET/Select)<br />
+SQL Injection (POST/Search)<br />
+SQL Injection (POST/Select)<br />
+SQL Injection (AJAX/JSON/jQuery)<br />
+SQL Injection (CAPTCHA)<br />
+SQL Injection (Login Form/Hero)<br />
+SQL Injection (Login Form/User)<br />
+SQL Injection (SQLite)<br />
+SQL Injection (Drupal)<br />
+SQL Injection - Stored (Blog)<br />
+SQL Injection - Stored (SQLite)<br />
+SQL Injection - Stored (User-Agent)<br />
+SQL Injection - Stored (XML)<br />
+SQL Injection - Blind - Boolean-Based<br />
+SQL Injection - Blind - Time-Based<br />
+SQL Injection - Blind (SQLite)<br />
+SQL Injection - Blind (Web Services/SOAP)<br />
+XML/XPath Injection (Login Form)<br />
+XML/XPath Injection (Search)</p>
+
+<p><strong>Broken Auth. &amp; Session Mgmt.</strong><br />
+Broken Authentication - CAPTCHA Bypassing<br />
+Broken Authentication - Forgotten Function<br />
+Broken Authentication - Insecure Login Forms<br />
+Broken Authentication - Logout Management<br />
+Broken Authentication - Password Attacks<br />
+Broken Authentication - Weak Passwords<br />
+Session Management - Administrative Portals<br />
+Session Management - Cookies (HTTPOnly)<br />
+Session Management - Cookies (Secure)<br />
+Session Management - Session ID in URL<br />
+Session Management - Strong Sessions</p>
+
+<p><strong>Cross-Site Scripting (XSS)</strong><br />
+Cross-Site Scripting - Reflected (GET)<br />
+Cross-Site Scripting - Reflected (POST)<br />
+Cross-Site Scripting - Reflected (JSON)<br />
+Cross-Site Scripting - Reflected (AJAX/JSON)<br />
+Cross-Site Scripting - Reflected (AJAX/XML)<br />
+Cross-Site Scripting - Reflected (Back Button)<br />
+Cross-Site Scripting - Reflected (Custom Header)<br />
+Cross-Site Scripting - Reflected (Eval)<br />
+Cross-Site Scripting - Reflected (HREF)<br />
+Cross-Site Scripting - Reflected (Login Form)<br />
+Cross-Site Scripting - Reflected (phpMyAdmin)<br />
+Cross-Site Scripting - Reflected (PHP_SELF)<br />
+Cross-Site Scripting - Reflected (Referer)<br />
+Cross-Site Scripting - Reflected (User-Agent)<br />
+Cross-Site Scripting - Stored (Blog)<br />
+Cross-Site Scripting - Stored (Change Secret)<br />
+Cross-Site Scripting - Stored (Cookies)<br />
+Cross-Site Scripting - Stored (SQLiteManager)<br />
+Cross-Site Scripting - Stored (User-Agent)</p>
+
+<p><strong>Insecure Direct Object References</strong><br />
+Insecure DOR (Change Secret)<br />
+Insecure DOR (Reset Secret)<br />
+Insecure DOR (Order Tickets)</p>
+
+<p><strong>Security Misconfiguration</strong><br />
+Arbitrary File Access (Samba)<br />
+Cross-Domain Policy File (Flash)<br />
+Cross-Origin Resource Sharing (AJAX)<br />
+Cross-Site Tracing (XST)<br />
+Denial-of-Service (Large Chunk Size)<br />
+Denial-of-Service (Slow HTTP DoS)<br />
+Denial-of-Service (SSL-Exhaustion)<br />
+Denial-of-Service (XML Bomb)<br />
+Insecure FTP Configuration<br />
+Insecure SNMP Configuration<br />
+Insecure WebDAV Configuration<br />
+Local Privilege Escalation (sendpage)<br />
+Local Privilege Escalation (udev)<br />
+Man-in-the-Middle Attack (HTTP)<br />
+Man-in-the-Middle Attack (SMTP)<br />
+Old/Backup &amp; Unreferenced Files<br />
+Robots File</p>
+
+<p><strong>Sensitive Data Exposure</strong><br />
+Base64 Encoding (Secret)<br />
+BEAST/CRIME/BREACH Attacks<br />
+Clear Text HTTP (Credentials)<br />
+Heartbleed Vulnerability<br />
+Host Header Attack (Reset Poisoning)<br />
+HTML5 Web Storage (Secret)<br />
+POODLE Vulnerability<br />
+SSL 2.0 Deprecated Protocol<br />
+Text Files (Accounts)</p>
+
+<p><strong>Missing Functional Level Access Control</strong><br />
+Directory Traversal - Directories<br />
+Directory Traversal - Files<br />
+Host Header Attack (Cache Poisoning)<br />
+Host Header Attack (Reset Poisoning)<br />
+Local File Inclusion (SQLiteManager)<br />
+Remote &amp; Local File Inclusion (RFI/LFI)<br />
+Restrict Device Access<br />
+Restrict Folder Access<br />
+Server Side Request Forgery (SSRF)<br />
+XML External Entity Attacks (XXE)</p>
+
+<p><strong>Cross-Site Request Forgery (CSRF)</strong><br />
+Cross-Site Request Forgery (Change Password)<br />
+Cross-Site Request Forgery (Change Secret)<br />
+Cross-Site Request Forgery (Transfer Amount)</p>
+
+<p><strong>Using Known Vulnerable Components</strong><br />
+Buffer Overflow (Local)<br />
+Buffer Overflow (Remote)<br />
+Drupal SQL Injection (Drupageddon)<br />
+Heartbleed Vulnerability<br />
+PHP CGI Remote Code Execution<br />
+PHP Eval Function<br />
+phpMyAdmin BBCode Tag XSS<br />
+Shellshock Vulnerability (CGI)<br />
+SQLiteManager Local File Inclusion<br />
+SQLiteManager PHP Code Injection<br />
+SQLiteManager XSS</p>
+
+<p><strong>Unvalidated Redirects &amp; Forwards</strong><br />
+Unvalidated Redirects &amp; Forwards (1)<br />
+Unvalidated Redirects &amp; Forwards (2)</p>
+
+<p><strong>Other bugs…</strong><br />
+ClickJacking (Movie Tickets)<br />
+Client-Side Validation (Password)<br />
+HTTP Parameter Pollution<br />
+HTTP Response Splitting<br />
+HTTP Verb Tampering<br />
+Information Disclosure - Favicon<br />
+Information Disclosure - Headers<br />
+Information Disclosure - PHP version<br />
+Information Disclosure - Robots File<br />
+Insecure iFrame (Login Form)<br />
+Unrestricted File Upload</p>
+
+<p><strong>Extras</strong><br />
+A.I.M. - No-authentication Mode<br />
+Client Access Policy File<br />
+Cross-Domain Policy File<br />
+Evil 666 Fuzzing Page<br />
+Manual Intervention Required!<br />
+Unprotected Admin Portal<br />
+We Steal Secrets… (html)<br />
+We Steal Secrets… (plain)<br />
+WSDL File (Web Services/SOAP)</p>
+
+<p>Have fun !</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#training" title="Pages tagged training" class="tag"><span class="term">training</span></a><a href="http://10degres.net/tags/#csrf" title="Pages tagged csrf" class="tag"><span class="term">csrf</span></a><a href="http://10degres.net/tags/#xss" title="Pages tagged xss" class="tag"><span class="term">xss</span></a><a href="http://10degres.net/tags/#sql injection" title="Pages tagged sql injection" class="tag"><span class="term">sql injection</span></a><a href="http://10degres.net/tags/#bwapp" title="Pages tagged bwapp" class="tag"><span class="term">bwapp</span></a><a href="http://10degres.net/tags/#brute force" title="Pages tagged brute force" class="tag"><span class="term">brute force</span></a><a href="http://10degres.net/tags/#command injection" title="Pages tagged command injection" class="tag"><span class="term">command injection</span></a><a href="http://10degres.net/tags/#lfi&rfi" title="Pages tagged lfi&rfi" class="tag"><span class="term">lfi&rfi</span></a><a href="http://10degres.net/tags/#path traversal" title="Pages tagged path traversal" class="tag"><span class="term">path traversal</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/an-extremely-buggy-web-app/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/an-extremely-buggy-web-app/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/an-extremely-buggy-web-app/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="http://www.itsecgames.com/" target="_blank">Official website of bWAPP</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/playing-with-s3-buckets/">&laquo; Playing with S3 buckets</a></h4>
+			<span>Published on April 15, 2016</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/sqlmap/">Sqlmap &raquo; </a></h4>
+			<span>Published on January 18, 2016</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

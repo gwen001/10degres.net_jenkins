@@ -1,0 +1,333 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Massive pwnage &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="aws, bucket, subdomain, xss, heroku, cloudfront">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/images/massive-xss.png">
+<meta name="twitter:title" content="Massive pwnage">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Massive pwnage">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/massive-pwnage/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/images/massive-xss.png">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/massive-pwnage/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Massive pwnage">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/massive-pwnage/" rel="bookmark" title="Massive pwnage">Massive pwnage</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2018-02-03T00:00:00+00:00">February 03, 2018</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>There is different ways to hunt for vulnerabilities, depending of your knowledge, your skills, your expectation and how you like to chase.
+I personally love programming and, as a true developper, I’m lazy, so I love to automate things.
+By writing some piece of code or by combining multiple tools, you can find a lot of interesting stuff.
+This article is about some scripts/tricks I wrote/use to perform massive tests:</p>
+
+<ul>
+  <li>XSS with PhantomJS</li>
+  <li>Heroku subdomain takeover</li>
+  <li>Amazon S3 buckets theft
+<!--more--></li>
+</ul>
+
+<h2 id="xss-with-phantomjs">XSS with PhantomJS</h2>
+
+<p>The first thing to do is to get a list of urls to test, it’s like finding endpoints when you perform the recon of a new target.
+And since even an url without any parameter can be vulnerable, it doesn’t matter if our urls have one or several or none.</p>
+
+<p>Possible sources:</p>
+<ul>
+  <li>using the <a href="https://github.com/googleinurl/SCANNER-INURLBR" class="flashlink" target="_blank">scanner INURLBR</a>, you can retrieve a list of urls from many search engines, a simple dork as <code class="highlighter-rouge">inurl:"&amp;"</code> would return many results</li>
+  <li>a list of subdomains in scope of different bug bounty programs</li>
+  <li>the list of the most famous xxx websites in whatever country or all around the world</li>
+  <li>the history of the Wayback Machine</li>
+  <li>…</li>
+</ul>
+
+<p>The second thing you need is a good list of payloads.
+You could use the awesome <a href="https://leanpub.com/xss" class="flashlink" target="_blank">Brutal Cheat Sheet</a> list or grab another one on the internet or create your own.
+Another good one is the list from RSnake because it contains payloads with a call of an external Javascript, using <a href="https://xsshunter.com/app" class="flashlink" target="_blank">XSS Hunter</a> here could be a good idea, you never know…</p>
+
+<p>Finally you need a program to automatically test all the urls you grabbed.
+You could probably use Burp Suite but I’m not sure it would be the best tool to test XSS.
+@brutelogic created the magic extension <a href="https://knoxss.me/" class="flashlink" target="_blank">Knoxss</a>, you can use the free version.
+However it becomes very complicated when you deal with thousands of urls, I already tried to script it but I was faced to the rate limit of the firewall.
+So I finally created my own script, it was originally based on string comparaison but I recently changed my mind and I implemented PhantomJS which is much more reliable.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ php testxss.php --prefix --suffix --sos --threads=10 --verbose=2
+--phantom=/usr/local/bin/phantomjs --payload=brute-full.txt --urls=urls.txt
+</code></pre>
+</div>
+<p><a href="/images/massive-xss.png"><img src="/images/massive-xss.png" alt="massive XSS" /></a></p>
+
+<h2 id="heroku-subdomain-takeover">Heroku subdomain takeover</h2>
+
+<p>I recently discovered <a href="https://dnstrails.com/" class="flashlink" target="_blank">DNSTrails</a>, “The World’s Largest Repository of historical DNS data”. 
+Basically it’s a huge database of DNS history.</p>
+
+<p>After reading the report <a href="https://hackerone.com/reports/296907" class="flashlink" target="_blank">#296907</a> on Hackerone, I had the idea to check the IPs of Heroku.
+I checked my log files and I extracted all IPs I had, linked to <code class="highlighter-rouge">herokuapp.com</code>.
+I have 44 address in my list, they probably own much more but that was enough for a single test.</p>
+
+<p>Calling the API of DNSTrails, you can retrieve many domains and subdomains configured with those DNS: <code class="highlighter-rouge">https://app.securitytrails.com/api/search/by_type/ip/&lt;ip&gt;</code>
+Looping through the 44 IPs, I got +30k (sub)domains. Doh!</p>
+
+<p>We all know that a misconfigured Heroku service leads to this page:
+<a href="/images/heroku-error.png"><img src="/images/heroku-error.png" alt="Heroku error" /></a></p>
+
+<p>It would be impossible (or very very long) to manually test all domains. Fortunately Michael Henriksen wrote <a href="https://github.com/michenriksen/aquatone" class="flashlink" target="_blank">Aquatone</a>.
+This tool can check if a given list of subdomains is vulnerable to subdomain takeover, it supports services like: Heroku, Cloudfront, Zendesk, Uservoice and many others…
+It comes very handy when you deal with so much datas.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ aquatone-takeover --domain herokuapp.com
+</code></pre>
+</div>
+<p><a href="/images/massive-subto-aquatone.png"><img src="/images/massive-subto-aquatone.png" alt="massive subdomain takeover Aquatone" /></a></p>
+
+<p>I also wrote my own script to test some 3rd party services a long time ago, so I also injected my list in it, the result was pretty much the same.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ for d in $(cat domains.txt) ; do php 3rdparty.php -s heroku -d $d ; done
+</code></pre>
+</div>
+<p><a href="/images/massive-subto-3rdps.png"><img src="/images/massive-subto-3rdps.png" alt="massive subdomain takeover 3rd party services" /></a></p>
+
+<p>Let’s say 10% of the domains are vulnerable.<br />
+<a href=""><img src="/images/massive-subto-surprise.png" alt="massive subdomain surprise" /></a></p>
+
+<h2 id="amazon-s3-buckets-theft">Amazon S3 buckets theft</h2>
+
+<p>Here I started to query Threat Crowd with every IP I was able to link to Amazon Service using <a href="https://bgp.he.net/" target="_blank">https://bgp.he.net/</a> and some other resources.
+<code class="highlighter-rouge">https://www.threatcrowd.org/searchApi/v1/api.php?type=ip&amp;query=&lt;ip&gt;</code><br />
+I locally stored the json result and more than 3000 requests later, I got 90k+ unique (sub)domains.</p>
+
+<p>Ok, things change, so probably some of them are not linked to Cloudfront anymore but hey! It’s worth to try!
+So I wrote a quick script that basically requests every domain in the list and check the response from the server.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ php cloudfront.php domains.txt
+</code></pre>
+</div>
+<p><a href="/images/massive-bucket-cloudfront.png"><img src="/images/massive-bucket-cloudfront.png" alt="massive bucket cloudfront" /></a></p>
+
+<p>After extracting all buckets found, about 37000, I ran my tool to test their permissions, maybe some of them are writable? Really??</p>
+
+<p>About 2300 buckets are world writable, and for 1950 of them any user could alter the permissions, so everything is possible.</p>
+
+<p><a href="/images/massive-bucket-vulnerable.png"><img src="/images/massive-bucket-vulnerable.png" alt="massive bucket vulnerable" /></a></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I don’t know how far this can goes. I think there is no limit to automation when combined with a good imagination and some technical skills, you can always dig deeper and deeper. 
+The problem is, as a hunter, how would you monetize the time you spend on this?</p>
+
+<p>2 years ago, when I started bug bounty, I was confident enough to think that companies would be happy to be warned of that kind of problems.
+But the responses were very different from a firm to another. Sometimes you get a “WTF?? Who the hell are you? What are you doing with my website?!”, then take care.
+Sometimes a single “Thank you”, no matter if the issue is fixed or not, and sometimes nothing, silence, they simply ignore you…</p>
+
+<p>As far as I can see, chasing in the wild is fun, you can learn alot, but you won’t make money this way.</p>
+
+<h2 id="tools">Tools</h2>
+
+<p><a href="https://gist.github.com/mhmdiaa/adf6bff70142e5091792841d4b372050" class="flashlink" target="_blank">The script waybackurls.py</a><br />
+<a href="https://github.com/gwen001/testxss/" class="flashlink" target="_blank">My tool: testxss</a><br />
+<a href="https://github.com/gwen001/3rdparty-services" class="flashlink" target="_blank">My tool: 3party-services</a><br />
+<a href="http://10degres.net/assets/cloudfront.txt" class="flashlink" target="_blank">The Cloudfront checker script</a><br />
+<a href="https://github.com/gwen001/s3-buckets-finder" class="flashlink" target="_blank">My tool: s3-buckets-finder</a></p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#aws" title="Pages tagged aws" class="tag"><span class="term">aws</span></a><a href="http://10degres.net/tags/#bucket" title="Pages tagged bucket" class="tag"><span class="term">bucket</span></a><a href="http://10degres.net/tags/#subdomain" title="Pages tagged subdomain" class="tag"><span class="term">subdomain</span></a><a href="http://10degres.net/tags/#xss" title="Pages tagged xss" class="tag"><span class="term">xss</span></a><a href="http://10degres.net/tags/#heroku" title="Pages tagged heroku" class="tag"><span class="term">heroku</span></a><a href="http://10degres.net/tags/#cloudfront" title="Pages tagged cloudfront" class="tag"><span class="term">cloudfront</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/massive-pwnage/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/massive-pwnage/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/massive-pwnage/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://gbhackers.com/top-500-important-xss-cheat-sheet/" target="_blank">Top 500 Most Important XSS Script Cheat</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/the-bugbounty-program-that-changed-my-life/">&laquo; The bug bounty program that changed my life</a></h4>
+			<span>Published on February 11, 2018</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/ctf-h1-212/">Fail at CTF h1-212 - The Evil Job &raquo; </a></h4>
+			<span>Published on November 20, 2017</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

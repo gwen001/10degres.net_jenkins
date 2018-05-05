@@ -1,0 +1,108 @@
+<p>Amazon Simple Storage Service aka S3 is a cloud storage for the Internet. 
+You first create a bucket and you can then upload any number of objects (photos, videos, documents etc.) to it.
+However if the permissions (ACL) are not well settled, bad things can happen.</p>
+
+<p>Recently disclosed by Hackerone, a misconfiguration in their Amazon Web Services S3 buckets allowed any authenticated user to write in there.
+From here an attacker could upload a malicious file waiting for someone open it, or overwrite existing files.</p>
+
+<p>When you crawl a website, you can you can check the presence of S3 by intercepting calls to <code class="highlighter-rouge">amazonaws.com</code>.
+The bucket call can have different look:
+<code class="highlighter-rouge">https://&lt;aws_region&gt;.amazonaws.com/&lt;bucket_name&gt;/&lt;file_path&gt;</code><br />
+or:<br />
+<code class="highlighter-rouge">https://&lt;bucket_name&gt;.amazonaws.com/&lt;file_path&gt;</code></p>
+
+<p>Once you get the bucket name, you can execute many tests using <strong>awscli</strong> to check his permissions.
+If you try to access to a bucket who doesn’t exist, you’ll get this message:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>aws s3 ls s3://gwen001-azertyuiop  
+A client error <span class="o">(</span>NoSuchBucket<span class="o">)</span> occurred when calling the ListObjects operation: The specified bucket does not exist
+</code></pre>
+</div>
+
+<p>If you try to execute a command you are not allowed to, you’ll then get something like this:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>aws s3 ls s3://gwen001-test000/
+A client error <span class="o">(</span>AccessDenied<span class="o">)</span> occurred when calling the ListObjects operation: Access Denied
+</code></pre>
+</div>
+<!--more-->
+<p>For the purpose of this article I created some buckets with differents permissions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bucket</th>
+      <th>Grantee</th>
+      <th>Read</th>
+      <th>Write</th>
+      <th>get ACL</th>
+      <th>set ACL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>test000</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test001</td>
+      <td>me</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>test002</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test003</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test004</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>test005</td>
+      <td>Everyone</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Using my brain and bit of Bash, I wrote a script based on a wordlist to discover and test my buckets.
+The wordlist: 
+<code class="highlighter-rouge">test000 test001 testme test002 test003 test004 test005 testx</code></p>
+
+<p>The script:<br />
+https://github.com/gwen001/pentest-tools/blob/master/s3-buckets-force.sh</p>
+
+<p>The output:
+<a href="/images/s3-bucket-test.png"><img src="/images/s3-bucket-test.png" alt="s3 bucket test" /></a></p>
+
+<p>Finally 6 buckets has been found, which is correct, and the permissions has also been tested.</p>
+
+<p>When <code class="highlighter-rouge">Edit Permissions</code> is allowed for <code class="highlighter-rouge">Everyone</code>, this is the deadly zone but don’t underestimate the power of read only.
+From a pentester point of view this is a very good start to gather informations about your business and for a hacker it’s a great source to leak your datas.</p>
+

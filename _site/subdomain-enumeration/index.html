@@ -1,0 +1,352 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Subdomain enumeration &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="recon, subdomain, bug bounty, information gathering, tools">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/images/subdomain-enumeration-aquatone.jpg">
+<meta name="twitter:title" content="Subdomain enumeration">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Subdomain enumeration">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/subdomain-enumeration/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/images/subdomain-enumeration-aquatone.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/subdomain-enumeration/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Subdomain enumeration">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/subdomain-enumeration/" rel="bookmark" title="Subdomain enumeration">Subdomain enumeration</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2018-04-21T00:00:00+01:00">April 21, 2018</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>A friend recently asked me what methods I use to find subdomains.
+To be honest I was confused, like <em>“oooohhh so much, brute force mmm… zone transfer and… brute for… wait Google and mmm… many other tools!”</em>
+What a shame that I was so inaccurate after so much time spent to look for subdomains.
+Time to dig a little bit!
+After I wrote a list of the most popular methods, I tried to make a list of some tools and online resources to exploit them.
+Of course this list is far from exhaustive, there are many new stuff every day, but it’s still a good start :)
+<!--more--></p>
+
+<h2 id="methods">Methods</h2>
+
+<p><strong>Brute force</strong><br />
+The easiest way. Try millions and millions words as subdomains and check which ones are alive with a forward DNS request.</p>
+
+<p><strong>Zone transfer aka AXFR</strong><br />
+Zone transfer is a mechanism that administrators can use to replicate DNS databases but sometimes the DNS is not well configured and this operation is allowed by anyone, revealing all subdomains configured.</p>
+
+<p><strong>DNS cache snooping</strong><br />
+DNS cache snooping is a specific way to query a DNS server in order to check if a record exists in his cache.</p>
+
+<p><strong>Reverse DNS</strong><br />
+Try to find the domain name associated with an IP address, it’s the opposite of Forward DNS.</p>
+
+<p><strong>Alternative names</strong><br />
+Once the first round of your recon is finished, apply permutations and transformations (based on another wordlist maybe?) to all subdomains discovered in order to find new ones.</p>
+
+<p><strong>Online DNS tools</strong><br />
+There are many websites that allow to query DNS databases and their history.</p>
+
+<p><strong>SSL Certificates</strong><br />
+Request informations about all certificates linked to a specific domain, and obtain a list of subdomains covered by these certificates.</p>
+
+<p><strong>Search engines</strong><br />
+Search for a specific domain in your favourite search engine then minus the discovered sudomains one by one <code class="highlighter-rouge">site:example.com -www -dev</code></p>
+
+<p><strong>Technical tools/search engines</strong><br />
+More and more companies host their code online on public platform, most of the time these services have a search bar.</p>
+
+<p><strong>Text parsing</strong><br />
+Parse the HTML code of a website to find new subdomains, this can be applied to every resources of the company, office documents as well.</p>
+
+<p><strong>VHost discovery</strong><br />
+Try to find any other subdomain configured on the same web server by brute forcing the HTTP <code class="highlighter-rouge">Host</code> header.</p>
+
+<h2 id="tools">Tools</h2>
+
+<p><a href="https://github.com/infosec-au/altdns" class="flashlink" target="_blank">Altdns</a>: alternative names brute forcing<br />
+<a href="https://github.com/caffix/amass" class="flashlink" target="_blank">Amass</a>: brute force, Google, VirusTotal, alt names<br />
+<a href="https://github.com/michenriksen/aquatone" class="flashlink" target="_blank">aquatone-discover</a>: Brute force, Riddler, PassiveTotal, Threat Crowd, Google, VirusTotal, Shodan, SSL Certificates, Netcraft, HackerTarget, DNSDB<br />
+<a href="https://github.com/sensepost/BiLE-suite" class="flashlink" target="_blank">BiLE-suite</a>: HTML parsing, alt names, reverse DNS<br />
+<a href="https://github.com/tomsteele/blacksheepwall" class="flashlink" target="_blank">blacksheepwall</a>: AXFR, brute force, reverse DNS, Censys, Yandex, Bing, Shodan, Logontube, SSL Certificates, Virus Total<br />
+<a href="https://github.com/RandomStorm/Bluto" class="flashlink" target="_blank">Bluto</a>: AXFR, netcraft, brute force<br />
+<a href="https://github.com/anshumanbh/brutesubs" class="flashlink" target="_blank">brutesubs</a>: enumall, Sublist3r, Altdns<br />
+<a href="https://github.com/mandatoryprogrammer/cloudflare_enum" class="flashlink" target="_blank">cloudflare_enum</a>: Cloudflare DNS<br />
+<a href="https://github.com/UnaPibaGeek/ctfr" class="flashlink" target="_blank">CTFR</a>: SSL Certificates<br />
+<a href="https://github.com/m0nad/DNS-Discovery" class="flashlink" target="_blank">DNS-Discovery</a>: brute force<br />
+<a href="https://github.com/lorenzog/dns-parallel-prober" class="flashlink" target="_blank">DNS Parallel Prober</a>: DNS resolver<br />
+<a href="https://github.com/rbsec/dnscan" class="flashlink" target="_blank">dnscan</a>: AXFR, brute force<br />
+<a href="https://github.com/darkoperator/dnsrecon" class="flashlink" target="_blank">dnsrecon</a>: AXFR, brute force, reverse DNS, snoop caching, Google<br />
+<a href="https://github.com/evilsocket/dnssearch" class="flashlink" target="_blank">dnssearch</a>: brute force<br />
+<a href="https://github.com/reconned/domained" class="flashlink" target="_blank">domained</a>: Sublist3r, enumall, Knockpy, SubBrute, MassDNS, recon-ng<br />
+<a href="https://github.com/jhaddix/domain" class="flashlink" target="_blank">enumall</a>: recon-ng -&gt; Google, Bing, Baidu, Netcraft, brute force<br />
+<a href="https://github.com/mschwager/fierce" class="flashlink" target="_blank">Fierce</a>: AXFR, brute force, reverse DNS<br />
+<a href="http://github.com/guelfoweb/knock" class="flashlink" target="_blank">Knockpy</a>: AXFR, virustotal, brute force<br />
+<a href="https://github.com/blechschmidt/massdns" class="flashlink" target="_blank">MassDNS</a>: DNS resolver<br />
+<a href="https://github.com/mhmdiaa/second-order" class="flashlink" target="_blank">Second Order</a>: HTML parsing<br />
+<a href="https://github.com/jrozner/sonar" class="flashlink" target="_blank">Sonar</a>: AXFR, brute force<br />
+<a href="https://github.com/TheRook/subbrute" class="flashlink" target="_blank">SubBrute</a>: brute force<br />
+<a href="https://github.com/aboul3la/Sublist3r" class="flashlink" target="_blank">Sublist3r</a>: Baidu, Yahoo, Google, Bing, Ask, Netcraft, DNSdumpster, VirusTotal, Threat Crowd, SSL Certificates, PassiveDNS<br />
+<a href="https://github.com/laramies/theHarvester" class="flashlink" target="_blank">theHarvester</a>: reverse DNS, brute force, Google, Bing, Dogpile, Yahoo, Baidu, Shodan, Exalead<br />
+TXDNS: alt names (typo/tld)<br />
+<a href="https://github.com/gwen001/vhost-brute" class="flashlink" target="_blank">vhost-brute</a>: vhost discovery<br />
+<a href="https://github.com/codingo/VHostScan" class="flashlink" target="_blank">VHostScan</a>: vhost discovery<br />
+<a href="https://github.com/jobertabma/virtual-host-discovery" class="flashlink" target="_blank">virtual-host-discovery</a>: vhost discovery</p>
+
+<h2 id="online-dns-tools">Online DNS tools</h2>
+
+<p><a href="https://hackertarget.com/" target="_blank">https://hackertarget.com/</a><br />
+<a href="http://searchdns.netcraft.com/" target="_blank">http://searchdns.netcraft.com/</a><br />
+<a href="https://dnsdumpster.com/" target="_blank">https://dnsdumpster.com/</a><br />
+<a href="https://www.threatcrowd.org/" target="_blank">https://www.threatcrowd.org/</a><br />
+<a href="https://riddler.io/" target="_blank">https://riddler.io/</a><br />
+<a href="https://api.passivetotal.org" target="_blank">https://api.passivetotal.org</a><br />
+<a href="https://www.censys.io" target="_blank">https://www.censys.io</a><br />
+<a href="https://api.shodan.io" target="_blank">https://api.shodan.io</a><br />
+<a href="http://www.dnsdb.org/f/" target="_blank">http://www.dnsdb.org/f/</a><br />
+<a href="https://www.dnsdb.info/" target="_blank">https://www.dnsdb.info/</a><br />
+<a href="https://scans.io/" target="_blank">https://scans.io/</a><br />
+<a href="https://findsubdomains.com/" target="_blank">https://findsubdomains.com/</a><br />
+<a href="https://securitytrails.com/dns-trails" target="_blank">https://securitytrails.com/dns-trails</a></p>
+
+<p><a href="https://crt.sh/" target="_blank">https://crt.sh/</a><br />
+<a href="https://certspotter.com/api/v0/certs?domain=example.com" target="_blank">https://certspotter.com/api/v0/certs?domain=example.com</a><br />
+<a href="https://transparencyreport.google.com/https/certificates" target="_blank">https://transparencyreport.google.com/https/certificates</a><br />
+<a href="https://developers.facebook.com/tools/ct" target="_blank">https://developers.facebook.com/tools/ct</a></p>
+
+<h2 id="search-engines">Search engines</h2>
+
+<p><a href="http://www.baidu.com/" target="_blank">http://www.baidu.com/</a><br />
+<a href="http://www.yahoo.com/" target="_blank">http://www.yahoo.com/</a><br />
+<a href="http://www.google.com/" target="_blank">http://www.google.com/</a><br />
+<a href="http://www.bing.com/" target="_blank">http://www.bing.com/</a><br />
+<a href="https://www.yandex.ru/" target="_blank">https://www.yandex.ru/</a><br />
+<a href="https://www.exalead.com/search/" target="_blank">https://www.exalead.com/search/</a><br />
+<a href="http://www.dogpile.com/" target="_blank">http://www.dogpile.com/</a><br />
+<a href="https://www.zoomeye.org/" target="_blank">https://www.zoomeye.org/</a><br />
+<a href="https://fofa.so/" target="_blank">https://fofa.so/</a></p>
+
+<h2 id="technical-toolssearch-engines">Technical tools/search engines</h2>
+
+<p><a href="https://github.com/" target="_blank">https://github.com/</a><br />
+<a href="https://gitlab.com/" target="_blank">https://gitlab.com/</a><br />
+<a href="https://www.virustotal.com/fr/" target="_blank">https://www.virustotal.com/fr/</a></p>
+
+<h2 id="dns-cache-snooping">DNS cache snooping</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nslookup -norecursive domain.com
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nmap -sU -p 53 --script dns-cache-snoop.nse --script-args 'dns-cache-snoop.mode=timed,dns-cache-snoop.domains={domain1,domain2,domain3}' &lt;ip&gt;
+</code></pre>
+</div>
+
+<h2 id="others-online-resources">Others online resources</h2>
+
+<p><a href="https://ask.fm/" target="_blank">https://ask.fm/</a><br />
+<a href="http://logontube.com/" target="_blank">http://logontube.com/</a><br />
+<a href="http://commoncrawl.org/" target="_blank">http://commoncrawl.org/</a><br />
+<a href="http://www.sitedossier.com/" target="_blank">http://www.sitedossier.com/</a></p>
+
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#recon" title="Pages tagged recon" class="tag"><span class="term">recon</span></a><a href="http://10degres.net/tags/#subdomain" title="Pages tagged subdomain" class="tag"><span class="term">subdomain</span></a><a href="http://10degres.net/tags/#bug bounty" title="Pages tagged bug bounty" class="tag"><span class="term">bug bounty</span></a><a href="http://10degres.net/tags/#information gathering" title="Pages tagged information gathering" class="tag"><span class="term">information gathering</span></a><a href="http://10degres.net/tags/#tools" title="Pages tagged tools" class="tag"><span class="term">tools</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/subdomain-enumeration/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/subdomain-enumeration/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/subdomain-enumeration/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://blog.sweepatic.com/art-of-subdomain-enumeration/" target="_blank">The Art of Subdomain Enumeration</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="https://blog.appsecco.com/a-penetration-testers-guide-to-sub-domain-enumeration-7d842d5570f6" target="_blank">A penetration tester’s guide to sub-domain enumeration</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/the-bugbounty-program-that-changed-my-life/" title="The bug bounty program that changed my life">The bug bounty program that changed my life</a></h3>
+      <p>This is a real story or not, that occured in mid 2017 or not, about a private program or not, on Hackerone or not, believe me or not, but...&hellip; <a href="http://10degres.net/the-bugbounty-program-that-changed-my-life/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			&nbsp;
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/why-bugbounty/">Why Bug Bounty &raquo; </a></h4>
+			<span>Published on March 29, 2018</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

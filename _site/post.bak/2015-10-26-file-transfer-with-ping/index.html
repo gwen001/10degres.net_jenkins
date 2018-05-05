@@ -1,0 +1,36 @@
+<h2 id="introduction">Introduction</h2>
+
+<p>Anyone who ever deals with server managment knows the famous <code class="highlighter-rouge">ping</code> utility. 
+Ping send <strong>ICMP request</strong> to a remote host, it’s commonly used to test if a server is alive or to know his ip address. 
+However ping options allow us to customize this requests in some way, then it becomes possible to transfer any type of data. 
+For the purpose I test my script with different media types like png or mp3 and it worked perfectly.</p>
+
+<h2 id="the-idea">The idea</h2>
+
+<p>By default ping requests are formed with 98 bytes including 56 bytes of data and various headers. 
+With the <code class="highlighter-rouge">-p</code> option, ping allows you to customize 16 of those 56 bytes:</p>
+
+<p><a href="/images/ping_test.png"><img src="/images/ping_test.png" alt="ping test" /></a></p>
+
+<p>Here is the request catched with <code class="highlighter-rouge">tcpdump</code> on the remote host:</p>
+
+<p><a href="/images/ping-capture.png"><img src="/images/ping-capture.png" alt="ping capture" /></a></p>
+
+<p>As you can see the submitted string repeats again and again until the end of the data request.
+If you provide a string longer than 16 bytes it will be truncated. From here, we can <strong>convert any data to hexa and send it through ping request</strong>.
+<!--more--></p>
+
+<h2 id="the-poc">The POC</h2>
+
+<p>For my tests I used the following Anonymous image:</p>
+
+<p><a href="/images/anonymous.jpg"><img src="/images/anonymous.jpg" alt="anonymous" /></a></p>
+
+<p>This image is about 7Ko so the script sent near 1200 ping requests, which is alot… It’s also time consuming but to be honest it’s so fun :) Below the poc:</p>
+
+<p><a href="/images/icmp-transfer-poc.png"><img src="/images/icmp-transfer-poc.png" alt="icmp transfer poc" /></a></p>
+
+<p><a href="/images/icmp-transfer-capture.png"><img src="/images/icmp-transfer-capture.png" alt="icmp transfer capture" /></a></p>
+
+<p>Note: the script also works if echo request has been disable on the remote host (with <code class="highlighter-rouge">icmp_echo_ignore_all</code> equal to <code class="highlighter-rouge">1</code>), 
+but slower. Feel free to mail me if you want to take a look at the scripts.</p>

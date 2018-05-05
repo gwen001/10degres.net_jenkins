@@ -1,0 +1,16 @@
+<div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			{% for sa in page.see_also %}
+				{% if sa.url contains 'http' %}
+					<li class="entry-title"><a href="{{ sa.url }}" target="_blank">{{ sa.link }}</a></li>
+				{% else %}
+					<li class="entry-title"><a href="{{ sa.url }}">{{ sa.link }}</a></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</article>
+</div><!-- /.see-also -->

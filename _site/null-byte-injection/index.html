@@ -1,0 +1,282 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>Null Byte Injection &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="php, null byte">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="Null Byte Injection">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Null Byte Injection">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/null-byte-injection/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/null-byte-injection/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="Null Byte Injection">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/null-byte-injection/" rel="bookmark" title="Null Byte Injection">Null Byte Injection</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-01-10T00:00:00+00:00">January 10, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>I recently read a nice article on <a href="http://resources.infosecinstitute.com/null-byte-injection-php/" title="Null byte injection" class="flashlink" target="_blank">InfoSec Institute</a> 
+(again) about Null byte injection. 
+However I met some problems to make it works in a real situation so I decided to write my own.</p>
+
+<p>First of all, this vulnerability has been <strong>fully patched in PHP 5.3.4</strong> (until someone else find another buggy function…), that means you need to install an old version of PHP. 
+Grab it in <a href="http://php.net/releases/" title="PHP releases" class="flashlink" target="_blank">PHP releases archive</a>. 
+After compiled and configured, it’s very important to set <strong>magic_quotes_gpc=Off</strong> in the <code class="highlighter-rouge">php.ini</code> (it won’t work with <code class="highlighter-rouge">ini_set</code> in the script itself).</p>
+
+<p>Then imagine an <code class="highlighter-rouge">index.php</code> like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">include</span><span class="p">(</span> <span class="s1">'/var/www/pages/'</span><span class="o">.</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'p'</span><span class="p">]</span><span class="o">.</span><span class="s1">'.php'</span> <span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>And a <code class="highlighter-rouge">/pages/store.php</code> like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">echo</span> <span class="s1">'This is the store !'</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>If you call it directly it will works but in that case <code class="highlighter-rouge">index.php</code> is usually used to display common stuffs like header and footer. 
+<!--more-->
+So the basic use is:</p>
+
+<p><a href="/images/null_byte_injection_1.png"><img src="/images/null_byte_injection_1.png" alt="Null Byte Injection" /></a></p>
+
+<p>Since <code class="highlighter-rouge">index.php</code> already concatenate <code class="highlighter-rouge">.php</code> with the <code class="highlighter-rouge">p</code> parameter, you’ll get that kind of error if you set it manually:</p>
+
+<p><a href="/images/null_byte_injection_2.png"><img src="/images/null_byte_injection_2.png" alt="Null Byte Injection" /></a></p>
+
+<p>Notice the double extension <code class="highlighter-rouge">.php.php</code>, that means the site might be vulnerable. 
+An easy tool to determine the PHP version of your target is a browser extension like <a href="https://wappalyzer.com/" title="Wappalyzer" target="_blank">Wappalyzer</a> 
+for <a href="https://addons.mozilla.org/fr/firefox/addon/wappalyzer/" title="Wappalyzer for Firefox/Iceweasel" target="_blank">Firefox/Iceweasel</a> 
+or <a href="https://chrome.google.com/webstore/detail/wappalyzer/gppongmhjkpfnbhagpmjfkannfbllamg" title="Wappalyzer for Chrome" target="_blank">Chrome</a>.</p>
+
+<p>The next step is to add the null byte:</p>
+
+<p><a href="/images/null_byte_injection_3.png"><img src="/images/null_byte_injection_3.png" alt="Null Byte Injection" /></a></p>
+
+<p>Because we got the same result as the “normal” usage, now that’s sure, the target is vulnerable! You can inject everything. 
+Of course the goal of this attack is to retrieve sensitive files:</p>
+
+<p><a href="/images/null_byte_injection_5.png"><img src="/images/null_byte_injection_5.png" alt="Null Byte Injection" /></a></p>
+
+<p>Keep in mind that the path of the required file must be relative of the current script (<code class="highlighter-rouge">index.php</code> in my case) otherwise it will throw an error as a file not found:</p>
+
+<p><a href="/images/null_byte_injection_4.png"><img src="/images/null_byte_injection_4.png" alt="Null Byte Injection" /></a></p>
+
+<p>Here is the error you’ll get if you fight against a patched PHP:</p>
+
+<p><a href="/images/null_byte_injection_7.png"><img src="/images/null_byte_injection_7.png" alt="Null Byte Injection" /></a></p>
+
+<p>And the error you’ll get if <code class="highlighter-rouge">magic_quotes_gpc</code> is enable:</p>
+
+<p><a href="/images/null_byte_injection_6.png"><img src="/images/null_byte_injection_6.png" alt="Null Byte Injection" /></a></p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#php" title="Pages tagged php" class="tag"><span class="term">php</span></a><a href="http://10degres.net/tags/#null byte" title="Pages tagged null byte" class="tag"><span class="term">null byte</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/null-byte-injection/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/null-byte-injection/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/null-byte-injection/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://www.owasp.org/index.php/OWASP_Periodic_Table_of_Vulnerabilities_-_Null_Byte_Injection" target="_blank">OWASP description</a></li>
+				
+			
+				
+					<li class="entry-title"><a href="http://blog.benjaminwalters.net/?p=22139" target="_blank">Another article about Null byte injection</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/exploit-exercices-nebula-level00/">&laquo; Exploit Exercices, Nebula - level00</a></h4>
+			<span>Published on January 13, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/resources/">Resources &raquo; </a></h4>
+			<span>Published on December 29, 2014</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

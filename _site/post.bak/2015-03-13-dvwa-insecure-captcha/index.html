@@ -1,0 +1,35 @@
+<p>Captchas are usually used to prevent robots to make an action instead of humans. 
+It should add an extra layer of security but badly configured it could lead to unauthorized access…</p>
+
+<p>When you try to submit the form without providing a captcha code, you get the following error:</p>
+
+<p><a href="/images/dvwa-captcha-error.png"><img src="/images/dvwa-captcha-error.png" alt="dvwa captcha error" /></a></p>
+
+<h2 id="low">Low</h2>
+
+<p>Try to submit an empty password and take a look to the HTTP request and her parameters, you can notice the strange variable <code class="highlighter-rouge">step</code>:</p>
+
+<p><a href="/images/dvwa-captcha-low.png"><img src="/images/dvwa-captcha-low.png" alt="dvwa captcha low" /></a></p>
+
+<p>This variable is the step in the change password functionnality. 
+So if you simply change it to <code class="highlighter-rouge">2</code> and replay the request with this new value, it works perfectly.</p>
+
+<!--more-->
+
+<h2 id="medium">Medium</h2>
+
+<p>In this level another step has been added. 
+After submitting your new password and the good captcha you’ll have to confirm your wish by submitting another form:</p>
+
+<p><a href="/images/dvwa-captcha-medium.png"><img src="/images/dvwa-captcha-medium.png" alt="dvwa captcha medium" /></a></p>
+
+<p>Again, if you check the parameters of this second request, you can notice a new field called <code class="highlighter-rouge">passed_captcha</code> set to <code class="highlighter-rouge">true</code>. 
+Now if you merge the both requests and apply the same method viewed in the first level, you are able to change your password within only one request:</p>
+
+<p><a href="/images/dvwa-captcha-medium.png"><img src="/images/dvwa-aptcha-medium.png" alt="dvwa captcha medium" /></a></p>
+
+<h2 id="high">High</h2>
+
+<p>As usual the highest level is well configured and cannot be bypassed. 
+The check is done within only one step by calling the method <code class="highlighter-rouge">captcha_check_answer()</code>. 
+Plus note how the SQL query is protected from injection with <code class="highlighter-rouge">mysql_real_escape_string()</code>.</p>

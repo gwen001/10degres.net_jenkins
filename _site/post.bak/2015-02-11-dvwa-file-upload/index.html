@@ -1,0 +1,86 @@
+<p>A very useful aspect of PHP is the ability to manage file uploads. 
+Allowing users to send a file opens a whole can of worms, so be careful when allowing this fonctionnality. 
+If wrong protected it could result of a full control of the server. 
+With DVWA you can learn effective defense.</p>
+
+<h2 id="low">Low</h2>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>if(!move_uploaded_file($_FILES['uploaded']['tmp_name'], $target_path)) {
+    $html .= '<span class="nt">&lt;pre&gt;</span>';
+    $html .= 'Your image was not uploaded.';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+} else {
+    $html .= '<span class="nt">&lt;pre&gt;</span>';
+    $html .= $target_path . ' succesfully uploaded!';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+}
+</code></pre>
+</div>
+
+<p>The first level is the easiest because it has absolutly no protection against malicious file upload. 
+Choose a file - in my case a PHP shell - and submit the form:</p>
+
+<p><a href="/images/dvwa-file-upload_1.png"><img src="/images/dvwa-file-upload_1.png" alt="DVWA file upload" /></a></p>
+
+<!--more-->
+
+<p>The script has been successfully uploaded and the path displayed, now you can easily call it:</p>
+
+<p><a href="/images/dvwa-file-upload-2.png"><img src="/images/dvwa-file-upload-2.png" alt="DVWA file upload" /></a></p>
+
+<h2 id="medium">Medium</h2>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>if (($uploaded_type == "image/jpeg") <span class="err">&amp;&amp;</span> ($uploaded_size <span class="nt">&lt; 100000</span><span class="err">)){</span>
+  <span class="na">if</span><span class="err">(!</span><span class="na">move_uploaded_file</span><span class="err">($</span><span class="na">_FILES</span><span class="err">['</span><span class="na">uploaded</span><span class="err">']['</span><span class="na">tmp_name</span><span class="err">'],</span> <span class="err">$</span><span class="na">target_path</span><span class="err">))</span> <span class="err">{</span>
+    <span class="err">$</span><span class="na">html</span> <span class="err">.=</span> <span class="err">'&lt;</span><span class="na">pre</span><span class="nt">&gt;</span>';
+    $html .= 'Your image was not uploaded.';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+  } else {
+    $html .= '<span class="nt">&lt;pre&gt;</span>';
+    $html .= $target_path . ' succesfully uploaded!';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+  }
+}
+else {
+  echo '<span class="nt">&lt;pre&gt;</span>Your image was not uploaded.<span class="nt">&lt;/pre&gt;</span>';
+}
+</code></pre>
+</div>
+
+<p>In the next level, the script checks the size of the uploaded file, which is useless because a PHP backdoor can be under 1ko, and the mime type by allowing only jpeg image, which is a good idea. 
+If you try to upload anything else you will be faced to the following error:</p>
+
+<p><a href="/images/dvwa-file-upload-3.png"><img src="/images/dvwa-file-upload-3.png" alt="DVWA file upload" /></a></p>
+
+<p>To bypass this test, you need to change the mime type of the file you choosed. 
+There is plenty of browser extensions available to perform that kind of tricks, I personally like <a href="http://livehttpheaders.mozdev.org/" title="LiveHTTPHeaders" class="flashlink" target="_blank">LiveHTTPHeaders</a> for Firefox which is very easy to use. 
+After submitting your file, you can view, modify and replay the request. 
+Locate the <code class="highlighter-rouge">Content-type</code> header and replace it by: <code class="highlighter-rouge">image/jpeg</code></p>
+
+<p><a href="/images/dvwa_file_upload_4.png"><img src="/images/dvwa_file_upload_4.png" alt="DVWA file upload" /></a></p>
+
+<p>Submit the new request, et voilà! It works like a fucking charm!</p>
+
+<h2 id="high">High</h2>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>if (($uploaded_ext == "jpg" || $uploaded_ext == "JPG" || $uploaded_ext == "jpeg" || $uploaded_ext == "JPEG") <span class="err">&amp;&amp;</span> ($uploaded_size <span class="nt">&lt; 100000</span><span class="err">)){</span>
+  <span class="na">if</span><span class="err">(!</span><span class="na">move_uploaded_file</span><span class="err">($</span><span class="na">_FILES</span><span class="err">['</span><span class="na">uploaded</span><span class="err">']['</span><span class="na">tmp_name</span><span class="err">'],</span> <span class="err">$</span><span class="na">target_path</span><span class="err">))</span> <span class="err">{</span>					
+    <span class="err">$</span><span class="na">html</span> <span class="err">.=</span> <span class="err">'&lt;</span><span class="na">pre</span><span class="nt">&gt;</span>';
+    $html .= 'Your image was not uploaded 1.';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+  } else {
+    $html .= '<span class="nt">&lt;pre&gt;</span>';
+    $html .= $target_path . ' succesfully uploaded!';
+    $html .= '<span class="nt">&lt;/pre&gt;</span>';
+  }
+}
+</code></pre>
+</div>
+
+<p>Here the check of the mime type has been replaced by an extension check. 
+That does not mean you can only upload jpeg image but only a file with an allowed jpeg extension. 
+Of course if you upload a PHP script renamed with a jpeg extension your browser will throw an error when trying to display the image:</p>
+
+<p><a href="/images/dvwa-file-upload-5.png"><img src="/images/dvwa-file-upload-5.png" alt="DVWA file upload" /></a></p>
+
+<p>It would be also possible to bypass this if you could upload an <code class="highlighter-rouge">.htaccess</code> but there is no way in this level, it’s well secured.</p>

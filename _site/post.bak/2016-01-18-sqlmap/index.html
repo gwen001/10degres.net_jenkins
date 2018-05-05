@@ -1,0 +1,119 @@
+<p>Written in Python by <a href="https://twitter.com/stamparm" class="flashlink" target="_blank">Miroslav Stamper</a>, Sqlmap is probably the best automated tool to detect and exploit SQL Injection.</p>
+
+<p>Sqlmap fully supports many databases as MySQL, Microsoft SQL Server, PostgreSQL, Oracle (and many more) and is able to detect the following injection types : 
+Boolean based blind, Error based, Union based, Stacked queries, Time based blind, Inline queries. Depending of the target status, sqlmap is also able to :</p>
+
+<ul>
+  <li>prompt an interactive sql shell</li>
+  <li>download/upload files</li>
+  <li>prompt a web shell</li>
+  <li>crack hashed password using a dictionnary attack</li>
+  <li>and a lot more…</li>
+</ul>
+
+<p>Below some examples of the main functions using <a href="/an-extremely-buggy-web-app/">bWAPP</a></p>
+
+<h2 id="basic-usage">Basic usage</h2>
+
+<p><a href="/images/sqlmap-basic-usage.png"><img src="/images/sqlmap-basic-usage.png" alt="sqlmap basic usage" style="float:left;margin-right:10px;" width="300" /></a></p>
+
+<p>In this example sqlmap has detected that the GET parameter <code class="highlighter-rouge">title</code> of the search function is vulnerable to sql injection. 
+Well done! Plus it found that 4 different types of injection can be used for exploitation. 
+Note that sqlmap has also detected that the parameter is vulnerable to XSS attacks which is unfortunatly very common these days…</p>
+
+<p>To perform test on POST field you should write: <code class="highlighter-rouge">--data="title=sqlitest&amp;action=search"</code></p>
+
+<p>In the next example, I’ll turn off the verbose mode.</p>
+
+<p><br /></p>
+
+<!--more-->
+
+<h2 id="information-gathering">Information gathering</h2>
+
+<p>Who am I ? Where am I ? What can I do ? Once you found an injection point, the next step is to gather as much information as possible about the running environment. 
+ This task is very easy with sqlmap which provides a great list of options.</p>
+
+<p><code class="highlighter-rouge">--hostname</code></p>
+
+<p><a href="/images/sqlmap-hostname.png"><img src="/images/sqlmap-hostname.png" alt="sqlmap hostname" /></a></p>
+
+<p><code class="highlighter-rouge">--current-user</code></p>
+
+<p><a href="/images/sqlmap-current-user.png"><img src="/images/sqlmap-current-user.png" alt="sqlmap current user" /></a></p>
+
+<p><code class="highlighter-rouge">--privileges</code></p>
+
+<p><a href="/images/sqlmap-privileges.png"><img src="/images/sqlmap-privileges.png" alt="sqlmap privileges" /></a></p>
+
+<p>And many more… All collected informations are stored in log files in the <code class="highlighter-rouge">~/.sqlmap</code> directory. 
+To get fresh results ignoring the results previously recorded you’ll then have to use <code class="highlighter-rouge">--fresh-queries</code> or <code class="highlighter-rouge">--flush-session</code> or simply remove the corresponding directory.</p>
+
+<h2 id="enumeration">Enumeration</h2>
+
+<p>The next step of the exploitation is to enumerate available databases, tables and columns. Again this is pretty simple with sqlmap.</p>
+
+<p>Databases: <code class="highlighter-rouge">--dbs</code></p>
+
+<p><a href="/images/sqlmap-databases.png"><img src="/images/sqlmap-databases.png" alt="sqlmap databases" /></a></p>
+
+<p>Tables: <code class="highlighter-rouge">-D bwapp --tables</code></p>
+
+<p><a href="/images/sqlmap-tables.png"><img src="/images/sqlmap-tables.png" alt="sqlmap tables" /></a></p>
+
+<p>Columns: <code class="highlighter-rouge">-D bwapp -T users --columns</code></p>
+
+<p><a href="/images/sqlmap-columns.png"><img src="/images/sqlmap-columns.png" alt="sqlmap columns" /></a></p>
+
+<p>Check the official documentation to see the list of all available options.</p>
+
+<h2 id="getting-datas">Getting datas</h2>
+
+<p>Now you know the structure of the tables, you can grab all datas you want. To perform that task, I like to use the interactive sql prompt:</p>
+
+<p><a href="/images/sqlmap-datas.png"><img src="/images/sqlmap-datas.png" alt="sqlmap datas" /></a></p>
+
+<p>You can also dump a table or a database with the option <code class="highlighter-rouge">--dump</code> on the command line. If sqlmap detects hashed strings, it will ask you to crack them or not via a dictionnary based attack.
+ The default wordlist is +1M length, it’s up you to fill it or provide your own list.</p>
+
+<p><a href="/images/sqlmap-crack.png"><img src="/images/sqlmap-crack.png" alt="sqlmap crack" /></a></p>
+
+<h2 id="manage-files">Manage files</h2>
+
+<p>Depending of the sql user privileges , the injection type and the filesystem permissions, you maybe could be able to play with the server.</p>
+
+<p>Read file:</p>
+
+<p><a href="/images/sqlmap-file-read.png"><img src="/images/sqlmap-file-read.png" alt="sqlmap file read" /></a></p>
+
+<p>Write file:</p>
+
+<p><a href="/images/sqlmap-file-write.png"><img src="/images/sqlmap-file-write.png" alt="sqlmap file write" /></a></p>
+
+<p>The option <code class="highlighter-rouge">--os-shell</code> allows you to upload an ASP/JSP/PHP script on the remote server which will render an upload form. 
+Then you’ll use it to upload whatever file you want, usually a backdoor to perform a POC for your client.</p>
+
+<h2 id="usefull">Usefull</h2>
+
+<p>Below my favorite options of sqlmap, the ones I always use in all pentest.</p>
+
+<p><code class="highlighter-rouge">--threads=10</code> : to speed up sqlmap</p>
+
+<p><code class="highlighter-rouge">--tor --tor-type=socks5</code> : to anonymize the traffic, must be used carefully while performing time based tests</p>
+
+<p><code class="highlighter-rouge">--random-agent</code> : a different User-Agent for each session</p>
+
+<p>In this time where security is the heart of our job, day after day more and more network admins like to implements WAF, IPS or IDS. 
+Sqlmap has an option to bypass basic configuration of those systems: <code class="highlighter-rouge">--tamper</code> allows you to trick the requests by applying a filter on the SQL string like random case.</p>
+
+<h2 id="going-further">Going further</h2>
+
+<p>Sqlmap is a very very powerful tool. After months I still don’t know all options but here are some extra functionnalities who look interesting:</p>
+
+<p>Interaction with Metasploit framework</p>
+
+<p>Smartphone impersonation</p>
+
+<p>Website crawling</p>
+
+<p>Windows registry access</p>

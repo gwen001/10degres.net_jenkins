@@ -1,0 +1,301 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>SMB null session &#8211; Gwendal Le Coguic</title>
+<meta name="description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="keywords" content="smb, rpc">
+
+<!-- Twitter Cards --><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://10degres.net/assets/img/header-background.jpg">
+<meta name="twitter:title" content="SMB null session">
+<meta name="twitter:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta name="twitter:creator" content="@gwendallecoguic">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SMB null session">
+<meta property="og:description" content="Gwendal Le Coguic, web developer and security researcher">
+<meta property="og:url" content="http://10degres.net/smb-null-session/">
+<meta property="og:site_name" content="Gwendal Le Coguic">
+<meta property="og:image" content="http://10degres.net/assets/img/header-background.jpg">
+
+
+<meta name="google-site-verification" content="GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8">
+
+
+
+<link rel="canonical" href="http://10degres.net/smb-null-session/">
+<link href="http://10degres.net/feed.xml" type="application/atom+xml" rel="alternate" title="Gwendal Le Coguic Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://10degres.net/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+<!-- Load Modernizr -->
+<script src="http://10degres.net/assets/js/vendor/modernizr-2.6.2.custom.min.js"></script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="http://10degres.net/favicon.png">
+
+
+
+</head>
+
+<body id="post" class="feature">
+
+<!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+	<button class="dl-trigger">Open Menu</button>
+	<ul class="dl-menu">
+		<li><a href="http://10degres.net/">Home</a></li>
+		<li>
+			<a href="#">About</a>
+			<ul class="dl-submenu">
+				<li>
+					<img src="http://10degres.net/assets/img/me.jpg" alt="Gwen photo" class="author-photo">
+					<h4>Gwen</h4>
+					<p>Web developer reconverted to security researcher, playing bug bounty sometimes :)</p>
+				</li>
+				<li><a href="http://10degres.net/about/"><span class="btn btn-inverse">Learn More</span></a></li>
+				<li>
+					<a href="mailto:g@10degres.net"><i class="fa fa-fw fa-envelope"></i> Email</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/gwendallecoguic" target="_blank"><i class="fa fa-fw fa-twitter"></i> Twitter</a>
+				</li>
+				
+				
+				<li>
+					<a href="https://linkedin.com/in/gwendal-le-coguic-77106729" target="_blank"><i class="fa fa-fw fa-linkedin"></i> LinkedIn</a>
+				</li>
+				<li>
+					<a href="https://github.com/gwen001" target="_blank"><i class="fa fa-fw fa-github"></i> GitHub</a>
+				</li>
+				
+				
+				
+				
+			</ul><!-- /.dl-submenu -->
+		</li>
+		<li>
+			<a href="#">Posts</a>
+			<ul class="dl-submenu">
+				<li><a href="http://10degres.net/posts/">All Posts</a></li>
+				<li><a href="http://10degres.net/tags/">All Tags</a></li>
+			</ul>
+		</li>
+		
+	</ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
+
+
+
+<div class="entry-header">
+  
+  <div class="entry-image">
+    <img src="http://10degres.net/assets/img/header-background.jpg" alt="SMB null session">
+  </div><!-- /.entry-image -->
+</div><!-- /.entry-header -->
+
+
+<div id="main" role="main">
+  <article class="hentry">
+    <header class="header-title">
+      <div class="header-title-wrap">
+        
+          <h1 class="entry-title"><a href="http://10degres.net/smb-null-session/" rel="bookmark" title="SMB null session">SMB null session</a></h1>
+        
+        <h2><span class="entry-date date published"><time datetime="2015-05-09T00:00:00+01:00">May 09, 2015</time></span></h2>
+        
+      </div><!-- /.header-title-wrap -->
+    </header>
+    <div class="entry-content">
+      <p>While performing a pentest, if you discover a server running the <a href="http://en.wikipedia.org/wiki/Server_Message_Block" title="Server Message Block" class="flashlink" target="_blank">SMB protocol</a> 
+you can test if it’s vulnerable to anonymous connection (also called null session) and then glean a lot of informations with 
+a <a href="http://en.wikipedia.org/wiki/Remote_procedure_call" title="Remote Procedure Call" class="flashlink" target="_blank">RPC</a> client. 
+Nmap is usefull to locate that kind of service:</p>
+
+<p><a href="/images/smb-null-session.png"><img src="/images/smb-null-session-1.png" alt="smb null session" /></a></p>
+
+<p>Now you can try to interact with the remote machine with the help of <a href="https://www.samba.org/samba/docs/man/manpages/rpcclient.1.html" title="Man rpcclient">rpcclient</a>. 
+To perform a null session you have to specify an empty user and an empty password. 
+If the host is not vulnerable, you will get the following error:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ rpcclient -U "" 192.168.1.31
+Enter 's password:
+could not initialise lsa pipe. Error was NT_STATUS_ACCESS_DENIED
+could not obtain sid for domain WORKGROUP
+error: NT_STATUS_ACCESS_DENIED
+</code></pre>
+</div>
+
+<p>But if the host is vulnerable you will immediatly get a prompt:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ rpcclient -U "" 192.168.1.18
+Enter 's password:
+rpcclient $&gt;
+</code></pre>
+</div>
+
+<!--more-->
+
+<p>If you connect successfully, you can use help to see the list of available commands (anyway tab works for autocompletion). 
+Below some examples of the most used.</p>
+
+<p>Basic server infos:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rpcclient $&gt; srvinfo
+  LUIGI          Wk Sv PrQ Unx NT SNT nintendo server
+  platform_id     :  500
+  os version      :  4.9
+  server type     :  0x809a03
+</code></pre>
+</div>
+
+<p>Users enumeration:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rpcclient $&gt; enumdomusers
+user:[admin] rid:[0x3ec]
+user:[Administrator] rid:[0x1f4]
+user:[Guest] rid:[0x1f5]
+user:[lisa] rid:[0x3f1]
+user:[mark] rid:[0x3f2]&lt;/pre&gt;
+</code></pre>
+</div>
+
+<p>Groups enumeration:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rpcclient $&gt; enumalsgroups builtin
+group:[Administrators] rid:[0x220]
+group:[Backup Operators] rid:[0x227]
+group:[Guests] rid:[0x222]
+group:[Power Users] rid:[0x223]
+group:[Users] rid:[0x221]
+</code></pre>
+</div>
+
+<p>Privileges of the connected user:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rpcclient $&gt; enumprivs
+found 8 privileges
+
+SeMachineAccountPrivilege 		0:6 (0x0:0x6)
+SeTakeOwnershipPrivilege 		0:9 (0x0:0x9)
+SeBackupPrivilege 		0:17 (0x0:0x11)
+SeRestorePrivilege 		0:18 (0x0:0x12)
+SeRemoteShutdownPrivilege 		0:24 (0x0:0x18)
+SePrintOperatorPrivilege 		0:4097 (0x0:0x1001)
+SeAddUsersPrivilege 		0:4098 (0x0:0x1002)
+SeDiskOperatorPrivilege 		0:4099 (0x0:0x1003)
+</code></pre>
+</div>
+
+<p>Shares enumeration:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>rpcclient $&gt; netshareenum
+netname: IPC$
+  remark:	IPC Service
+  path:	C:\tmp
+  password:
+netname: Lisa Share
+  remark:	Lisa Docs
+  path:	C:\home\lisa\files
+  password:
+</code></pre>
+</div>
+
+<p><a href="https://code.google.com/p/phillips321/" class="flashlink" target="_blank">enum4linux</a> is the perfect tool to automate null session attacks. 
+According to the documentation : “[…] this script is basically just a wrapper around rpcclient, net, nmblookup and smbclient […]”.</p>
+
+      <footer class="entry-meta">
+        <span class="entry-tags"><a href="http://10degres.net/tags/#smb" title="Pages tagged smb" class="tag"><span class="term">smb</span></a><a href="http://10degres.net/tags/#rpc" title="Pages tagged rpc" class="tag"><span class="term">rpc</span></a></span>
+        
+        <div class="social-share">
+  <ul class="socialcount socialcount-small inline-list">
+    <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=http://10degres.net/smb-null-session/" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+    <li class="twitter"><a href="https://twitter.com/intent/tweet?text=http://10degres.net/smb-null-session/" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+    <li class="googleplus"><a href="https://plus.google.com/share?url=http://10degres.net/smb-null-session/" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+  </ul>
+</div><!-- /.social-share -->
+      </footer>
+    </div><!-- /.entry-content -->
+    
+    
+    
+
+<div class="read-more">
+  
+    <div class="read-more-header">
+      <a href="javascript:;" class="read-more-btn">Read More</a>
+    </div><!-- /.read-more-header -->
+    <div class="read-more-content">
+      <h3><a href="http://10degres.net/subdomain-enumeration/" title="Subdomain enumeration">Subdomain enumeration</a></h3>
+      <p>A friend recently asked me what methods I use to find subdomains.To be honest I was confused, like *"oooohhh so much, brute force mmm... ...&hellip; <a href="http://10degres.net/subdomain-enumeration/">Continue reading</a></p>
+    </div><!-- /.read-more-content -->
+  
+  <div class="read-more-list">
+	  <div class="list-item">
+		  
+			<h4><a href="/secure-your-wordpress/">&laquo; Secure your Wordpress</a></h4>
+			<span>Published on May 10, 2015</span>
+		  
+	  </div><!-- /.list-item -->
+	  <div class="list-item">
+		
+			<h4><a href="/dvwa-csrf/">DVWA - CSRF &raquo; </a></h4>
+			<span>Published on March 26, 2015</span>
+		
+	  </div><!-- /.list-item -->
+  </div><!-- /.read-more-list -->
+</div><!-- /.read-more -->
+
+  </article>
+</div><!-- /#main -->
+
+<div class="footer-wrapper">
+  <footer role="contentinfo">
+    <span>&copy; 2018 Gwendal Le Coguic</span>
+
+  </footer>
+</div><!-- /.footer-wrapper -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="http://10degres.net/assets/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+<script src="http://10degres.net/assets/js/scripts.min.js"></script>
+
+
+<!-- Asynchronous Google Analytics snippet -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61485350-1', 'auto');  
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+	        
+
+</body>
+</html>

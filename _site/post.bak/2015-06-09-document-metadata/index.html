@@ -1,0 +1,61 @@
+<p>Metadata are informations stored in a document itself but not easy to find for common mortals. 
+Those infos usually are: file name/type/size, author, organization, created date, last modified date and so on… 
+But sometimes there are extra infos that could be very interesting from a hacker point of view like email, phone number, username, geoloc and even local ip address.</p>
+
+<!--more-->
+
+<p>Let’s take a look at a photo of the beautiful Scarlett Johansson. 
+First I will use the nice online tool <a href="http://regex.info/exif.cgi" class="flashlink" target="_blank">Jeffrey’s Exif Viewer</a> wich will output dozen infos:</p>
+
+<p><a href="/images/exif-viewer-1.png"><img src="/images/exif-viewer-1.png" alt="exif viewer 1" /></a> 
+<a href="/images/exif-viewer-2.png"><img src="/images/exif-viewer-2.png" alt="exif viewer 2" /></a> 
+<a href="/images/exif-viewer-4.png"><img src="/images/exif-viewer-4.png" alt="exif viewer 4" /></a> 
+<a href="/images/exif-viewer-3.png"><img src="/images/exif-viewer-3.png" alt="exif viewer 3" /></a></p>
+
+<p>From here what usefull informations did I get ?</p>
+
+<ul>
+  <li>the filename</li>
+  <li>the title of the image (headline)</li>
+  <li>the name of the author in different ways</li>
+  <li>the date and the time it was taken in different ways also</li>
+  <li>the resolution</li>
+  <li>the image size in pixel</li>
+  <li>the file size</li>
+  <li>the credit/copyright</li>
+  <li>the company name</li>
+  <li>a caption describing the event</li>
+  <li>many parameters about colors</li>
+  <li>alot of datas that are not related to security</li>
+</ul>
+
+<p>Ok nothing special here and nothing very serious, the only thing we can be sure is that the author has been very cautious with all details of the image, looks like copyright is important for him :)</p>
+
+<p>Let’s try another file that I intentionnally set up with “secret” metadata. 
+This time I will use the command line <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" class="flashlink" target="_blank">ExifTool</a> wich can be used to read, set and edit metadata. 
+This tool support about 150 different file format and is by default installed in Kali Linux.</p>
+
+<p><a href="/images/exiftool.png"><img src="/images/exiftool.png" alt="exiftool" /></a></p>
+
+<p>There I got the following infos:</p>
+
+<ul>
+  <li>the file name and it’s size</li>
+  <li>the document title</li>
+  <li>the creation date and the last modified date</li>
+  <li>the name of the last writer</li>
+  <li>and the most important, the originial author wich looks like more than a username than a full name</li>
+</ul>
+
+<p>By using a Google Dorks like <code class="highlighter-rouge">site:www.leparticulier.fr filetype:pdf</code> and after a bit of scripting combined with ExifTool, I was able to find about 15 usernames. 
+With only this information in my hands I won’t be able to penetrate their system but it’s a really good start while performing the information gathering phase of a pentest. 
+Plus you will probably be confronted to vulnerabilities who require a valid user to be exploited…</p>
+
+<p>An awesome tool to automate metadata mining is FOCA. 
+This program can search office documents of a specified site and extract all metadata to finally map the local network of the company.</p>
+
+<p>&gt; <a href="https://www.youtube.com/watch?v=XVjZEijbekw" class="flashlink" target="_blank">Foca demo</a> at DEFCON 18</p>
+
+<p>Anyway you should be able to remove the metadata of your document with the application you used to create it or with online tools, follow the link below.</p>
+
+<p>&gt; <a href="http://www.makeuseof.com/tag/3-ways-to-remove-exif-metadata-from-photos-and-why-you-might-want-to/" class="flashlink" target="_blank">How to remove EXIF Metadata</a></p>

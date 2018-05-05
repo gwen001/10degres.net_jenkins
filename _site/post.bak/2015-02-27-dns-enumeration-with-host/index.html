@@ -1,0 +1,73 @@
+<p>While performing a pentest the information gathering phase is the most important, it’s the key of a successful test. 
+The DNS is very great source of informations, whith some simple queries you will be able to grab usefull datas about the domain you are targeting. 
+The <code class="highlighter-rouge">host</code> command is a very powerful DNS lookup utility which is present in all Linux distribution.</p>
+
+<p>For the examples, I will use a domain which allows that kind of query at this moment.</p>
+
+<h2 id="basic-usage">Basic usage</h2>
+
+<p>As the <code class="highlighter-rouge">man</code> says, <code class="highlighter-rouge">host</code> is normally used to convert names to IP addresses and vice versa:</p>
+
+<p><a href="/images/dns-enumeration-host-basic.png"><img src="/images/dns-enumeration-host-basic.png" alt="DNS enumeration host basic" /></a></p>
+
+<p>If the domain doesn’t exist, you will meet that message: <code class="highlighter-rouge">Host pmolkijn.de not found: 3(NXDOMAIN)</code></p>
+
+<p>If the ip doesn’t point anywhere, you will get this message: <code class="highlighter-rouge">Host 91.121.139.2 not found: 3(NXDOMAIN)</code></p>
+
+<!--more-->
+
+<h2 id="forward">Forward</h2>
+
+<p>From here you can perform a brute force based on a dictionnary to find subdomains. 
+Imagine a text file containing those few keywords:</p>
+
+<p>mail, demo, test, admin, blog</p>
+
+<p>With 3 lines of shell code, you could loop to query all derived subdomains:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="k">for </span>name <span class="k">in</span> <span class="k">$(</span>cat subdomains.txt<span class="k">)</span> ; <span class="k">do
+  </span>host <span class="nv">$name</span>.leparisien.fr |grep <span class="s2">"has address"</span> |cut -d <span class="s2">" "</span> -f 1,4
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<p>Will output:</p>
+
+<p><a href="/images/dns-enumeration-host-forward.png"><img src="/images/dns-enumeration-host-forward.png" alt="DNS enumeration host forward" /></a></p>
+
+<h2 id="reverse">Reverse</h2>
+
+<p>Of course you could query the discovered ip address but you can also query all ip in the same network to find more subdomains. Here is a simple shell script:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="k">for </span>ip <span class="k">in</span> <span class="k">$(</span>seq 0 254<span class="k">)</span> ; <span class="k">do
+  </span>host 160.92.126.<span class="nv">$ip</span> |grep <span class="s2">"leparisien.fr"</span> |cut -d <span class="s2">" "</span> -f 1,5
+<span class="k">done</span>
+</code></pre>
+</div>
+
+<p>Will output:</p>
+
+<p><a href="/images/dns-enumeration-host-reverse.png"><img src="/images/dns-enumeration-host-reverse.png" alt="DNS enumeration host reverse" /></a></p>
+
+<h2 id="zone-transfer">Zone transfer</h2>
+
+<p>Finally the best technique is to try a zone transfer.
+Zone transfer is a mechanism available for administrators to replicate DNS databases across a set of DNS servers.</p>
+
+<p>With the <code class="highlighter-rouge">-t</code> option you can grab specific informations about the domain: name server (ns), exchange mail (mx), alias (cname), etc.:</p>
+
+<p><a href="/images/dns-enumeration-host-zone-transfer-1.png"><img src="/images/dns-enumeration-host-zone-transfer-1.png" alt="DNS enumeration host zone transfer" /></a></p>
+
+<p>Then, for each name server found we will try to perform a zone transfer for the domain of the example:</p>
+
+<p><a href="/images/dns-enumeration-host-zone-transfer-2.png"><img src="/images/dns-enumeration-host-zone-transfer-2.png" alt="DNS enumeration host zone transfer" /></a></p>
+
+<p>Et voilà! My screen is to small but more than 100 unique subdomains have been found.
+If the zone transfer fails, you will get this message: <code class="highlighter-rouge">; Transfer failed.</code></p>
+
+<p>There is many tools to deal with DNS: <code class="highlighter-rouge">dig</code>, <code class="highlighter-rouge">dnsenum</code>, <code class="highlighter-rouge">dnsrecon</code> can also do the trick. 
+My favorite and probably the easiest is <a href="http://ha.ckers.org/fierce/" title="Fierce" class="flashlink" target="_blank">Fierce</a>.</p>

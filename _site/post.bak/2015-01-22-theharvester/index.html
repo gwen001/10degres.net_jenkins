@@ -1,0 +1,37 @@
+<p>Information gathering is the first and the most important step of a penetration test. 
+More informations you will grab, easier the exploit will be.</p>
+
+<p>Developed by Christian Martorella <a href="https://code.google.com/p/theharvester/" class="flashlink" target="_blank">theHarvester</a> is very usefull for this task. 
+It’s a python script that will help you to find user emails and subdomains of a given domain by merely parsing search engines results. 
+The following data sources are supported :</p>
+
+<ul>
+  <li>bing,</li>
+  <li>google, googleCSE, googleplus, google-profiles</li>
+  <li>jigsaw</li>
+  <li>linkedin</li>
+  <li>people123</li>
+  <li>pgp</li>
+  <li>shodan</li>
+  <li>twitter</li>
+</ul>
+
+<p>theHarvester is by default installed on Kali Linux. Basic usage is:
+<code class="highlighter-rouge">theharvester -d &lt;domain&gt; -b &lt;source&gt;</code></p>
+
+<!--more-->
+
+<p>Some options are available to tweak your request:</p>
+
+<p>-d: the domain you are looking for<br />
+-b: source or <code class="highlighter-rouge">all</code><br />
+-f: output file (html and xml)<br />
+-l: limit the number of results used for each source<br />
+-s: start result number<br />
+-h: query Shodan with each discovered hosts<br />
+-n: perform a reverse dns lookup for each range of ip address discovered<br />
+-c: perform a brute force search (can’t make it work anyway…)</p>
+
+<p>Example:</p>
+
+<p><a href="/images/theharvester_1.png"><img src="/images/theharvester_1.png" alt="theHarvester" /></a></p>

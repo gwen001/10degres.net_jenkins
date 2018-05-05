@@ -1,0 +1,103 @@
+title:            Gwendal Le Coguic
+description:      Gwendal Le Coguic, web developer and security researcher
+disqus_shortname:
+reading_time:     false
+words_per_minute: 200
+
+# Owner/author information
+owner:
+  name:           Gwen
+  full_name:      Gwendal Le Coguic
+  avatar:         me.jpg
+  bio:            "Web developer reconverted to security researcher, playing bug bounty sometimes :)"
+  email:          g@10degres.net
+  # Social networking links used in footer. Update and remove as you like.
+  twitter: gwendallecoguic
+  facebook:
+  github: gwen001
+  stackexchange:
+  linkedin: gwendal-le-coguic-77106729
+  instagram:
+  flickr:
+  tumblr:
+  # google plus id, include the '+', eg +mmistakes
+  google_plus:
+
+# Background image to be tiled on all pages
+background:
+
+# Analytics and webmaster tools stuff goes here
+google_analytics: UA-61485350-1
+google_verify: GnoFwHUV3XNgLy4D-7XjLQ0Dbw6fKBXZnBzMn-0GBX8
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:
+
+# make money!
+coinhive: QsQAd1qAFW37LsJ4nifCPDFl9AOup0o5
+
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone:    Europe/London
+future:      true
+highlighter: rouge
+markdown:    kramdown
+gems:
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-gist
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+permalink:   /:categories/:title/
+
+# Amount of post to show on home page
+paginate: 5
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+syntax_highlighter_opts:
+  line_numbers: nil
+  line_numbers_start: 1
+  tab_width: 4
+  bold_every: 10
+  css: class
+
+# Octopress
+# Default extensions
+post_ext: md
+page_ext: md
+# Found in _templates/
+post_layout: post
+page_layout: page
+# Format titles with titlecase?
+titlecase: true
+excerpt_separator: <!--more-->
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      header:
+        background: header-background.jpg
+      image:
+        feature: "assets/img/header-background.jpg"
+      #categories: "articles"
+      #permalink: "/articles/:title"
+      layout: post
+      author:
+        display_name: Gwen
+        email: g@10degres.net
+        url: http://10degres.net
+      author_email: g@10degres.net
+      author_url: http://10degres.net

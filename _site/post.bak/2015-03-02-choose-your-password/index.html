@@ -1,0 +1,48 @@
+<p>I recently worked with a well known web agency in France. 
+They have a good reputation, they were rewarded last year for their good works and they are in the top 40 of the best french agencies. </p>
+
+<p>However I was terribly surprised to find many basic errors/misconfiguration on their own site: error_reporting enable, 
+SQL injection and finally a “private” admin section reachable with a simple couple of <code class="highlighter-rouge">demo</code>/<code class="highlighter-rouge">demo</code> as credentials…</p>
+
+<p>Such vulnerability can be dangerous when using common login/password and it can be even deadly if the discovered user has high privileges. 
+It was true in this situation: mail contact, articles, resumes, photos everything was alterable.</p>
+
+<p>Below the good practice to create a strong password.</p>
+
+<h2 id="the-rules">The rules</h2>
+
+<ul>
+  <li>must be at least 8 characters</li>
+  <li>must be different than your previous password</li>
+  <li>must NOT be related to your username</li>
+  <li>must NOT contain any recognizable word</li>
+</ul>
+
+<!--more-->
+
+<h2 id="the-characters-set">The characters set</h2>
+
+<ul>
+  <li>must contains uppercase: <code class="highlighter-rouge">A, B, C, ...</code></li>
+  <li>must contains lowercase: <code class="highlighter-rouge">a, b, c, ...</code></li>
+  <li>must contains number: <code class="highlighter-rouge">0, 1, 2, ...</code></li>
+  <li>must contains symbol: <code class="highlighter-rouge">#, §, %, @, &amp;, ...</code></li>
+</ul>
+
+<h2 id="the-method">The method</h2>
+
+<p>A good approach is to choose a random sentence, a song title, a proverb, a book excerpt or whatever you’ll remember easily… Extract the first letter of each words, apply some changes and add some chars.</p>
+
+<h2 id="the-example">The example</h2>
+
+<p>I choosed a small sentence from “Fade into you” by Mazzy Star:</p>
+
+<ol>
+  <li>the original: <code class="highlighter-rouge">Some kind of night into your darkness</code></li>
+  <li>first letters: <code class="highlighter-rouge">skoniyd</code></li>
+  <li>replace letters by numbers: <code class="highlighter-rouge">sk0n1yd</code></li>
+  <li>transform lowercase to uppercase: <code class="highlighter-rouge">Sk0n1yD</code></li>
+  <li>add symbols to reach a good length: <code class="highlighter-rouge">#Sk0n1yD*</code></li>
+</ol>
+
+<p>An attack based on a dictionary would fail against this password. A brute force still possible but will be much much loooooonnnnnnger :)</p>

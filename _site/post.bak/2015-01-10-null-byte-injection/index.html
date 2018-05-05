@@ -1,0 +1,59 @@
+<p>I recently read a nice article on <a href="http://resources.infosecinstitute.com/null-byte-injection-php/" title="Null byte injection" class="flashlink" target="_blank">InfoSec Institute</a> 
+(again) about Null byte injection. 
+However I met some problems to make it works in a real situation so I decided to write my own.</p>
+
+<p>First of all, this vulnerability has been <strong>fully patched in PHP 5.3.4</strong> (until someone else find another buggy function…), that means you need to install an old version of PHP. 
+Grab it in <a href="http://php.net/releases/" title="PHP releases" class="flashlink" target="_blank">PHP releases archive</a>. 
+After compiled and configured, it’s very important to set <strong>magic_quotes_gpc=Off</strong> in the <code class="highlighter-rouge">php.ini</code> (it won’t work with <code class="highlighter-rouge">ini_set</code> in the script itself).</p>
+
+<p>Then imagine an <code class="highlighter-rouge">index.php</code> like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">include</span><span class="p">(</span> <span class="s1">'/var/www/pages/'</span><span class="o">.</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'p'</span><span class="p">]</span><span class="o">.</span><span class="s1">'.php'</span> <span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>And a <code class="highlighter-rouge">/pages/store.php</code> like this:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">echo</span> <span class="s1">'This is the store !'</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>If you call it directly it will works but in that case <code class="highlighter-rouge">index.php</code> is usually used to display common stuffs like header and footer. 
+<!--more-->
+So the basic use is:</p>
+
+<p><a href="/images/null_byte_injection_1.png"><img src="/images/null_byte_injection_1.png" alt="Null Byte Injection" /></a></p>
+
+<p>Since <code class="highlighter-rouge">index.php</code> already concatenate <code class="highlighter-rouge">.php</code> with the <code class="highlighter-rouge">p</code> parameter, you’ll get that kind of error if you set it manually:</p>
+
+<p><a href="/images/null_byte_injection_2.png"><img src="/images/null_byte_injection_2.png" alt="Null Byte Injection" /></a></p>
+
+<p>Notice the double extension <code class="highlighter-rouge">.php.php</code>, that means the site might be vulnerable. 
+An easy tool to determine the PHP version of your target is a browser extension like <a href="https://wappalyzer.com/" title="Wappalyzer" target="_blank">Wappalyzer</a> 
+for <a href="https://addons.mozilla.org/fr/firefox/addon/wappalyzer/" title="Wappalyzer for Firefox/Iceweasel" target="_blank">Firefox/Iceweasel</a> 
+or <a href="https://chrome.google.com/webstore/detail/wappalyzer/gppongmhjkpfnbhagpmjfkannfbllamg" title="Wappalyzer for Chrome" target="_blank">Chrome</a>.</p>
+
+<p>The next step is to add the null byte:</p>
+
+<p><a href="/images/null_byte_injection_3.png"><img src="/images/null_byte_injection_3.png" alt="Null Byte Injection" /></a></p>
+
+<p>Because we got the same result as the “normal” usage, now that’s sure, the target is vulnerable! You can inject everything. 
+Of course the goal of this attack is to retrieve sensitive files:</p>
+
+<p><a href="/images/null_byte_injection_5.png"><img src="/images/null_byte_injection_5.png" alt="Null Byte Injection" /></a></p>
+
+<p>Keep in mind that the path of the required file must be relative of the current script (<code class="highlighter-rouge">index.php</code> in my case) otherwise it will throw an error as a file not found:</p>
+
+<p><a href="/images/null_byte_injection_4.png"><img src="/images/null_byte_injection_4.png" alt="Null Byte Injection" /></a></p>
+
+<p>Here is the error you’ll get if you fight against a patched PHP:</p>
+
+<p><a href="/images/null_byte_injection_7.png"><img src="/images/null_byte_injection_7.png" alt="Null Byte Injection" /></a></p>
+
+<p>And the error you’ll get if <code class="highlighter-rouge">magic_quotes_gpc</code> is enable:</p>
+
+<p><a href="/images/null_byte_injection_6.png"><img src="/images/null_byte_injection_6.png" alt="Null Byte Injection" /></a></p>
